@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import Nav from 'components/nav';
 import { connect } from 'dva';
 import styles from './index.less';
+import InputBox from 'components/inputbox';
 
 const PrefixCls = 'homeworkdetails';
 
@@ -33,6 +34,7 @@ class HomeWorkDetails extends React.Component {
           <h3>{title}</h3>
           <p>{question}</p>
         </div>
+        <InputBox />
       </div>
     );
   }

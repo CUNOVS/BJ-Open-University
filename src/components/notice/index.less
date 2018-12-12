@@ -1,0 +1,34 @@
+@PrefixCls: notice;
+.@{PrefixCls}-tongzhi {
+  background:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  align-content:center;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 20px;
+  img{
+    width:70%;
+    margin-left:0.1rem;
+  }
+  &-div1{
+    flex:20%
+  }
+  &-div2{
+    flex:70%;
+    padding:10px 0;
+    p{
+      margin: 0;
+    }
+    &-p1{
+      font-size:0.38rem
+    }
+    &-p2{
+      width: 5rem;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

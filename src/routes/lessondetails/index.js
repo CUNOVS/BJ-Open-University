@@ -26,6 +26,7 @@ import video from './jquery.mp4';
 import pic from './pic.jpg';
 import Purchase from 'components/purchase';
 import TransparentHeader from 'components/transparentheader';
+import DiscussionArea from 'components/discussionarea';
 
 const PrefixCls = 'lessondetails';
 let content = '<p style="text-align: center;margin:0">\n' +
@@ -49,6 +50,13 @@ const tabs = [
     {
       section: '第二章',
       part: [
+        {
+          title: '课程大纲',
+          time: '',
+          id: '0',
+          type: 'pdf',
+          url: 'https://raw.githubusercontent.com/mynane/PDF/ff4e1a0e52eb35bd91c13aaaf5715ea6bf09bfdc/Docker%20%E5%AE%9E%E8%B7%B5%20-%20v1.1.pdf',
+        },
         { title: 'Jquery基础课程01', time: '9:10', id: '1', type: 'video' },
         { title: 'Jquery基础课程02', time: '9:10', id: '2', type: 'video' },
         { title: 'Jquery基础课程03', time: '9:10', id: '3', type: 'video' },
@@ -125,7 +133,7 @@ class LessonDetails extends React.Component {
           },
         }));
       },
-      handlerCourseClick = ({ type }) => {
+      handlerCourseClick = ({ type, title = '', url = '' }) => {
         if (type === 'homework') {
           this.props.dispatch(routerRedux.push({
             pathname: '/homeworkdetails',
@@ -133,6 +141,14 @@ class LessonDetails extends React.Component {
               name: '作业',
             },
           }));
+        } else if (type === 'pdf') {
+          cnOpen(url);
+          // this.props.dispatch(routerRedux.push({
+          //   pathname: '/readpdf',
+          //   query: {
+          //     name: title,
+          //   },
+          // }));
         }
       },
       handlerPayClick = () => {
@@ -154,14 +170,15 @@ class LessonDetails extends React.Component {
         <div>
           {getvideo()}
         </div>
-        <Tabs tabs={tabs}
-              ref={el => this.tabs = el}
-              onChange={(tab, index) => {
-                console.log('onChange', index, tab);
-              }}
-              onTabClick={(tab, index) => {
-                console.log('onTabClick', index, tab);
-              }}
+        <Tabs
+          tabs={tabs}
+          ref={el => this.tabs = el}
+          onChange={(tab, index) => {
+            console.log('onChange', index, tab);
+          }}
+          onTabClick={(tab, index) => {
+            console.log('onTabClick', index, tab);
+          }}
         >
           <div style={{ height: this.state.height }}>
             <LessonGrade dispatch={this.props.dispatch} />
@@ -182,6 +199,11 @@ class LessonDetails extends React.Component {
             <CourseList data={row} handlerClick={handlerCourseClick} />
           </div>
           <div className={styles[`${PrefixCls}-discuss`]} style={{ height: this.state.height, background: '#fff' }}>
+            <div className={styles[`${PrefixCls}-discuss-area`]}>
+              <DiscussionArea title="综合讨论区" />
+              <DiscussionArea title="综合讨论区" />
+              <DiscussionArea title="综合讨论区" />
+            </div>
             <TitleBox title={`评论(${4})`} sup='' />
             <div>
               {currentComments && currentComments.map((data, i) => (

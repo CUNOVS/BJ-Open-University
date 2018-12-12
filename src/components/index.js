@@ -30,7 +30,8 @@ import {
   NavBar,
   DatePicker,
   Drawer,
-  ActionSheet
+  ActionSheet,
+  Slider,
 } from 'antd-mobile';
 
 module.exports = {
@@ -65,5 +66,6 @@ module.exports = {
   NavBar,
   DatePicker,
   Drawer,
-  ActionSheet
+  ActionSheet,
+  Slider,
 };

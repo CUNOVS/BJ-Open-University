@@ -86,10 +86,11 @@
   &-codebox{
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #ddd;
+    background:white
   }
   &-phonebox{
-    border-bottom: 2px solid #ddd;
+    background:white;
+    border-bottom: solid 1px #ddd;
   }
   :global{
     .am-list-item .am-input-item .am-input-focus .am-input-android{
@@ -99,6 +100,13 @@
     }
     .am-button-small{
       padding: 0 10px;
+    }
+    .am-button{
+        border-radius: 0;
+    }
+    .am-button-primary{
+        border: none;
+        background: #bed742;
     }
     .am-wingblank>.am-list-item{
       border: 2px solid #ddd;

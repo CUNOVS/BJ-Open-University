@@ -16,7 +16,7 @@ module.exports = {
    * @date 2018/11/08 13:53:04
    * @Description:课程列表
    */
-  commonRow: ({ image, title, price, people }, onClick) => {
+  commonRow: ({ image, title, price="0", people }, onClick) => {
     return (
       <div className={styles[`${PrefixCls}-common`]}>
         <Item
@@ -89,37 +89,6 @@ module.exports = {
     </div>);
   },
 
-  exhibition: (data, onClick) => {
-    console.log(onClick);
-    // 教师列表
-    return (
-      <div>
-        {
-          data && data.map((data, index) => (
-            <div key={index} className={styles[`${PrefixCls}-exhibition`]} onClick={onClick}>
-              <div className={styles[`${PrefixCls}-exhibition-image`]}>
-                <img src={data.imag} />
-              </div>
-              <div className={styles[`${PrefixCls}-exhibition-tex`]}>
-                <div className={styles[`${PrefixCls}-exhibition-tex-chil`]}>
-                  <div className={styles[`${PrefixCls}-exhibition-tex-chil-title`]}>{data.name}</div>
-                  <div className={styles[`${PrefixCls}-exhibition-comm`]}>{data.school}</div>
-                </div>
-                <div className={styles[`${PrefixCls}-exhibition-onButt`]}>
-                  +关注
-                </div>
-                <div className={styles[`${PrefixCls}-exhibition-botto`]}>
-                  <div>开课{data.clas}门</div>
-                  <div style={{ margin: '0 0.1rem' }}>|</div>
-                  <div>共{data.man}学习人数</div>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    );
-  },
   progressRow: (data, onClick) => {
     /* WKC 课程列表进度条版 */
     return (
@@ -241,38 +210,21 @@ module.exports = {
       </div>
     );
   },
-  hotRankingRow: (data) => {
-    /**
-     * @author Lowkey
-     * @date 2018/11/08 16:31:33
-     * @Description:热门排行列表
-     */
-    const getStyle = (rank) => {
-      switch (rank) {
-        case 1:
-          return { color: '#f25858', fontSize: '32px' };
-        case 2:
-          return { color: '#f8d540', fontSize: '30px' };
-        case 3:
-          return { color: '#87e62a', fontSize: '28px' };
-        default:
-          return {};
-      }
-    };
-    const { rank, image, title, students } = data;
-    return (<div className={styles[`${PrefixCls}-hotRanking`]}>
-      <div className={styles[`${PrefixCls}-hotRanking-rank`]} style={getStyle(rank)}>
-        {rank}
+  noticeRow: (data, Click) => {
+    return (
+      <div className={styles[`${PrefixCls}-tongzhi`]} onClick={Click}>
+        {/*<div className={styles[`${PrefixCls}-tongzhi-div1`]}>*/}
+          {/*<img src={data.images} style={{ width: '70%', marginLeft: '0.1rem' }} />*/}
+        {/*</div>*/}
+        <div className={styles[`${PrefixCls}-tongzhi-div2`]}>
+          <p className={styles[`${PrefixCls}-tongzhi-div2-p1`]}>{data.title}</p>
+          <p className={styles[`${PrefixCls}-tongzhi-div2-p2`]} style={{ margin: '5px 0 0 0' }}>{data.content}</p>
+          <p className={styles[`${PrefixCls}-tongzhi-div2-p3`]} style={{ margin: '5px 0 0 0' }}>{data.date}</p>
+        </div>
       </div>
-      <div className={styles[`${PrefixCls}-hotRanking-imgbox`]}>
-        <img src={image} alt="" />
-      </div>
-      <div className={styles[`${PrefixCls}-hotRanking-info`]}>
-        <div className={styles[`${PrefixCls}-hotRanking-info-title`]}>{title}</div>
-        <div className={styles[`${PrefixCls}-hotRanking-info-man`]}>{students}人参与学习</div>
-      </div>
-    </div>);
+    );
   },
+
 
 };
 

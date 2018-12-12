@@ -1,5 +1,6 @@
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
+import { getList } from 'services/list';
 
 const defaultList = [
   {
@@ -45,7 +46,7 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ history, dispatch }) {
       history.listen(({ pathname, action, query }) => {
-        if (pathname === '/curriculum') {
+        if (pathname === '/curriculum' && action === 'PUSH') {
           dispatch({
             type: 'updateState',
             payload: {
@@ -64,10 +65,12 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
+      const data = yield call(getList);
+
       yield put({
         type: 'updateState',
         payload: {
-          dataList: defaultList,
+          dataList: data.data,
         },
       });
     },

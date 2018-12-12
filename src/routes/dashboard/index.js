@@ -10,29 +10,22 @@ import { commonRow } from 'components/row';
 import { handleLessonClick, handleGridClick, handlerCommonClick } from 'utils/commonevents';
 import Banner from 'components/banner/index';
 import Notice from 'components/noticebar/index';
-import HotCourse from 'components/hotCourse/index';
 import CarouselGrid from 'components/carouselgrid';
 import TitleBox from 'components/titlecontainer/index';
 import SpecialBox from 'components/specialbox/index';
 import Container from 'components/container/index';
 import InfoBox from 'components/infobox/index';
-import CardSilder from 'components/swipers/index';
 import SearchHeader from 'components/searchheader';
 
 const PrefixCls = 'dashboard',
   Item = List.Item;
 
-const Dashboard = ({ dashboard, loading, dispatch, app }) => {
+const Dashboard = ({ dashboard, loading, dispatch }) => {
   const { BaseLine } = Layout,
 
-    { bannerDatas, listData, specialData, hotBannerDatas, infoDatas, cardSilderDatas, carouseDatas, bannerNotice } = dashboard;
+    { bannerDatas, listData, specialData, infoDatas, carouseDatas, bannerNotice } = dashboard;
 
-  const shopping = () => {
-      dispatch(routerRedux.push({
-        pathname: '/shoppings',
-      }));
-    },
-    search = () => {
+  const search = () => {
       dispatch(routerRedux.push({
         pathname: '/search',
       }));
@@ -58,7 +51,6 @@ const Dashboard = ({ dashboard, loading, dispatch, app }) => {
           placeholder="搜索"
           children={<Icon
             type={getLocalIcon('/components/shopping.svg')}
-            onClick={shopping}
           />}
           Click={search}
         />
@@ -71,10 +63,6 @@ const Dashboard = ({ dashboard, loading, dispatch, app }) => {
       <WhiteSpace size="xs" />
       <CarouselGrid datas={carouseDatas} dispatch={dispatch} handleClick={handleGridClick} />
       <WhiteSpace size="xs" />
-      <HotCourse
-        bannerDatas={hotBannerDatas} dispatch={dispatch}
-        handleClick={handleLessonClick.bind(null, dispatch)} />
-      <WhiteSpace size="xs" />
       <Container
         title="新课推荐"
         handlerClick={handlerCommonClick.bind(null, '新课推荐', dispatch)}
@@ -82,9 +70,6 @@ const Dashboard = ({ dashboard, loading, dispatch, app }) => {
           return <InfoBox key={i} {...data} handleClick={handleLessonClick.bind(null, dispatch, data)} />;
         })}
       />
-      <WhiteSpace size="xs" />
-      <TitleBox title="合作学校" />
-      <CardSilder datas={cardSilderDatas} />
       <WhiteSpace size="xs" />
       <TitleBox title="猜你喜欢" handlerClick={handlerCommonClick.bind(null, '猜你喜欢', dispatch)} />
       <List className={styles[`${PrefixCls}-list`]}>
@@ -115,4 +100,4 @@ Dashboard.propTypes = {
   loading: PropTypes.object,
 };
 
-export default connect(({ dashboard, loading, app }) => ({ dashboard, loading, app }))(Dashboard);
+export default connect(({ dashboard, loading }) => ({ dashboard, loading }))(Dashboard);

@@ -2,15 +2,13 @@ import React from 'react';
 import { Grid } from 'antd-mobile';
 import styles from './index.less';
 import { Layout } from 'components';
-import defaultIcon from 'themes/images/nmenus/lvyou.png';
 
 const PrefixCls = 'menu',
-  { BaseLine } = Layout,
   getDatas = (menus = []) => {
     const result = [];
     menus.map((menu, index) => {
-      let { icon = defaultIcon, text = '', name = '', title = '' } = menu;
-      if (text == '') {
+      let { icon = '', text = '', name = '', title = '' } = menu;
+      if (text === '') {
         text = name || title;
       }
       result.push({ ...menu, icon, text });

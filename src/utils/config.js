@@ -2,7 +2,6 @@ module.exports = {
   name: 'ALS-APP',
   logo: '/logo.png',
   baseURL: 'http://www.myals.gov.cn:9000',
-  wsURL: 'ws://www.myals.gov.cn:9000/websocket/chat/',
   userTag: {
     username: 'username',
     usertoken: 'KSESSIONID',

@@ -11,6 +11,7 @@ const svgSpriteDirs = [
 export default {
   entry: 'src/index.js',
   svgSpriteLoaderDirs: svgSpriteDirs,
+  devtool: 'inline-source-map',
   theme: "./theme.config.js",
   publicPath: `./${version}/`,
   outputPath: `dist/www/${version}`,

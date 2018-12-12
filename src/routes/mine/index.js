@@ -18,6 +18,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
   const { users: { username, useravatar }, isLogin, noViewCount = 0 } = app,
     { gridDatas } = mine;
   const handleLogin = () => {
+    console.log(isLogin)
       if (!isLogin) {
         dispatch(routerRedux.push({
           pathname: '/login',
@@ -35,14 +36,6 @@ function Mine ({ location, dispatch, mine, app, login }) {
         query: {
           name,
           externalUrl: baseURL + helpApi,
-        },
-      }));
-    },
-    handlerShoppingClick = ({ name = '购物车' }) => {
-      dispatch(routerRedux.push({
-        pathname: 'shoppings',
-        query: {
-          name,
         },
       }));
     },
@@ -97,13 +90,6 @@ function Mine ({ location, dispatch, mine, app, login }) {
       <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-info`]}>
         <List>
-          <Item
-            onClick={handlerShoppingClick}
-            thumb={<Icon type={getLocalIcon('/mine/shopcar.svg')} />}
-            arrow="horizontal"
-          >
-            我的购物车
-          </Item>
           <Item
             thumb={<Icon type={getLocalIcon('/mine/opinion.svg')} />}
             onClick={handleopinionClick}

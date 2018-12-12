@@ -1,0 +1,76 @@
+@import "../../themes/default";
+
+@PrefixCls: readpdf;
+.@{PrefixCls}-container {
+
+}
+
+.@{PrefixCls}-pdfcontent {
+  margin-top: 8px;
+
+  :global {
+    .ReactPDF {
+      &__Document {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      &__Page {
+        max-width: calc(~"100% - .2rem");
+        box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+        margin: .1rem;
+
+        canvas {
+          width: 100%;
+          height: auto !important;
+        }
+      }
+
+      &__Loader {
+        padding: 1rem;
+        color: black;
+      }
+      &__Error {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+.@{PrefixCls}-silder-box {
+  position: fixed;
+  display: flex;
+  right: 20px;
+  bottom: 80px;
+  z-index: 9999;
+  border-radius: 40px;
+}
+
+.@{PrefixCls}-font-small, .@{PrefixCls}-font-big {
+  padding: 5px 30px;
+  background:@opacity;
+}
+
+
+.@{PrefixCls}-item {
+  position: relative;
+}
+
+.@{PrefixCls}-page {
+
+}
+
+.@{PrefixCls}-pageNum {
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  margin: 0;
+  padding: 5px;
+  border-radius: 10px;
+  text-align: center;
+  background: @opacity;
+  color: #fff;
+  transition: all 1s ease-out;
+}

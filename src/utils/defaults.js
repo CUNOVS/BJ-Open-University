@@ -17,14 +17,8 @@ const defaultTabBars = [{
   selectedIcon: require('themes/images/ntabr/study-o.png'),
   route: '/studyBase',
 }, {
-  title: '开放大学',
-  key: 4,
-  icon: require('themes/images/ntabr/school.png'),
-  selectedIcon: require('themes/images/ntabr/school-o.png'),
-  route: '/school',
-}, {
   title: '我的',
-  key: 5,
+  key: 4,
   icon: require('themes/images/ntabr/mine.png'),
   selectedIcon: require('themes/images/ntabr/mine-o.png'),
   route: '/mine',

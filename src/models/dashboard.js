@@ -8,11 +8,6 @@ const defaultBannerDatas = [
   require('../themes/images/banner/banner3.png'),
   require('../themes/images/banner/banner4.png'),
 ];
-const hotBannerDatas = [
-  require('../themes/images/hot/hot1.png'),
-  require('../themes/images/hot/hot2.jpg'),
-  require('../themes/images/hot/hot3.jpg'),
-];
 
 const defaultNewCourse = [
   {
@@ -91,28 +86,7 @@ const defaultSpecialData = [
 
   },
 ];
-const defaultCardSilderDatas = [
-  {
-    image: require('../themes/images/school/peking.jpg'),
-    text: '北京大学',
-  },
-  {
-    image: require('../themes/images/school/qinghua.jpg'),
-    text: '清华大学',
-  },
-  {
-    image: require('../themes/images/school/nankai.jpg'),
-    text: '南开大学',
-  },
-  {
-    image: require('../themes/images/school/wuhan.jpg'),
-    text: '武汉大学',
-  },
-  {
-    image: require('../themes/images/school/zhejiang.jpg'),
-    text: '浙江大学',
-  },
-];
+
 const defaultCarouseDatas = [
   {
     icon: require('../themes/images/grid/01.png'),
@@ -168,12 +142,10 @@ export default modelExtend(model, {
 
   state: {
     bannerDatas: [],
-    hotBannerDatas: [],
     newCourse: [],
     listData: [],
     specialData: [],
     infoDatas: [],
-    cardSilderDatas: [],
     carouseDatas: [],
     bannerNotice: [],
   },
@@ -195,12 +167,10 @@ export default modelExtend(model, {
         type: 'updateState',
         payload: {
           bannerDatas: defaultBannerDatas,
-          hotBannerDatas,
           newCourse: defaultNewCourse,
           listData: defaultListData,
           specialData: defaultSpecialData,
           infoDatas: defaultInfoDatas,
-          cardSilderDatas: defaultCardSilderDatas,
           carouseDatas: defaultCarouseDatas,
           bannerNotice: bannerNotice,
         },

@@ -25,6 +25,16 @@
 }
 
 .@{PrefixCls}-common {
+  :global {
+    .am-list-item.am-list-item-middle .am-list-line {
+      align-items: normal;
+    }
+    .am-list-item .am-list-line-wrap .am-list-content {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+    }
+  }
   &-title {
     font-size: @commonFonetSize;
     font-weight: bold;
@@ -36,7 +46,7 @@
   }
   & img {
     width: 220px;
-    height: 180px;
+    height: 160px;
     padding: 20px 0;
     border-radius: 20px;
   }
@@ -398,6 +408,44 @@
     }
     &-man {
       font-size: 26px;
+    }
+  }
+}
+
+.@{PrefixCls}-tongzhi {
+  background: white;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border-bottom: solid 1px #ddd;
+  img {
+    width: 70%;
+    margin-left: 0.1rem;
+  }
+  &-div1 {
+    flex: 20%
+  }
+  &-div2 {
+    flex: 70%;
+    padding: 10px 10px 10px 0;
+    p {
+      margin: 0;
+    }
+    &-p1 {
+      font-size: 0.38rem
+    }
+    &-p2 {
+      width: 5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &-p3 {
+      font-size: 0.24rem;
+      font-weight: 300;
+      color: #77787b;
     }
   }
 }

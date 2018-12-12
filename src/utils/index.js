@@ -191,16 +191,7 @@ const arrSum = (arr) => {
   }
 
 };
-const randomRgbColor = () => {
-  const colorArr = [
-    'rgb(240,135,165)', 'rgb(135,210,215)',
-    'rgb(237,117,82)',
-    'rgb(240,190,130)', 'rgb(195,135,125)',
-    'rgb(34,182,218)', 'rgb(250,155,150)',
-  ];
 
-  return colorArr[Math.floor(Math.random() * colorArr.length)];
-};
 module.exports = {
   WKC,
   config,
@@ -225,5 +216,4 @@ module.exports = {
   DateChange,
   getTitle,
   arrSum,
-  randomRgbColor,
 };
