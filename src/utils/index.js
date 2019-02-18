@@ -12,23 +12,13 @@ import formsubmit from './formsubmit';
 
 const { userTag: { username, usertoken, userpower, userid, useravatar, usertype } } = config,
   { _cs, _cr, _cg } = cookie;
-// 连字符转驼峰
-String.prototype.hyphenToHump = function () {
-  return this.replace(/-(\w)/g, (...args) => {
-    return args[1].toUpperCase();
-  });
-};
 
-// 驼峰转连字符
-String.prototype.humpToHyphen = function () {
-  return this.replace(/([A-Z])/g, '-$1')
-    .toLowerCase();
-};
 
 // 日期格式化
-const DateChange = function (format) {
-  let date = new Date(format);
-  let newDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+const DateChange = function () {
+  let date = new Date();
+  let week = '日一二三四五六'.charAt(date.getDay());
+  let newDate = `今天是${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${week}`
   return newDate;
 };
 
@@ -83,7 +73,7 @@ const getDefaultBg = (path = '') => {
   if (path instanceof Blob || path.startsWith('blob:')) {
     return path;
   }
-  if (path == '' || !path) {
+  if (path === '' || !path) {
     return defaultBg;
   }
   return path.startsWith('http://') || path.startsWith('https://') ? path
@@ -175,22 +165,6 @@ const WKC = (i) => {
   return title.replace(/yep/, true);
 };
 
-/***
- *
- * @param arr 数组
- * @returns {*}
- * 数组求和
- */
-const arrSum = (arr) => {
-  if (arr.length > 0) {
-    return arr.reduce(function (prev, curr, idx, arr) {
-      return (prev * 100 + curr * 100) / 100;
-    });
-  } else {
-    return 0;
-  }
-
-};
 
 module.exports = {
   WKC,
@@ -215,5 +189,4 @@ module.exports = {
   hasSystemEmoji,
   DateChange,
   getTitle,
-  arrSum,
 };

@@ -1,8 +1,6 @@
 
 import { routerRedux } from 'dva/router';
-import { parse } from 'qs';
 import { config, cookie, setLoginOut, postCurrentPosition } from 'utils';
-import { Modal } from 'antd-mobile';
 import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
 
 
@@ -40,7 +38,6 @@ export default {
     tabBars: [],
     updates: {},
     showModal: false,
-    noViewCount: 0,
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
@@ -64,7 +61,7 @@ export default {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
+    * query ({ payload }, { call, put }) {
       let tabBars = defaultTabBars;
 
       tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
@@ -84,7 +81,6 @@ export default {
           payload: {
             users: {},
             isLogin: false,
-            noViewCount: 0,
           },
         });
         yield put(routerRedux.replace({

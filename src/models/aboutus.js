@@ -1,11 +1,10 @@
-import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 
 export default modelExtend(model, {
   namespace: 'aboutus',
   state: {
-    content: ''
+    content: '',
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -23,8 +22,9 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-
+      const { aboutus, mine, app } = yield select();
+      console.log(app);
     },
-  }
+  },
 
 });

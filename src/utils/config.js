@@ -1,6 +1,5 @@
 module.exports = {
-  name: 'ALS-APP',
-  logo: '/logo.png',
+  name: 'BJOU-APP',
   baseURL: 'http://www.myals.gov.cn:9000',
   userTag: {
     username: 'username',

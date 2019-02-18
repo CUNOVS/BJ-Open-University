@@ -3,7 +3,7 @@ import styles from './index.less';
 import { Badge, Icon } from 'antd-mobile';
 import { getLocalIcon } from 'utils';
 import PropTypes from 'prop-types';
-import ClassifyItem from '../classify';
+
 
 const PrefixCls = 'notice';
 

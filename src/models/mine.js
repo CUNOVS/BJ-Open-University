@@ -5,22 +5,22 @@ import { model } from 'models/common';
 
 const defaultDatas = [
   {
-    icon: require('../themes/images/others/history.png'),
-    text: '参加的课程',
+    icon: require('../themes/images/others/teacher.jpg'),
+    text: '我的老师',
     route: 'commonlist',
   },
   {
-    icon: require('../themes/images/others/course.png'),
-    text: '我的积分',
+    icon: require('../themes/images/others/group.jpg'),
+    text: '我的小组',
     route: '',
   },
   {
-    icon: require('../themes/images/others/note.png'),
-    text: '我的笔记',
+    icon: require('../themes/images/others/achievement.jpg'),
+    text: '我的成绩',
     route: 'notelist',
   }, {
-    icon: require('../themes/images/others/credit.png'),
-    text: '我的收藏',
+    icon: require('../themes/images/others/attendance.jpg'),
+    text: '我的考勤',
     route: 'commonlist',
   },
 ];

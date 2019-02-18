@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Nav from 'components/nav'
 import { connect } from 'dva'
-import InfoBox from '../../components/infobox';
+
 
 class Moudle extends React.Component {
     constructor(props){
@@ -22,13 +22,13 @@ class Moudle extends React.Component {
     }
 }
 
-InfoBox.defaultProps = {
+Moudle.defaultProps = {
   image: '',
   title: 'hxi',
   price: '免费',
   number: '212',
 };
-InfoBox.propTypes = {
+Moudle.propTypes = {
   handleClick: PropTypes.func.isRequired,
 };
 

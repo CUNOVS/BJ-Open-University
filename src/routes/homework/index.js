@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import { homeworkRow } from 'components/row';
 import TitleBox from 'components/titlecontainer';
 import { routerRedux } from 'dva/router';
-import homework from '../../models/homework';
 
 class Homework extends React.Component {
   constructor (props) {

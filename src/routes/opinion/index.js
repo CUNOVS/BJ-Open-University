@@ -61,7 +61,7 @@ class Opinion extends Component {
     
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} hasShadow={true}/>
+        <Nav title={name} dispatch={this.props.dispatch} hasShadow={true} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-title`]}>您有什么问题或建议想对我们说？</div>
           <form>

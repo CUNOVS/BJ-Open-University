@@ -43,7 +43,7 @@ var cunovs = {
             StatusBar.backgroundColorByHexString('#fff');
             break;
           }
-          case '/studyBase': {
+          case '/closed': {
             StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#fff');
             break;

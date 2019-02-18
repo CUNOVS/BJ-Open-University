@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "ALSApp",
+  "name": "bjou-app",
   "version": "1.0.0",
   "dependencies": {
     "antd": "^2.11.2",
@@ -8,7 +8,7 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "cheerio": "^1.0.0-rc.2",
-    "classnames": "^2.2.5",
+    "": "^2.2.5",
     "crypto-js": "^3.1.9-1",
     "crypto-md5": "^1.0.0",
     "dva": "^1.2.0",
@@ -53,6 +53,8 @@
     "eslint-plugin-react": "^7.1.0",
     "html-webpack-plugin": "^2.29.0",
     "postcss-pxtorem": "^4.0.1",
+    "react-router-dom": "^4.3.1",
+    "react-transition-group": "^2.5.2",
     "redbox-react": "^1.2.10",
     "roadhog": "^1.2.1"
   },
@@ -65,5 +67,18 @@
     "build": "roadhog build",
     "build:dll": "roadhog buildDll",
     "build:new": "node version && roadhog build"
-  }
+  },
+  "description": "运行前要将\r  \"react-swipes\": \"^1.1.0\",\r     \"react-wx-images-viewer\": \"^0.0.1\",\r     2个插件删除",
+  "main": ".roadhogrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CUNOVS/BJ-Open-University.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CUNOVS/BJ-Open-University/issues"
+  },
+  "homepage": "https://github.com/CUNOVS/BJ-Open-University#readme"
 }

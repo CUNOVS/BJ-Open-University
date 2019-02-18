@@ -12,7 +12,7 @@ export default modelExtend(model, {
       history.listen(location => {
         let { pathname, query, action } = location;
         if (pathname.startsWith('/aboutus')) {
-          if (action == 'PUSH') {
+          if (action === 'PUSH') {
             dispatch({
               type: 'query',
             });

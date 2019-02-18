@@ -24,17 +24,7 @@ const CourseList = (props) => (
         })
       }
     </Accordion>
-
-    {/*{props.data.map((d, i) => { //不带手风琴效果*/}
-    {/*return <div>*/}
-    {/*<p>{d.section}</p>*/}
-    {/*<div className={styles[`${PrefixCls}-part`]}>*/}
-    {/*{d.part && d.part.map((p, i) => (*/}
-    {/*chapterrow(p)*/}
-    {/*))}*/}
-    {/*</div>*/}
-    {/*</div>*/}
-    {/*})}*/}
+    
   </div>
 );
 

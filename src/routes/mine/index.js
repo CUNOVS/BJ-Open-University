@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Button, Flex, WingBlank, WhiteSpace, List, Icon, Modal, Badge, Layout } from 'components';
-import { getImages, getErrorImg, getLocalIcon, getDefaultBg } from 'utils';
+import { getImages, getErrorImg, getLocalIcon } from 'utils';
 import CarouselGrid from 'components/carouselgrid';
 import { handleGridClick } from 'utils/commonevents';
 import { routerRedux } from 'dva/router';
@@ -15,10 +15,9 @@ const PrefixCls = 'mine',
 
 function Mine ({ location, dispatch, mine, app, login }) {
   const name = '我的';
-  const { users: { username, useravatar }, isLogin, noViewCount = 0 } = app,
+  const { users: { username, useravatar }, isLogin } = app,
     { gridDatas } = mine;
   const handleLogin = () => {
-    console.log(isLogin)
       if (!isLogin) {
         dispatch(routerRedux.push({
           pathname: '/login',
@@ -30,15 +29,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
         type: 'app/logout',
       });
     },
-    handleHelpClick = ({ name = '帮助' }) => {
-      dispatch(routerRedux.push({
-        pathname: 'iframe',
-        query: {
-          name,
-          externalUrl: baseURL + helpApi,
-        },
-      }));
-    },
+
     handleopinionClick = ({ name = '意见反馈' }) => {
       dispatch(routerRedux.push({
         pathname: 'opinion',
@@ -48,12 +39,9 @@ function Mine ({ location, dispatch, mine, app, login }) {
       }));
     },
 
-    handleSetupClick = ({ name = '个人设置' }) => {
+    handlerHomePageClick = () => {
       dispatch(routerRedux.push({
-        pathname: '/setup',
-        query: {
-          name,
-        },
+        pathname: '/homepage',
       }));
     },
     showAlert = () => {
@@ -65,31 +53,41 @@ function Mine ({ location, dispatch, mine, app, login }) {
         { text: '再看看', onPress: () => console.log('cancel') },
 
       ]);
-    },
-    handleAboutUsClick = ({ name = '关于我们' }) => {
-      dispatch(routerRedux.push({
-        pathname: '/aboutus',
-        query: {
-          name,
-        },
-      }));
     };
   return (
     <div>
       <div className={styles[`${PrefixCls}-top`]} onClick={handleLogin}>
-        <div className={styles[`${PrefixCls}-top-bg`]} style={{ backgroundImage: `url(${getDefaultBg('')})` }}>
-
-        </div>
         <div className={styles[`${PrefixCls}-top-content`]}>
           <img src={getImages(useravatar, 'user')} alt="" />
-          <div className={styles[`${PrefixCls}-top-content-username`]}>登录/注册</div>
+          <div className={styles[`${PrefixCls}-top-content-info`]}>
+            <div className={styles[`${PrefixCls}-top-content-info-username`]}>登录/注册</div>
+            <div className={styles[`${PrefixCls}-top-content-info-chapters`]}>
+              <div><Icon type={getLocalIcon('/mine/chapters.svg')} color="#ff9a1b" size="xs" /></div>
+              <div>勋章</div>
+            </div>
+          </div>
+        </div>
+        <div className={styles[`${PrefixCls}-top-homepage`]}>
+          <div><Icon type={getLocalIcon('/mine/homepage.svg')} color="#fff" size="xs" /></div>
+          <div onClick={handlerHomePageClick}>个人主页</div>
         </div>
       </div>
-      <CarouselGrid datas={gridDatas} dispatch={dispatch} hasLine={false} isCarousel={false}
-                    handleClick={handleGridClick} />
+      <CarouselGrid
+        datas={gridDatas}
+        dispatch={dispatch}
+        hasLine={false}
+        isCarousel={false}
+        handleClick={handleGridClick} />
       <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-info`]}>
         <List>
+          <Item
+            thumb={<Icon type={getLocalIcon('/mine/contacts.svg')} />}
+            onClick={handleopinionClick}
+            arrow="horizontal"
+          >
+            我的联系人
+          </Item>
           <Item
             thumb={<Icon type={getLocalIcon('/mine/opinion.svg')} />}
             onClick={handleopinionClick}
@@ -103,20 +101,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
           >
             使用帮助
           </Item>
-          <Item
-            thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')} />}
-            arrow="horizontal"
-            onClick={handleAboutUsClick}
-          >
-            关于我们
-          </Item>
-          <Item
-            thumb={<Icon type={getLocalIcon('/mine/setup.svg')} />}
-            arrow="horizontal"
-            onClick={handleSetupClick}
-          >
-            个人设置
-          </Item>
+
         </List>
       </div>
     </div>

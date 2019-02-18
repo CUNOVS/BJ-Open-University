@@ -1,8 +1,8 @@
 /**
  * @author Lowkey
- * @date 2018/10/18 
- * @Description: 
-*/
+ * @date 2018/10/18
+ * @Description:
+ */
 import React from 'react';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
@@ -17,7 +17,7 @@ let lastHref,
   progessStart = false;
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal, noViewCount = 0 } = app;
+  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -25,7 +25,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
   tabBars.map((_) => {
     menusArray.push(_.route);
   });
-  
+
   cnSetStatusBarStyle(pathname);
   if (lastHref !== href || loading.global) {
     NProgress.start();
@@ -39,54 +39,48 @@ const App = ({ children, dispatch, app, loading, location }) => {
     NProgress.done();
   }
   const update = (url, upgraded) => {
-      if (upgraded) {
-        return (<Modal
-          visible
-          transparent
-          maskClosable={false}
-          title="当前版本过低"
-          footer={[{ text: '立刻升级', onPress: () => cnUpdate(url)}]}
-        >
-          <div>
-            为保证正常使用，请先升级应用
-          </div>
-        </Modal>);
-      }
-      if (isFirst) {
-        Modal.alert('版本更新', '点击升级我的阿拉善', [
-          {
-            text: '暂不升级',
-            onPress: () => dispatch({
-              type: 'app/updateState',
-              payload: {
-                showModal: false,
-              },
-            }),
-            style: 'default',
-          },
-          { text: '立刻升级', onPress: () => cnUpdate(url) },
-        ]);
-        isFirst = false;
-      }
-    },
-    getDot = (pathname, noViewCount) => {
-      if (pathname === '/mine' && noViewCount > 0) {
-        return true;
-      }
-      return false;
-    };
+    if (upgraded) {
+      return (<Modal
+        visible
+        transparent
+        maskClosable={false}
+        title="当前版本过低"
+        footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
+      >
+        <div>
+          为保证正常使用，请先升级应用
+        </div>
+      </Modal>);
+    }
+    if (isFirst) {
+      Modal.alert('版本更新', '点击升级我的阿拉善', [
+        {
+          text: '暂不升级',
+          onPress: () => dispatch({
+            type: 'app/updateState',
+            payload: {
+              showModal: false,
+            },
+          }),
+          style: 'default',
+        },
+        { text: '立刻升级', onPress: () => cnUpdate(url) },
+      ]);
+      isFirst = false;
+    }
+  };
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
     return (<div>
       <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
       {children}
     </div>);
   }
-  
+
   return (
     <div className="tabbarbox">
       <TabBar
         unselectedTintColor="#949494"
-        tintColor="#33A3F4"
+        tintColor="#3f7eba"
         barTintColor="white"
         hidden={false}
       >
@@ -95,7 +89,6 @@ const App = ({ children, dispatch, app, loading, location }) => {
             key: index,
             selectedIcon: _.icon,
             selected: pathname === _.route,
-            dot: getDot(_.route, noViewCount),
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
@@ -113,7 +106,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
             background: `url(${props.icon}) center center /  0.42rem 0.42rem no-repeat`,
           }}
           />);
-          
+
           props.selectedIcon = (<div style={{
             width: '0.44rem',
             height: '0.44rem',
@@ -137,7 +130,7 @@ App.propTypes = {
   dispatch: PropTypes.func,
   app: PropTypes.object,
   loading: PropTypes.object,
-  icon: PropTypes.string
+  icon: PropTypes.string,
 };
 
 export default connect(({ app, loading }) => ({ app, loading }))(App);

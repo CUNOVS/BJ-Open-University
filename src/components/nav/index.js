@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavBar, Icon } from 'antd-mobile';
+import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
-import classNames from 'classnames'
+import classNames from 'classnames';
 import styles from './index.less';
 
 const PrefixCls = 'nav';
@@ -15,30 +16,31 @@ function Nav (props) {
   };
   return (
     <div>
-      <div className={classNames(styles[`${PrefixCls}-header-box`],{[styles.shadow]:props.hasShadow})}>
+      <div className={classNames(styles[`${PrefixCls}-header-box`], { [styles.shadow]: props.hasShadow })}>
         <div className={styles[`${PrefixCls}-header`]}>
           <NavBar
-            style={{ background: props.color }}
             leftContent=""
-            onLeftClick={goBack}
+            onLeftClick={props.isGoBack ? goBack : null}
             mode="light"
-            icon={<Icon type="left" color='#000'/>}
+            icon={props.isGoBack ? <Icon type="left" color='#fff' /> : null}
             rightContent={props.renderNavRight}
           >{props.title}</NavBar>
         </div>
       </div>
     </div>
   );
-  Static.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    renderNavRight: PropTypes.func.isRequired,
-  };
-  Static.defaultProps = {
-    renderNavRight: null,
-    title: '',
-    color: '#fff',
-    navEvent: null,
-    hasShadow:false
-  };
 }
+
+Nav.propTypes = {
+
+};
+Nav.defaultProps = {
+  dispatch: null,
+  renderNavRight: null,
+  title: '',
+  navEvent: null,
+  hasShadow: false,
+  isGoBack: true,
+};
+
 export default Nav;
