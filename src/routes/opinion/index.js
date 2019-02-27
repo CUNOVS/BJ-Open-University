@@ -9,11 +9,22 @@ import {
   Button,
   Toast,
   WhiteSpace,
+  Picker,
 } from 'components';
 import styles from './index.less';
 
 
-const PrefixCls = 'opinion';
+const PrefixCls = 'opinion',
+  type = [
+    {
+      label: '课程优化',
+      value: '1',
+    },
+    {
+      label: '平台优化',
+      value: '2',
+    },
+  ];
 
 class Opinion extends Component {
   changeValue = (obj) => {
@@ -24,7 +35,7 @@ class Opinion extends Component {
     }
     return obj;
   };
-  
+
   onSubmit = (isPatry) => {
     console.log(isPatry);
     this.props.form.validateFields({
@@ -38,14 +49,14 @@ class Opinion extends Component {
           this.props.dispatch({
             type: 'opinion/sendPatryOpinion',
             payload: {
-              ...data
+              ...data,
             },
           });
         } else {
           this.props.dispatch({
             type: 'opinion/sendOpinion',
             payload: {
-              ...data
+              ...data,
             },
           });
         }
@@ -54,17 +65,22 @@ class Opinion extends Component {
       }
     });
   };
-  
+
   render () {
     const { name = '请示反馈', isPatry = false } = this.props.location.query,
       { getFieldProps, getFieldError } = this.props.form;
-    
+
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch} hasShadow={true} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-title`]}>您有什么问题或建议想对我们说？</div>
           <form>
+            <List>
+              <Picker data={type} cols={1} {...getFieldProps('district3')} className="forss">
+                <List.Item arrow="horizontal">意见类型：</List.Item>
+              </Picker>
+            </List>
             <List.Item className={styles[`${PrefixCls}-outer-content`]}>
               <TextareaItem
                 {...getFieldProps('content', {

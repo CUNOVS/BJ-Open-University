@@ -3,6 +3,7 @@ import { NavBar, Icon } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import classNames from 'classnames';
+import { getTitle } from 'utils';
 import styles from './index.less';
 
 const PrefixCls = 'nav';
@@ -24,16 +25,14 @@ function Nav (props) {
             mode="light"
             icon={props.isGoBack ? <Icon type="left" color='#fff' /> : null}
             rightContent={props.renderNavRight}
-          >{props.title}</NavBar>
+          >{getTitle(props.title)}</NavBar>
         </div>
       </div>
     </div>
   );
 }
 
-Nav.propTypes = {
-
-};
+Nav.propTypes = {};
 Nav.defaultProps = {
   dispatch: null,
   renderNavRight: null,

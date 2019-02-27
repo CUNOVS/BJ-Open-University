@@ -7,21 +7,21 @@ const defaultDatas = [
   {
     icon: require('../themes/images/others/teacher.jpg'),
     text: '我的老师',
-    route: 'commonlist',
+    route: 'teachers',
   },
   {
     icon: require('../themes/images/others/group.jpg'),
     text: '我的小组',
-    route: '',
+    route: 'group',
   },
   {
     icon: require('../themes/images/others/achievement.jpg'),
     text: '我的成绩',
-    route: 'notelist',
+    route: 'achievement',
   }, {
     icon: require('../themes/images/others/attendance.jpg'),
     text: '我的考勤',
-    route: 'commonlist',
+    route: 'attendance',
   },
 ];
 export default modelExtend(model, {

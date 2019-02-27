@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { Layout, WhiteSpace, Icon, List, Tabs } from 'components';
+import { taskRow, taskLessonRow } from 'components/row';
 import styles from './index.less';
 import { getLocalIcon } from 'utils';
-import { handleLessonClick, handlerCommonClick } from 'utils/commonevents';
+import { handleLessonClick, handlerChangeRouteClick } from 'utils/commonevents';
 import Notice from 'components/noticebar/index';
 import TimeLine from 'components/timeline/index';
 
@@ -33,7 +34,7 @@ const Dashboard = ({ dashboard, loading, dispatch }) => {
   };
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Header />
+      <Header handlerClick={handlerChangeRouteClick.bind(null, 'messageCenter', { name: '消息中心' }, dispatch)} />
       <WhiteSpace size="xs" />
       <Notice banner={bannerNotice} messageL={moreMessage} />
       <WhiteSpace size="xs" />
@@ -51,9 +52,12 @@ const Dashboard = ({ dashboard, loading, dispatch }) => {
       >
         <div>
           <TimeLine />
+          <div className={styles[`${PrefixCls}-tasklist`]}>
+            {taskRow(handlerChangeRouteClick.bind(null, 'homeworkdetails', { name: '作业' }, dispatch))}
+          </div>
         </div>
-        <div>
-          Content of second tab
+        <div className={styles[`${PrefixCls}-tasklist`]}>
+          {taskLessonRow(handlerChangeRouteClick.bind(null, 'lessondetails', { name: '3-6岁儿童学习与发展' }, dispatch))}
         </div>
       </Tabs>
       <WhiteSpace size="xs" />

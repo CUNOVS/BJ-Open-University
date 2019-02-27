@@ -18,26 +18,30 @@ class PhotoHeader extends React.Component {
     super();
 
   }
+
   render () {
     const hanleBackClick = () => {
       this.props.dispatch(routerRedux.goBack());
     };
 
     return (
-        <div className={styles[`${PrefixCls}-transparentouter`]}>
-          <div className={styles[`${PrefixCls}-transparentouter-backBtn`]} onClick={hanleBackClick}>
-            <Icon style={{ verticalAlign: 'middle' }} type='left' color='#fff' />
-          </div>
-          <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]}>
-            {this.props.children}
-          </div>
+      <div className={styles[`${PrefixCls}-transparentouter`]}>
+        <div className={styles[`${PrefixCls}-transparentouter-backBtn`]}
+             style={this.props.hasBg ? {} : { background: 'transparent' }}
+             onClick={hanleBackClick}>
+          <Icon style={{ verticalAlign: 'middle' }} type='left' color='#fff' />
         </div>
+        <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]}>
+          {this.props.children}
+        </div>
+      </div>
     );
   }
 }
 
 PhotoHeader.defaultProps = {
   name: '',
+  hasBg: true,
 };
 PhotoHeader.propTypes = {
   dispatch: PropTypes.func.isRequired,

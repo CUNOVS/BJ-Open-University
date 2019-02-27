@@ -8,7 +8,6 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "cheerio": "^1.0.0-rc.2",
-    "": "^2.2.5",
     "crypto-js": "^3.1.9-1",
     "crypto-md5": "^1.0.0",
     "dva": "^1.2.0",
@@ -62,7 +61,7 @@
     "lint"
   ],
   "scripts": {
-    "dev": "set BROWSER=none&&set HOST=0.0.0.0&&set PORT=8088&&roadhog server",
+    "dev": "set BROWSER=none&&set HOST=0.0.0.0&&set PORT=8000&&roadhog server",
     "lint": "eslint --fix --ext .js src",
     "build": "roadhog build",
     "build:dll": "roadhog buildDll",

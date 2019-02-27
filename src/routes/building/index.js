@@ -6,7 +6,7 @@ import Nav from 'components/nav';
 const Building = ({ dispatch, building }) => {
   return (
     <div>
-      <Nav dispatch={dispatch} />
+      <Nav dispatch={dispatch} title="正在建设中"/>
       <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} >
         <img style={{ width: '100%', height: '100vh' }} src={require('../../themes/images/others/building.png')} alt="" />
       </div>

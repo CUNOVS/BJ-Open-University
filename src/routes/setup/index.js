@@ -37,7 +37,7 @@ class Setup extends React.Component {
         },
       },
     ], 'default', `${user}`);
-  }
+  };
   handlePassWordClick = () => {
     prompt(
       '修改密码',
@@ -55,7 +55,7 @@ class Setup extends React.Component {
       null,
       ['原密码', '新密码'],
     );
-  }
+  };
   showActivityIndicator = () => {
     this.props.dispatch({
       type: 'updateState',
@@ -63,7 +63,7 @@ class Setup extends React.Component {
         animating: true,
       },
     });
-  }
+  };
   hiddenActivityIndicator = () => {
     this.props.dispatch({
       type: 'updateState',
@@ -71,7 +71,7 @@ class Setup extends React.Component {
         animating: false,
       },
     });
-  }
+  };
   handleAboutUsClick = ({ name = '关于我们' }) => {
     this.props.dispatch(routerRedux.push({
       pathname: '/aboutus',
@@ -79,7 +79,7 @@ class Setup extends React.Component {
         name,
       },
     }));
-  }
+  };
 
   render () {
     const { name = '' } = this.props.location.query,
@@ -121,8 +121,8 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
-        <WhiteSpace size="md" />
+        <Nav title={name} dispatch={this.props.dispatch} hasShadow={true} />
+        <WhiteSpace size="xs" />
         <div>
           <List className={`${PrefixCls}-list`}>
             <Item>
@@ -153,10 +153,10 @@ class Setup extends React.Component {
                 : ''
             }
             <Item onClick={this.handleAboutUsClick}>
-              关于我们
+              Email地址
             </Item>
             <Item>
-              版本信息
+              自述
             </Item>
           </List>
           <ActivityIndicator animating={animating} toast text="上传中..." />

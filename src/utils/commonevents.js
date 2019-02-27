@@ -28,18 +28,17 @@ const handleListClick = (data, dispatch) => {
     },
   }));
 };
-const handlerCommonClick = (text = '', dispatch) => {
+const handlerChangeRouteClick = (path = '', data = {}, dispatch, e) => {
   /**
    * @author Lowkey
-   * @date 2018/11/12 10:22:14
-   * @Description: 跳转列表
+   * @date 2019/2/20 10:22:14
+   * @Description: 跳转路由
    *
    */
+  e.stopPropagation();
   dispatch(routerRedux.push({
-    pathname: `/commonlist`,
-    query: {
-      name: `${text}`,
-    },
+    pathname: path,
+    query: data,
   }));
 };
 
@@ -47,5 +46,5 @@ module.exports = {
   handleListClick,
   handleLessonClick,
   handleGridClick,
-  handlerCommonClick,
+  handlerChangeRouteClick,
 };

@@ -1,0 +1,46 @@
+@import '../../themes/default.less';
+@PrefixCls: ceyan;
+
+.@{PrefixCls}-top{
+    padding:0 0.36rem;
+    background:white;
+    font-size: 0.32rem;
+    div{
+        line-height: 1rem;
+        white-space: pre-wrap;
+    }
+    &-head{
+        font-size:0.4rem;
+        font-weight:600;
+    }
+    &-jinxing{
+        display:flex;
+        justify-content:space-between;
+        span:nth-child(2){
+            color:green
+        }
+    }
+}
+
+.@{PrefixCls}-content{
+    background:white;
+    font-size:@mediumFontSize;
+    padding:0.2rem;
+    border:solid 1px #cdcdcd;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:0.1rem 0;
+    &-one{
+        flex:90%;
+        height:100px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        div{
+            display:flex;
+            justify-content:space-between;
+            white-space: pre-wrap;
+        }
+    }
+}

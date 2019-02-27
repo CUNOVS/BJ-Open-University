@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Button, Flex, WingBlank, WhiteSpace, List, Icon, Modal, Badge, Layout } from 'components';
 import { getImages, getErrorImg, getLocalIcon } from 'utils';
 import CarouselGrid from 'components/carouselgrid';
-import { handleGridClick } from 'utils/commonevents';
+import { handlerChangeRouteClick, handleGridClick } from 'utils/commonevents';
 import { routerRedux } from 'dva/router';
 import { baseURL, api } from 'utils/config';
 import styles from './index.less';
@@ -18,50 +18,20 @@ function Mine ({ location, dispatch, mine, app, login }) {
   const { users: { username, useravatar }, isLogin } = app,
     { gridDatas } = mine;
   const handleLogin = () => {
-      if (!isLogin) {
-        dispatch(routerRedux.push({
-          pathname: '/login',
-        }));
-      }
-    },
-    handleLoginout = () => {
-      dispatch({
-        type: 'app/logout',
-      });
-    },
-
-    handleopinionClick = ({ name = '意见反馈' }) => {
       dispatch(routerRedux.push({
-        pathname: 'opinion',
-        query: {
-          name,
-        },
+        pathname: '/login',
       }));
-    },
 
-    handlerHomePageClick = () => {
-      dispatch(routerRedux.push({
-        pathname: '/homepage',
-      }));
-    },
-    showAlert = () => {
-      Modal.alert('退出', '离开我的阿拉善', [
-        {
-          text: '残忍退出',
-          onPress: handleLoginout,
-        },
-        { text: '再看看', onPress: () => console.log('cancel') },
-
-      ]);
-    };
+  };
   return (
     <div>
-      <div className={styles[`${PrefixCls}-top`]} onClick={handleLogin}>
+      <div className={styles[`${PrefixCls}-top`]}>
         <div className={styles[`${PrefixCls}-top-content`]}>
           <img src={getImages(useravatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-top-content-info`]}>
-            <div className={styles[`${PrefixCls}-top-content-info-username`]}>登录/注册</div>
-            <div className={styles[`${PrefixCls}-top-content-info-chapters`]}>
+            <div className={styles[`${PrefixCls}-top-content-info-username`]} onClick={handleLogin}>登录/注册</div>
+            <div className={styles[`${PrefixCls}-top-content-info-chapters`]}
+                 onClick={handlerChangeRouteClick.bind(null, 'medalList', { name: '勋章' }, dispatch)}>
               <div><Icon type={getLocalIcon('/mine/chapters.svg')} color="#ff9a1b" size="xs" /></div>
               <div>勋章</div>
             </div>
@@ -69,28 +39,28 @@ function Mine ({ location, dispatch, mine, app, login }) {
         </div>
         <div className={styles[`${PrefixCls}-top-homepage`]}>
           <div><Icon type={getLocalIcon('/mine/homepage.svg')} color="#fff" size="xs" /></div>
-          <div onClick={handlerHomePageClick}>个人主页</div>
+          <div onClick={handlerChangeRouteClick.bind(this, 'homepage', {}, dispatch)}>个人主页</div>
         </div>
       </div>
       <CarouselGrid
         datas={gridDatas}
         dispatch={dispatch}
         hasLine={false}
-        isCarousel={false}
-        handleClick={handleGridClick} />
+        handleClick={handleGridClick}
+        isCarousel={false} />
       <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-info`]}>
         <List>
           <Item
             thumb={<Icon type={getLocalIcon('/mine/contacts.svg')} />}
-            onClick={handleopinionClick}
+            onClick={handlerChangeRouteClick.bind(this, 'contacts', { name: '我的联系人' }, dispatch)}
             arrow="horizontal"
           >
             我的联系人
           </Item>
           <Item
             thumb={<Icon type={getLocalIcon('/mine/opinion.svg')} />}
-            onClick={handleopinionClick}
+            onClick={handlerChangeRouteClick.bind(this, 'opinion', { name: '意见反馈' }, dispatch)}
             arrow="horizontal"
           >
             意见反馈

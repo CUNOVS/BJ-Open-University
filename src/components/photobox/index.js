@@ -1,3 +1,8 @@
+/**
+ * @author Lowkey
+ * @date 2019/02/26 11:00:46
+ * @Description:
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './index.less';
@@ -18,12 +23,12 @@ const PhotoBox = (props) => (
     </span>
     </div>
     {props.hasAttendance ?
-      <div className={styles[`${PrefixCls}-attendance`]}>
+      <div className={styles[`${PrefixCls}-attendance`]} onClick={props.attendanceClick}>
         <div className={styles[`${PrefixCls}-attendance-info`]}>
           <span><Icon type={getLocalIcon('/components/attendance.svg')} color='#22609c' /></span>
           <span>我的考勤</span>
         </div>
-        <Status content='达标'/>
+        <Status content='达标' />
       </div>
       :
       ''
@@ -41,5 +46,6 @@ PhotoBox.defaultProps = {
   master: '匿名',
   hasAttendance: true,
   status: '未知',
+  attendanceClick: null,
 };
 export default PhotoBox;

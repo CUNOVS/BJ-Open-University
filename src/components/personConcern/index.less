@@ -1,0 +1,19 @@
+@import "../../themes/default";
+@PrefixCls: personConcern;
+
+.@{PrefixCls}-back {
+   background:white;
+   padding:0.1rem;
+   &-One{
+       display:flex;
+       justify-content: center;
+       align-items: center;
+       & div{
+           margin:0 0.1rem;
+           & img:nth-child(1){
+               margin: 0 !important;
+           }
+       }
+   }
+}
+

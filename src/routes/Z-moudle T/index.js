@@ -1,19 +1,20 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Nav from 'components/nav'
-import { connect } from 'dva'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Nav from 'components/nav';
+import { connect } from 'dva';
+import styles from './index.less';
+import CourseList from '../../components/courselist';
 
-const Moudle = ({ }) => {
-	return(
-        <div>
-            <Nav title={name} dispatch={this.props.dispatch}/>
-        </div>		
-	)
-}
+const PrefixCls = 'contacts';
 
-Moudle.propTypes = {
-}
+const Contacts = ({ location, dispatch, contacts }) => {
+  return (
+    <div>
+      <Nav title={name} dispatch={this.props.dispatch} />
+    </div>
+  );
+};
 
-export default connect(({  }) => ({
-    
-}))( )
+Contacts.propTypes = {};
+CourseList.defaultProps = {};
+export default Contacts(({ loading, contacts }) => ({ loading, contacts }))(Contacts);

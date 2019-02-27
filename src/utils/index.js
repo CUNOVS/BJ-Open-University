@@ -53,12 +53,17 @@ const queryArray = (array, key, keyAlias = 'key') => {
   }
   return null;
 };
-
+/**
+ *
+ * @param path
+ * @param type 传一个任意字符串获取头像
+ * @returns {*}
+ */
 const getImages = (path = '', type = 'defaultImg') => {
   if (path instanceof Blob || path.startsWith('blob:')) {
     return path;
   }
-  if (path == '' || !path) {
+  if (path === '' || !path) {
     return type === 'defaultImg' ? defaultImg : defaultUserIcon;
   }
   return path.startsWith('http://') || path.startsWith('https://') ? path
@@ -158,7 +163,7 @@ const hasSystemEmoji = (content) => {
   return content.match(new RegExp(ranges.join('|'), 'g'));
 };
 const getTitle = (title) => {
-  return title.length > 8 ? `${title.substring(0, 7)}...` : title;
+  return title.length > 17 ? `${title.substring(0, 16)}...` : title;
 };
 
 const WKC = (i) => {

@@ -1,13 +1,83 @@
-@import "../../themes/default";
+@import '../../themes/default.less';
 
-@PrefixCls:homeworkdetails;
-.@{PrefixCls}-container{
-  background: #fff;
-  padding: 20px;
-  & div{
-    font-size: @titleFontSize;
+@PrefixCls: homeworkdetails;
+
+.@{PrefixCls}-list {
+  :global {
+    .am-list-body div:not(:last-child) .am-list-line, .am-list-item:not(:last-child) .am-list-line, .am-list-body {
+      border: none;
+    }
+    .am-list-item .am-list-thumb:first-child {
+      margin-right: 10px;
+    }
+    .am-list-item .am-list-line .am-list-extra, .am-list-item .am-list-line .am-list-content {
+      font-size: 0.28rem;
+    }
   }
-  & p{
-      font-size: @commonFonetSize;
+  &-item {
+    width: 0.35rem;
+    padding-right: 0;
+    display: inline-block;
+    vertical-align: middle;
   }
+}
+
+.@{PrefixCls}-top {
+  padding: 0.2rem 0.2rem 0 0.2rem;
+  border-bottom: solid 1px #cdcdcd;
+  background: white;
+}
+
+.@{PrefixCls}-firstFloor {
+  font-size: @titleFontSize;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.2rem;
+}
+
+.@{PrefixCls}-twoLevel {
+  font-size: @smallFontSize;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.2rem;
+  & div {
+    display: flex;
+    align-items: center;
+    color: @primary-color;
+
+    & span {
+      margin-right: 5px;
+    }
+  }
+  &-week span {
+    color: @color-text-paragraph;
+  }
+}
+
+.@{PrefixCls}-content {
+  border-top: solid 1px #cdcdcd;
+  background: white;
+  overflow: hidden;
+  transition: all .2s linear;
+  &-text {
+    height: 77%;
+    padding: 0.2rem;
+    font-size: @smallFontSize;
+    line-height: 0.4rem;
+  }
+  &-button {
+    background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.@{PrefixCls}-state {
+  color: black;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-bottom: solid 1px #cdcdcd;
+  font-size: @titleFontSize;
 }

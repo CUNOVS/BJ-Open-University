@@ -91,7 +91,7 @@ class ReadPdf extends React.Component {
         </div>
         <div className={styles[`${PrefixCls}-pdfcontent`]}>
           <Document
-            file="https://raw.githubusercontent.com/mynane/PDF/ff4e1a0e52eb35bd91c13aaaf5715ea6bf09bfdc/Docker%20%E5%AE%9E%E8%B7%B5%20-%20v1.1.pdf"
+            file={require('./default.pdf')}
             loading={<Loader spinning={true} />}
             onLoadSuccess={this.onDocumentLoadSuccess}
           >

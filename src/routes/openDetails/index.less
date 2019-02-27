@@ -1,0 +1,80 @@
+@import '../../themes/default.less';
+
+@PrefixCls: openDetails;
+
+.@{PrefixCls}-head {
+  background: #f6f5ec;
+  position: relative;
+  wdith: 100%;
+  &-teacher {
+    position: absolute;
+    bottom: 0.2rem;
+    right: 0.5rem;
+  }
+  &-back {
+    width: 0.5rem;
+    height: 0.5rem;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.@{PrefixCls}-noticeBar {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  background: #f6f6f6;
+  color: @primary-color;
+  &-info {
+    display: flex;
+    align-items: center;
+    & span {
+      margin-right: 20px;
+    }
+  }
+}
+
+.@{PrefixCls}-population {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: white;
+  &-achievement {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 3.5rem;
+    position: relative;
+    &-content {
+      height: 2.5rem;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      text-align: center;
+      div:nth-child(1) {
+        font-size: @smallFontSize;
+      }
+      div:nth-child(2) {
+        font-size: 1rem;
+      }
+      div:nth-child(3) {
+        font-size: @smallFontSize;
+      }
+      img {
+        height: 1rem;
+        width: 1rem;
+      }
+    }
+  }
+}

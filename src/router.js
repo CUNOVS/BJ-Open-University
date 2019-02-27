@@ -192,6 +192,168 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'contacts',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/contacts'));
+              cb(null, require('routes/contacts/'));
+            }, 'contacts');
+          },
+        },
+        {
+          path: 'messageCenter',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/messageCenter'));
+              cb(null, require('routes/messageCenter/'));
+            }, 'messageCenter');
+          },
+        },
+        {
+          path: 'openDetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/openDetails'));
+              cb(null, require('routes/openDetails/'));
+            }, 'openDetails');
+          },
+        },
+        {
+          path: 'homeworkdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/homeworkdetails'));
+              cb(null, require('routes/homeworkdetails/'));
+            }, 'homeworkdetails');
+          },
+        },
+        {
+          path: 'medalList',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/medalList'));
+              cb(null, require('routes/medalList/'));
+            }, 'medalList');
+          },
+        },
+        {
+          path: 'medal',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/medal'));
+              cb(null, require('routes/medal/'));
+            }, 'medal');
+          },
+        },
+        {
+          path: 'achievement',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/achievement'));
+              cb(null, require('routes/achievement/'));
+            }, 'achievement');
+          },
+        },
+        {
+          path: 'achievementdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/achievementdetails'));
+              cb(null, require('routes/achievementdetails/'));
+            }, 'achievementdetails');
+          },
+        },
+        {
+          path: 'teachers',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/teachers'));
+              cb(null, require('routes/teachers/'));
+            }, 'teachers');
+          },
+        },
+        {
+          path: 'group',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/group'));
+              cb(null, require('routes/group/'));
+            }, 'group');
+          },
+        },
+        {
+          path: 'groupdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/groupdetails'));
+              cb(null, require('routes/groupdetails/'));
+            }, 'groupdetails');
+          },
+        },
+        {
+          path: 'attendance',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/attendance'));
+              cb(null, require('routes/attendance/'));
+            }, 'attendance');
+          },
+        },
+        {
+          path: 'attendancedetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/attendancedetails'));
+              cb(null, require('routes/attendancedetails/'));
+            }, 'attendancedetails');
+          },
+        },
+        {
+          path: 'forum',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/forum'));
+              cb(null, require('routes/forum/'));
+            }, 'forum');
+          },
+        },
+        {
+          path: 'forumDetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/forumDetails'));
+              cb(null, require('routes/forumDetails/'));
+            }, 'forumDetails');
+          },
+        },
+        {
+          path: 'replyAll',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/replyAll'));
+              cb(null, require('routes/replyAll/'));
+            }, 'replyAll');
+          },
+        },
+        {
+          path: 'userpage',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/userpage'));
+              cb(null, require('routes/userpage/'));
+            }, 'userpage');
+          },
+        },
+        {
+          path: 'noticeDetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/noticeDetails'));
+              cb(null, require('routes/noticeDetails/'));
+            }, 'noticeDetails');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;
@@ -208,9 +370,7 @@ const Routers = function ({ history, app }) {
   ];
 
   return (
-
-      <Router history={history} routes={routes} />
-
+    <Router history={history} routes={routes} />
   );
 };
 
