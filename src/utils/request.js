@@ -1,4 +1,3 @@
-
 import { hashHistory } from 'react-router';
 import axios from 'axios';
 import qs from 'qs';
@@ -8,7 +7,7 @@ import pathToRegexp from 'path-to-regexp';
 import { Toast } from 'antd-mobile';
 import { _cg } from './cookie';
 
-import { baseURL, userTag } from './config';
+import { baseURL, userTag, token } from './config';
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
@@ -24,7 +23,7 @@ const fetch = (options) => {
     fetchType,
     url,
   } = options;
-  
+
   const appendParams = {
     /*    header: {
           'Access-Control-Allow-Origin': '*',
@@ -32,9 +31,9 @@ const fetch = (options) => {
         } */
   };
   // appendParams[usertoken] = _cg(usertoken)
-  
+
   const cloneData = lodash.cloneDeep({ ...data, ...appendParams });
-  
+
   try {
     let domin = '';
     if (url.match(/[a-zA-z]+:\/\/[^/]*/)) {
@@ -48,11 +47,11 @@ const fetch = (options) => {
         delete cloneData[item.name];
       }
     }
-    url = domin + url;
+    url = domin + url + '/' + token;
   } catch (e) {
     Toast.offline(e.message);
   }
-  
+
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(url, {

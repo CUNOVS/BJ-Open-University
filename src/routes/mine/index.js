@@ -18,10 +18,9 @@ function Mine ({ location, dispatch, mine, app, login }) {
   const { users: { username, useravatar }, isLogin } = app,
     { gridDatas } = mine;
   const handleLogin = () => {
-      dispatch(routerRedux.push({
-        pathname: '/login',
-      }));
-
+    dispatch(routerRedux.push({
+      pathname: '/login',
+    }));
   };
   return (
     <div>
@@ -30,24 +29,41 @@ function Mine ({ location, dispatch, mine, app, login }) {
           <img src={getImages(useravatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-top-content-info`]}>
             <div className={styles[`${PrefixCls}-top-content-info-username`]} onClick={handleLogin}>登录/注册</div>
-            <div className={styles[`${PrefixCls}-top-content-info-chapters`]}
-                 onClick={handlerChangeRouteClick.bind(null, 'medalList', { name: '勋章' }, dispatch)}>
-              <div><Icon type={getLocalIcon('/mine/chapters.svg')} color="#ff9a1b" size="xs" /></div>
-              <div>勋章</div>
-            </div>
+            <Button
+              onClick={handlerChangeRouteClick.bind(null, 'medalList', { name: '勋章' }, dispatch)}
+              type="ghost"
+              inline
+              size="small"
+              style={{ color: '#fff', borderColor: '#ff9a1b', padding: '2px' }}
+              icon={<Icon type={getLocalIcon('/mine/chapters.svg')}
+                inline
+                color="#ff9a1b"
+                size="xs"
+              />
+              }
+            >勋章</Button>
           </div>
         </div>
         <div className={styles[`${PrefixCls}-top-homepage`]}>
-          <div><Icon type={getLocalIcon('/mine/homepage.svg')} color="#fff" size="xs" /></div>
-          <div onClick={handlerChangeRouteClick.bind(this, 'homepage', {}, dispatch)}>个人主页</div>
+          <Button
+            onClick={handlerChangeRouteClick.bind(this, 'homepage', {}, dispatch)}
+            type="ghost"
+            inline
+            size="small"
+            style={{ color: '#fff', borderColor: '#fff', padding: '0 10px' }}
+            icon={<Icon type={getLocalIcon('/mine/homepage.svg')} color="#fff" size="xs" />
+            }
+          >个人主页</Button>
         </div>
       </div>
+      <WhiteSpace />
       <CarouselGrid
         datas={gridDatas}
         dispatch={dispatch}
         hasLine={false}
         handleClick={handleGridClick}
-        isCarousel={false} />
+        isCarousel={false}
+      />
       <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-info`]}>
         <List>

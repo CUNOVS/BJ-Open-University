@@ -17,18 +17,18 @@ const PhotoBox = (props) => (
     <div className={styles[`${PrefixCls}-teacher`]}>
       <span className={styles[`${PrefixCls}-tutorteacher`]}>
       辅导教师：{`${props.tutor}`}
-    </span>
+      </span>
       <span className={styles[`${PrefixCls}-masterteacher`]}>
       责任教师：{`${props.master}`}
-    </span>
+      </span>
     </div>
     {props.hasAttendance ?
       <div className={styles[`${PrefixCls}-attendance`]} onClick={props.attendanceClick}>
         <div className={styles[`${PrefixCls}-attendance-info`]}>
-          <span><Icon type={getLocalIcon('/components/attendance.svg')} color='#22609c' /></span>
+          <span><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span>
           <span>我的考勤</span>
         </div>
-        <Status content='达标' />
+        <Status content="达标" />
       </div>
       :
       ''

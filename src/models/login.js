@@ -3,7 +3,6 @@ import { login, SendValidateCode, PhoneLogin } from 'services/login';
 import { Toast } from 'antd-mobile';
 import modelExtend from 'dva-model-extend';
 import { pageModel } from './common';
-import { GetUnreadMessage } from 'services/querylist';
 import { setLoginIn, postCurrentPosition } from 'utils';
 
 const MD5 = require('md5'),

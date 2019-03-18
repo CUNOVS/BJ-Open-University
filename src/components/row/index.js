@@ -1,16 +1,22 @@
 import styles from './index.less';
 import React from 'react';
-import { List, Icon, Progress, Badge } from 'antd-mobile';
+import { List, Icon, Progress, Button } from 'antd-mobile';
 import Status from 'components/status';
 import CnBadge from 'components/cnBadge';
 import { getErrorImg, getImages, getLocalIcon } from 'utils';
 
-const lessonImg = require('../../themes/images/linshi/lessonBg.jpg');
-const closeImg = require('../../themes/images/linshi/lessonBg2.jpg');
+const lessonImg = require('../../themes/images/linshi/child.png');
+const closeImg = require('../../themes/images/linshi/txjy.png');
+
 const PrefixCls = 'row',
   Item = List.Item,
   Brief = Item.Brief;
-
+const isPass = (grade) => {
+  if (grade >= 60) {
+    return true;
+  } 
+  return false;
+};
 module.exports = {
   /**
    * @author Lowkey
@@ -76,93 +82,116 @@ module.exports = {
         <Item
           thumb={getImages('', 'user')}
           arrow="horizontal"
-          onClick={() => {
-          }}
+          onClick={Click}
         >曹雪芹</Item>
       </List>
     );
   },
 
-  taskRow: (click) => {
-    //任务列表
+  taskRow: (item, click) => {
+    // 任务列表
+    const { title, isToday, endDate, content, icon } = item;
     return (
       <div className={styles[`${PrefixCls}-task`]} onClick={click}>
         <div className={styles[`${PrefixCls}-task-top`]}>
-          <div className={styles[`${PrefixCls}-task-top-title`]}>
-            <span><Icon type={getLocalIcon('/lessontype/icon.svg')} /></span>
-            <span>儿童学习与发展</span>
+          <div className={styles[`${PrefixCls}-task-top-type`]}>
+            成绩要求
           </div>
           <div className={styles[`${PrefixCls}-task-top-time`]}>
-            <span><Icon type={getLocalIcon('/row/time.svg')} color='#ff9a1b' size='xs' /></span>
-            <span style={{ color: '#ff9a1b' }}>05月28日</span>
+            <span><Icon type={getLocalIcon('/row/time.svg')}
+              color={isToday ? '#f34e14' : '#ff9a1b'}
+              size="xxs"
+            /></span>
+            <span style={{ color: isToday ? '#f34e14' : '#ff9a1b' }}>{endDate}</span>
           </div>
         </div>
+        <div className={styles[`${PrefixCls}-task-title`]}>
+          <span><Icon type={getLocalIcon(icon)} /></span>
+          <span>{title}</span>
+        </div>
         <div className={styles[`${PrefixCls}-task-content`]}>
-          作业（第一周）：设计幼儿园班级户外体育活动（10分，考勤活动）
+          {content}
         </div>
       </div>
     );
   },
-  taskLessonRow: (click) => {
-    //全部任务列表
+  taskLessonRow: (item, click) => {
+    // 全部任务列表
+    const { title, endDate, teacher, image } = item;
     return (
       <div className={styles[`${PrefixCls}-tasklesson`]} onClick={click}>
         <div className={styles[`${PrefixCls}-tasklesson-img`]}>
-          <img src={lessonImg} alt="" />
+          <img src={image} alt="" />
         </div>
         <div className={styles[`${PrefixCls}-tasklesson-content`]}>
-          <div className={styles[`${PrefixCls}-tasklesson-content-title`]}>3-6岁儿童学习与发展</div>
-          <div className={styles[`${PrefixCls}-tasklesson-content-teacher`]}>责任教师：彭海蕾</div>
-          <div className={styles[`${PrefixCls}-tasklesson-content-time`]}>结课日期：12月31日</div>
+          <div className={styles[`${PrefixCls}-tasklesson-content-title`]}>{title}</div>
+          <div className={styles[`${PrefixCls}-tasklesson-content-teacher`]}>{`责任教师：${teacher}`}</div>
+          <div className={styles[`${PrefixCls}-tasklesson-content-time`]}>{`结课日期：${endDate}`}</div>
         </div>
       </div>
     );
   },
-  closeLessonRow: (onClick) => {
-    //已开课程列表
+  closeLessonRow: (item, onClick) => {
+    // 已开课程列表
+    const { title, teacher, attendance, grade, image } = item;
     return (
       <div className={styles[`${PrefixCls}-closelesson`]} onClick={onClick}>
         <div className={styles[`${PrefixCls}-closelesson-img`]}>
-          <img src={closeImg} alt="" />
+          <img src={image} alt="" />
         </div>
         <div className={styles[`${PrefixCls}-closelesson-content`]}>
-          <div className={styles[`${PrefixCls}-closelesson-content-title`]}>EM1C002 特许经营导论</div>
-          <div className={styles[`${PrefixCls}-closelesson-content-teacher`]}>责任教师：李刚</div>
+          <div className={styles[`${PrefixCls}-closelesson-content-title`]}>{title}</div>
+          <div className={styles[`${PrefixCls}-closelesson-content-teacher`]}>{`责任教师：${teacher}`}</div>
           <div className={styles[`${PrefixCls}-closelesson-content-info`]}>
-            <div style={{ color: '#1eb259' }}>考勤：合格</div>
-            <div style={{ color: '#1eb259' }}>成绩：86分</div>
+            {attendance ?
+              <div style={{ color: '#1eb259' }}>考勤：达标</div>
+              :
+              <div style={{ color: '#f34e14' }}>考勤：未达标</div>
+            }
+            {
+              <div style={{ color: isPass(grade) ? '#1eb259' : '#f34e14' }}>{`成绩：${grade}`}</div>
+            }
           </div>
         </div>
       </div>
     );
   },
 
-  openingLessonRow: (onClick,onProgressClick) => {
-    //已开课程列表
+  openingLessonRow: (item, onClick, onProgressClick) => {
+    // 已开课程列表
+
+    const { title, teacher, grade, endDate, isEnding, isAttendance, image } = item;
     return (
       <div className={styles[`${PrefixCls}-openinglessonout`]} onClick={onClick}>
         <div className={styles[`${PrefixCls}-openinglesson`]}>
           <div className={styles[`${PrefixCls}-openinglesson-img`]}>
-            <img src={lessonImg} alt="" />
+            <img src={image} alt="" />
           </div>
           <div className={styles[`${PrefixCls}-openinglesson-content`]}>
-            <div className={styles[`${PrefixCls}-openinglesson-content-title`]}>3-6岁儿童学习与发展</div>
-            <div className={styles[`${PrefixCls}-openinglesson-content-teacher`]}>责任教师：彭海蕾</div>
-            <div className={styles[`${PrefixCls}-openinglesson-content-time`]}>结课日期：12月31日</div>
+            <div className={styles[`${PrefixCls}-openinglesson-content-title`]}>{title}</div>
+            <div className={styles[`${PrefixCls}-openinglesson-content-teacher`]}>{`责任教师：${teacher}`}</div>
+            <div className={styles[`${PrefixCls}-openinglesson-content-time`]}>{`结课日期：${endDate}`}</div>
             <div className={styles[`${PrefixCls}-openinglesson-content-type`]}>
-              <div className={styles[`${PrefixCls}-openinglesson-content-type-ending`]}>终</div>
-              <div className={styles[`${PrefixCls}-openinglesson-content-type-attendance`]}>勤</div>
+              {isEnding ? <div className={styles[`${PrefixCls}-openinglesson-content-type-ending`]}>终考课</div> : ''}
+              {isAttendance ?
+                <div className={styles[`${PrefixCls}-openinglesson-content-type-attendance`]}>考勤课</div> : ''}
             </div>
           </div>
         </div>
         <div className={styles[`${PrefixCls}-openinglessonout-progress`]}
-        onClick={onProgressClick}
+          onClick={onProgressClick}
         >
           <div className={styles[`${PrefixCls}-openinglessonout-progress-left`]}>
-            <Progress percent={40} position="normal" appearTransition />
+            <Progress percent={grade}
+              position="normal"
+              barStyle={{ borderColor: isPass(grade) ? '#1eb259' : '#f34e14' }}
+              appearTransition
+            />
           </div>
-          <div className={styles[`${PrefixCls}-openinglessonout-progress-right`]}>
-            40分
+          <div className={styles[`${PrefixCls}-openinglessonout-progress-right`]}
+            style={{ color: isPass(grade) ? '#1eb259' : '#f34e14' }}
+          >
+            {`${grade}分`}
           </div>
         </div>
       </div>
@@ -173,7 +202,7 @@ module.exports = {
     return (
       <div className={styles[`${PrefixCls}-achievement`]} onClick={onClick}>
         <div className={styles[`${PrefixCls}-achievement-img`]}>
-          <img src={getImages()} alt="" />
+          <img src={lessonImg} alt="" />
         </div>
         <div className={styles[`${PrefixCls}-achievement-content`]}>
           <div className={styles[`${PrefixCls}-achievement-content-title`]}>3-6岁儿童学习与发展</div>
@@ -195,7 +224,7 @@ module.exports = {
               <span><Icon type={getLocalIcon('/temporary/homework.svg')} /></span>
               <span>参与集体教学活动</span>
             </div>
-            <Status content='考勤活动' />
+            <Status content="考勤活动" />
           </div>
           <div className={styles[`${PrefixCls}-achievementdetails-bottom`]}>
             <div className={styles[`${PrefixCls}-achievementdetails-bottom-total`]}>总分：10</div>
@@ -208,7 +237,7 @@ module.exports = {
               <span><Icon type={getLocalIcon('/temporary/homework.svg')} /></span>
               <span>设计幼儿园中班谈话活动</span>
             </div>
-            <Status content='考勤活动' />
+            <Status content="考勤活动" />
           </div>
           <div className={styles[`${PrefixCls}-achievementdetails-bottom`]}>
             <div className={styles[`${PrefixCls}-achievementdetails-bottom-total`]}>总分：10</div>
@@ -221,7 +250,7 @@ module.exports = {
               <span><Icon type={getLocalIcon('/temporary/homework.svg')} /></span>
               <span>设计一个集体美术活动</span>
             </div>
-            <Status content='考勤活动' />
+            <Status content="考勤活动" />
           </div>
           <div className={styles[`${PrefixCls}-achievementdetails-bottom`]}>
             <div className={styles[`${PrefixCls}-achievementdetails-bottom-total`]}>总分：10</div>
@@ -234,7 +263,7 @@ module.exports = {
               <span><Icon type={getLocalIcon('/temporary/homework.svg')} /></span>
               <span>设计幼儿园中班科学活动</span>
             </div>
-            <Status content='考勤活动' />
+            <Status content="考勤活动" />
           </div>
           <div className={styles[`${PrefixCls}-achievementdetails-bottom`]}>
             <div className={styles[`${PrefixCls}-achievementdetails-bottom-total`]}>总分：10</div>
@@ -254,7 +283,7 @@ module.exports = {
         <div className={styles[`${PrefixCls}-teachers-content`]}>
           <div className={styles[`${PrefixCls}-teachers-content-top`]}>
             <div className={styles[`${PrefixCls}-teachers-content-top-title`]}>
-              李志
+              3-6岁儿童与发展
             </div>
             <div className={styles[`${PrefixCls}-teachers-content-top-type`]}>
               责任教师
@@ -262,11 +291,13 @@ module.exports = {
           </div>
           <div className={styles[`${PrefixCls}-teachers-content-bottom`]}>
             <div className={styles[`${PrefixCls}-teachers-content-bottom-lesson`]}>
-              手动阀手动阀
+              李志
             </div>
-            <div className={styles[`${PrefixCls}-teachers-content-bottom-button`]}>
-              发消息
-            </div>
+            <Button
+              type="ghost"
+              inline
+              size="small"
+            >发消息</Button>
           </div>
         </div>
       </div>
@@ -275,9 +306,11 @@ module.exports = {
   groupRow: (onClick) => {
     // 小组
     return (
-      <Item extra="成员：5" align="top" multipleLine onClick={onClick}>
-        16、17级学前高起本班 <Brief>3-6岁儿童学习与发展</Brief>
-      </Item>
+      <div className={styles[`${PrefixCls}-group`]}>
+        <Item extra="成员：5" align="top" multipleLine onClick={onClick}>
+          3-6岁儿童学习与发展<Brief>16、17级学前高起本班</Brief>
+        </Item>
+      </div>
     );
   },
 
@@ -298,9 +331,11 @@ module.exports = {
             </div>
           </div>
           <div className={styles[`${PrefixCls}-groupList-content-bottom`]}>
-            <div className={styles[`${PrefixCls}-groupList-content-bottom-button`]}>
-              发消息
-            </div>
+            <Button
+              type="ghost"
+              inline
+              size="small"
+            >发消息</Button>
           </div>
         </div>
       </div>
@@ -308,17 +343,17 @@ module.exports = {
   },
 
   attendanceRow: (onClick) => {
-    //考勤列表
+    // 考勤列表
     return (
       <div className={styles[`${PrefixCls}-attendance`]} onClick={onClick}>
         <div className={styles[`${PrefixCls}-attendance-img`]}>
-          <img src={getImages()} alt="" />
+          <img src={closeImg} alt="" />
         </div>
         <div className={styles[`${PrefixCls}-attendance-content`]}>
           <div className={styles[`${PrefixCls}-attendance-content-title`]}>EM1C002 特许经营导论</div>
-          <div className={styles[`${PrefixCls}-attendance-content-teacher`]}>结课日期：2018.12.31</div>
+          <div className={styles[`${PrefixCls}-attendance-content-time`]}>结课日期：2018.12.31</div>
           <div className={styles[`${PrefixCls}-attendance-content-info`]}>
-            <Status />
+            <Status content="达标" />
           </div>
         </div>
       </div>
@@ -335,11 +370,11 @@ module.exports = {
                 <div className={styles[`${PrefixCls}-topic-title-text`]}>话题: {data.title}</div>
               </div>
               <div>
-                <Icon type={getLocalIcon(`/WKCjob/xiaoxi.svg`)} />{data.number}
+                <Icon type={getLocalIcon('/WKCjob/xiaoxi.svg')} />{data.number}
               </div>
             </div>
             <div className={styles[`${PrefixCls}-topic-info`]}>
-              <img src={getImages('', '')} size='xxs' style={{ marginRight: '10px' }} />
+              <img src={getImages('', '')} size="xxs" style={{ marginRight: '10px' }} />
               <div className={styles[`${PrefixCls}-topic-info-content`]}>
                 <div>
                   <div>{data.name}</div>
@@ -371,7 +406,7 @@ module.exports = {
             <div className={styles[`${PrefixCls}-forumDetails-title`]}>
               <div>{data.time}</div>
               <div>
-                <Icon type={getLocalIcon(`/WKCjob/xiaoxi.svg`)} />回复
+                <Icon type={getLocalIcon('/WKCjob/xiaoxi.svg')} />回复
               </div>
             </div>
 

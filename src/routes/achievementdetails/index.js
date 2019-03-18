@@ -10,7 +10,7 @@ const PrefixCls = 'achievementdetails';
 const AchievementDetails = ({ dispatch, achievementdetails }) => {
   return (
     <div>
-      <Photoheader hasBg={false} dispatch={dispatch} />
+      <Photoheader hasBg={false} dispatch={dispatch} size="lg" />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-head`]}>
           <div className={styles[`${PrefixCls}-outer-head-info`]}>

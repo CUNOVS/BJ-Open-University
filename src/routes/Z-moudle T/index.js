@@ -17,4 +17,4 @@ const Contacts = ({ location, dispatch, contacts }) => {
 
 Contacts.propTypes = {};
 CourseList.defaultProps = {};
-export default Contacts(({ loading, contacts }) => ({ loading, contacts }))(Contacts);
+export default connect(({ loading, contacts }) => ({ loading, contacts }))(Contacts);

@@ -3,10 +3,11 @@
 @PrefixCls: innerhtml;
 
 .@{PrefixCls}-outer {
-  padding:0 20px;
-  font-size: @commonFonetSize;
+  padding: 20px;
+  overflow: hidden;
   line-height: 1.5em;
-  background: #fff;
-  color: @color-text-paragraph;
+  & p, h1, h2, h3, h4, h5, h6, ul, ol {
+    margin: 1em 0;
+  }
 }
 

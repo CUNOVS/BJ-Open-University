@@ -23,7 +23,7 @@ function Nav (props) {
             leftContent=""
             onLeftClick={props.isGoBack ? goBack : null}
             mode="light"
-            icon={props.isGoBack ? <Icon type="left" color='#fff' /> : null}
+            icon={props.isGoBack ? <Icon type="left" color="#fff" /> : null}
             rightContent={props.renderNavRight}
           >{getTitle(props.title)}</NavBar>
         </div>

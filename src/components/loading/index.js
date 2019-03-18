@@ -6,7 +6,7 @@ import styles from './index.less';
 function Css3Loading (props) {
   return (
     <div style={{ display: props.show ? 'block' : 'none' }} >
-      <Icon type={getLocalIcon('/others/cssloading.svg')} />
+      <Icon type={getLocalIcon('/components/cssloading.svg')} />
     </div>
 
   );
@@ -14,7 +14,7 @@ function Css3Loading (props) {
 
 function LoadingFail (props) {
   return (
-    <div><Icon type={getLocalIcon('/others/loadingfail.svg')} /></div>
+    <div><Icon type={getLocalIcon('/components/loadingfail.svg')} /></div>
   );
 }
 

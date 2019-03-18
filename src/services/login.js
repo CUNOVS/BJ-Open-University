@@ -12,4 +12,3 @@ export async function login (data, serverError = false) {
   });
 }
 
-

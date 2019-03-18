@@ -121,7 +121,7 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} hasShadow={true} />
+        <Nav title={name} dispatch={this.props.dispatch} hasShadow />
         <WhiteSpace size="xs" />
         <div>
           <List className={`${PrefixCls}-list`}>

@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import React from 'react';
 import { connect } from 'dva';
-import { Icon, Button,List } from 'components';
+import { Icon, Button, List } from 'components';
 import { getImages, getErrorImg, getLocalIcon, getDefaultBg } from 'utils';
 import Photoheader from 'components/photoheader';
 import { routerRedux } from 'dva/router';
@@ -11,7 +11,7 @@ const PrefixCls = 'homepage',
   Item = List.Item,
   Brief = Item.Brief;
 const data = [
-  { right: <Icon type='right' />, left: '勋章' },
+  { right: <Icon type="right" />, left: '勋章' },
   { right: '北京开放大学', left: '所属学院' },
 ];
 
@@ -22,8 +22,7 @@ function Userpage ({ location, dispatch, homepage, app }) {
     <div style={{ height: '100vh', background: 'white' }}>
       <div className={styles[`${PrefixCls}-top`]}>
         <Photoheader dispatch={dispatch} />
-        <div className={styles[`${PrefixCls}-top-bg`]} style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }}>
-        </div>
+        <div className={styles[`${PrefixCls}-top-bg`]} style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }} />
         <div className={styles[`${PrefixCls}-top-avatar`]}>
           <img src={getImages(useravatar, 'user')} alt="" />
         </div>
@@ -31,7 +30,11 @@ function Userpage ({ location, dispatch, homepage, app }) {
           <div className={styles[`${PrefixCls}-info-username`]}>李志</div>
           <div className={styles[`${PrefixCls}-info-signature`]}>东张西望，一无所长</div>
           <div className={styles[`${PrefixCls}-info-button`]}>
-            发消息
+            <Button
+              type="ghost"
+              inline
+              size="small"
+            >发消息</Button>
           </div>
         </div>
       </div>
@@ -41,8 +44,11 @@ function Userpage ({ location, dispatch, homepage, app }) {
         ))}
       </List>
       <div style={{ padding: '1rem 0', background: 'white' }}>
-        <Button type="ghost" style={{ margin: '0 1rem' }} icon={<img src={require('./man.svg')} />}
-               >添加联系人</Button>
+        <Button size="small"
+          type="ghost"
+          style={{ margin: '0 1rem' }}
+          icon={<Icon color="#22609c" size="xs" type={getLocalIcon('/buttons/man.svg')} />}
+        >添加联系人</Button>
       </div>
     </div>
   );

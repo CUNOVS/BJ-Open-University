@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Nav from 'components/nav';
 import { connect } from 'dva';
-import { Badge, Icon, List } from 'antd-mobile';
-import InnerHtml from 'components/innerhtml';
+import { Icon, List } from 'antd-mobile';
+import Introduction from 'components/introduction';
 import CnBadge from 'components/cnBadge';
 import { getImages } from 'utils';
 import styles from './index.less';
@@ -56,22 +55,18 @@ class Forum extends React.Component {
       <div>
         <Nav title={name} dispatch={this.props.dispatch} />
         <div className={styles[`${PrefixCls}-head`]}>
-          <div>
+          <div className={styles[`${PrefixCls}-head-title`]}>
             学习活动1.1：评价幼儿健康成长状况
           </div>
           <div className={styles[`${PrefixCls}-head-bottom`]}>
             <div>总分:3</div>
             <CnBadge text="考勤活动" background="#ff911b" color="#fff" />
           </div>
-          <div>
-            <InnerHtml
-              data='<div><span style="line-height: 1.231; font-family: 微软雅黑; color: #000000; font-size: small;">《&lt;3-6岁儿童学习与发展指南&gt;之健康领域的目标及要求》带领大家学习了《指南》中3-6岁儿童健康成长的标准。</span></div>' />
-          </div>
+          <Introduction />
         </div>
-
         <div style={{ height: this.state.height, background: 'white' }} ref={el => this.lv = el}>
           <div className={styles[`${PrefixCls}-title`]}>
-            <div><Icon type='down' />话题(1)</div>
+            <div><Icon type="down" />话题(1)</div>
             <div style={{ color: '#1296db' }}>按用户查看帖子</div>
           </div>
 

@@ -20,10 +20,10 @@ const FaceChatBox = (props) => {
 
       </div>
       <div className={styles[`${PrefixCls}-outer-price`]}>
-        {/*<div className={styles[`${PrefixCls}-outer-price-box`]}>*/}
-          {/*<span style={{ color: 'red' }}><Icon type={getLocalIcon('/components/rmb.svg')} size="xxs" /></span>*/}
-          {/*<span style={{ color: 'red', marginLeft: '5px' }}>{props.price}</span>*/}
-        {/*</div>*/}
+        {/* <div className={styles[`${PrefixCls}-outer-price-box`]}> */}
+        {/* <span style={{ color: 'red' }}><Icon type={getLocalIcon('/components/rmb.svg')} size="xxs" /></span> */}
+        {/* <span style={{ color: 'red', marginLeft: '5px' }}>{props.price}</span> */}
+        {/* </div> */}
         <div className={styles[`${PrefixCls}-outer-price-box`]}>
           <span><Icon type={getLocalIcon('/components/people.svg')} size="xxs" /></span>
           <span style={{ marginLeft: '10px' }}>{props.number}</span>

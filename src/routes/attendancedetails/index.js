@@ -18,7 +18,7 @@ function AttendanceDetails ({ location, dispatch, attendancedetails }) {
 
   return (
     <div>
-      <Nav title={name} hasShadow={true} dispatch={dispatch} />
+      <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]}>
         <AttendanceHead />

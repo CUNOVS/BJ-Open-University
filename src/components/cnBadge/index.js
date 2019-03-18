@@ -15,7 +15,8 @@ class CnBadge extends React.Component {
     return (
       <div>
         <div className={styles[`${PrefixCls}-one`]}
-             style={{ background: this.props.background, color: this.props.color }}>
+          style={{ background: this.props.background, color: this.props.color }}
+        >
           {this.props.text}
         </div>
       </div>

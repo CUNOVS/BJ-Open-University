@@ -22,7 +22,6 @@ function TitleBox (props) {
 TitleBox.propTypes = {
   title: PropTypes.string.isRequired,
   sup: PropTypes.string.isRequired,
-  handlerClick: PropTypes.func.isRequired,
 };
 
 TitleBox.defaultProps = {

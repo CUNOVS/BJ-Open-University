@@ -8,6 +8,7 @@ import defaultImg from 'themes/images/default/default.png';
 import defaultUserIcon from 'themes/images/default/userIcon.png';
 import defaultBg from 'themes/images/others/mineBg.png';
 import formsubmit from './formsubmit';
+import { token } from './config';
 
 
 const { userTag: { username, usertoken, userpower, userid, useravatar, usertype } } = config,
@@ -18,7 +19,7 @@ const { userTag: { username, usertoken, userpower, userid, useravatar, usertype 
 const DateChange = function () {
   let date = new Date();
   let week = '日一二三四五六'.charAt(date.getDay());
-  let newDate = `今天是${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${week}`
+  let newDate = `今天是${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${week}`;
   return newDate;
 };
 
@@ -56,7 +57,7 @@ const queryArray = (array, key, keyAlias = 'key') => {
 /**
  *
  * @param path
- * @param type 传一个任意字符串获取头像
+ * @param type 传一个任意字符串获取头像 默认为课程图片
  * @returns {*}
  */
 const getImages = (path = '', type = 'defaultImg') => {
@@ -66,10 +67,10 @@ const getImages = (path = '', type = 'defaultImg') => {
   if (path === '' || !path) {
     return type === 'defaultImg' ? defaultImg : defaultUserIcon;
   }
-  return path.startsWith('http://') || path.startsWith('https://') ? path
-    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path);
+  return path.startsWith('http://') || path.startsWith('https://') ? path + '?token=' + token
+    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path + '?token=' + token);
 };
-/***
+/** *
  * 用户信息默认背景图片
  * @param path
  * @returns {*}

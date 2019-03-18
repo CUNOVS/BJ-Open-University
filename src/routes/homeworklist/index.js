@@ -28,10 +28,10 @@ class HomeworkList extends React.Component {
                   <div className={styles[`${PrefixCls}-part`]}>
                     {
                       data.part && data.part.map((item, i) => {
-                        return <div className={styles[`${PrefixCls}-part-item`]}>
+                        return (<div className={styles[`${PrefixCls}-part-item`]}>
                           <div>{item.title}</div>
                           <div className={styles[`${PrefixCls}-part-item-status`]}>{item.status}</div>
-                        </div>;
+                        </div>);
                       })
                     }
                   </div>

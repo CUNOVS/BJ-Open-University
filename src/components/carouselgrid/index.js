@@ -6,12 +6,16 @@ const PrefixCls = 'carouselgrid';
 const CarouselGrid = (props) => {
   return (
     <div className={styles[`${PrefixCls}`]}>
-      <Grid data={props.datas} isCarousel={props.isCarousel} hasLine={props.hasLine} onClick={(data, index) => {
-        const param = {
-          ...data,
-        };
-        props.handleClick(param, props.dispatch);
-      }} />
+      <Grid data={props.datas}
+        isCarousel={props.isCarousel}
+        hasLine={props.hasLine}
+        onClick={(data, index) => {
+          const param = {
+            ...data,
+          };
+          props.handleClick(param, props.dispatch);
+        }}
+      />
     </div>
   );
 };

@@ -1,12 +1,16 @@
 @PrefixCls: forum;
 
 .@{PrefixCls}-head {
-  padding: 0.4rem;
+  padding: 30px;
   background: white;
-  font-size: @titleFontSize;
-  color: @color-text-base;
-  font-weight: 600;
-  div:nth-child(2) {
+
+  &-title{
+    font-weight: 600;
+    font-size: @titleFontSize;
+    color: @color-text-base;
+  }
+
+  &-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,17 +18,7 @@
     color: @color-text-paragraph;
     font-size: @mediumFontSize;
   }
-  div:nth-child(3) {
-    font-size: 0.28rem;
-    font-weight: 400;
-    line-height: 0.5rem;
-    text-overflow: -o-ellipsis-lastline;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-  }
+
 }
 
 .@{PrefixCls}-title {

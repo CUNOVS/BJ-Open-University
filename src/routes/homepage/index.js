@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import React from 'react';
 import { connect } from 'dva';
-import { Icon } from 'components';
+import { Icon, Button } from 'components';
 import { getImages, getErrorImg, getLocalIcon, getDefaultBg } from 'utils';
 import Photoheader from 'components/photoheader';
 import { routerRedux } from 'dva/router';
@@ -21,8 +21,8 @@ function HomePage ({ location, dispatch, homepage, app }) {
         <Photoheader dispatch={dispatch} />
         <div style={{ overflow: 'hidden' }}>
           <div className={styles[`${PrefixCls}-top-bg`]}
-               style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }}>
-          </div>
+            style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }}
+          />
         </div>
         <div className={styles[`${PrefixCls}-top-avatar`]}>
           <img src={getImages(useravatar, 'user')} alt="" />
@@ -30,9 +30,14 @@ function HomePage ({ location, dispatch, homepage, app }) {
         <div className={styles[`${PrefixCls}-info`]}>
           <div className={styles[`${PrefixCls}-info-username`]}>深绘里</div>
           <div className={styles[`${PrefixCls}-info-signature`]}>东张西望，一无所长</div>
-          <div className={styles[`${PrefixCls}-info-button`]}
-               onClick={handlerChangeRouteClick.bind(this, 'setup', { name: '编辑' }, dispatch)}>
-            编辑个人信息
+
+          <div className={styles[`${PrefixCls}-info-button`]}>
+            <Button
+              onClick={handlerChangeRouteClick.bind(this, 'setup', { name: '编辑' }, dispatch)}
+              type="ghost"
+              inline
+              size="small"
+            >编辑个人信息</Button>
           </div>
         </div>
       </div>
@@ -40,7 +45,6 @@ function HomePage ({ location, dispatch, homepage, app }) {
         <List className="my-list">
           <Item thumb={<Icon type={getLocalIcon('/sprite/studentID.svg')} />} extra={'a9527'}>学号</Item>
           <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={'example@outlook.com'}>Email</Item>
-          <Item thumb={<Icon type={getLocalIcon('/sprite/school.svg')} />} extra={'北京开放大学'}>所属分校</Item>
         </List>
       </div>
     </div>

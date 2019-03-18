@@ -25,7 +25,7 @@ class WeekBox extends React.Component {
       <div className={styles[`${PrefixCls}-population`]}>
         <div className={styles[`${PrefixCls}-firstLine`]}>
           <div className={styles[`${PrefixCls}-firstLine-title`]}>
-            <span><Icon type={getLocalIcon('/components/attendance.svg')} color='#22609c' /></span>
+            <span><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span>
             <span> 第一周</span>
           </div>
           <div className={styles[`${PrefixCls}-firstLine-time`]}>2018.9.18至2018.9.25</div>
@@ -48,7 +48,7 @@ class WeekBox extends React.Component {
         </div>
         <div className={styles[`${PrefixCls}-bottom`]}>
           <div>周出勤天数:4</div>
-          <Stauts content='已达标' />
+          <Stauts content="已达标" />
         </div>
       </div>
     );

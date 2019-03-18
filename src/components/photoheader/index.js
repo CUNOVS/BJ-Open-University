@@ -16,7 +16,6 @@ const PrefixCls = 'photoheader';
 class PhotoHeader extends React.Component {
   constructor (props) {
     super();
-
   }
 
   render () {
@@ -27,9 +26,10 @@ class PhotoHeader extends React.Component {
     return (
       <div className={styles[`${PrefixCls}-transparentouter`]}>
         <div className={styles[`${PrefixCls}-transparentouter-backBtn`]}
-             style={this.props.hasBg ? {} : { background: 'transparent' }}
-             onClick={hanleBackClick}>
-          <Icon style={{ verticalAlign: 'middle' }} type='left' color='#fff' />
+          style={this.props.hasBg ? {} : { background: 'transparent' }}
+          onClick={hanleBackClick}
+        >
+          <Icon style={{ verticalAlign: 'middle' }} type="left" size={this.props.size} color="#fff" />
         </div>
         <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]}>
           {this.props.children}
@@ -42,6 +42,7 @@ class PhotoHeader extends React.Component {
 PhotoHeader.defaultProps = {
   name: '',
   hasBg: true,
+  size: 'md',
 };
 PhotoHeader.propTypes = {
   dispatch: PropTypes.func.isRequired,

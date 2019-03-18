@@ -14,7 +14,7 @@ function Container (props) {
     <div className={styles[`${PrefixCls}-outer`]}>
       <div className={styles[`${PrefixCls}-outer-title`]}>
         <div>{props.title}</div>
-        <span onClick={props.handlerClick }>更多></span>
+        <span onClick={props.handlerClick}>更多></span>
       </div>
       <div className={styles[`${PrefixCls}-outer-children`]}>{props.children}</div>
     </div>

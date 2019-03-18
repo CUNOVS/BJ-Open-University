@@ -1,7 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: {  userLogout } } = config;
-
+const { api: { userLogout } } = config;
 
 
 export async function logout () {
@@ -10,5 +9,4 @@ export async function logout () {
     method: 'get',
   });
 }
-
 

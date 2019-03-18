@@ -53,7 +53,7 @@ class Login extends React.Component {
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       userKey = 'usrMail',
-      powerKey = 'usrPwd'
+      powerKey = 'usrPwd';
     return (
       <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: `url(${bgs})` }}>
         <div className={styles[`${PrefixCls}-container-goback`]} onClick={this.handleBack}>
@@ -64,21 +64,21 @@ class Login extends React.Component {
             <WingBlank size="md">
               <div className={styles[`${PrefixCls}-phoneform-phonebox`]}>
                 <InputItem placeholder="用户名"
-                           name="phoneNum"
-                           onFocus={this.moveInput.bind(this)}
-                           {...getFieldProps(userKey, {
-                             initialValue: _cg(userKey),
-                             rules: [{ required: true, message: '用户名必须输入' }, {
-                               min: 2,
-                               message:
+                  name="phoneNum"
+                  onFocus={this.moveInput.bind(this)}
+                  {...getFieldProps(userKey, {
+                    initialValue: _cg(userKey),
+                    rules: [{ required: true, message: '用户名必须输入' }, {
+                      min: 2,
+                      message:
                                  '用户名小于2个字符',
-                             }],
-                           })}
-                           clear
-                           error={!!getFieldError(userKey)}
-                           onErrorClick={() => {
-                             Toast.fail(getFieldError(userKey));
-                           }}
+                    }],
+                  })}
+                  clear
+                  error={!!getFieldError(userKey)}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError(userKey));
+                  }}
                 >
                   <div style={{
                     backgroundImage: `url(${user})`,
@@ -126,8 +126,8 @@ class Login extends React.Component {
                 {
                   this.props.login.buttonState ? (
                     <Button type="primary"
-                            className="am-button-borderfix"
-                            onClick={this.onSubmit.bind(this)}
+                      className="am-button-borderfix"
+                      onClick={this.onSubmit.bind(this)}
                     >
                       登录
                     </Button>

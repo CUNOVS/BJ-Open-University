@@ -1,5 +1,5 @@
-/*WKC
-通知列表转跳的通知详情*/
+/* WKC
+通知列表转跳的通知详情 */
 import React from 'react';
 import Nav from 'components/nav';
 import { connect } from 'dva';

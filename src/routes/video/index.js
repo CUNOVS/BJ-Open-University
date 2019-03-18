@@ -31,26 +31,13 @@ class Video extends React.Component {
       element: video,
     });
     if (video.requestFullscreen) {
-
       video.requestFullscreen();
-
-    }
-
-    else if (video.mozRequestFullScreen) {
-
+    } else if (video.mozRequestFullScreen) {
       video.mozRequestFullScreen();
-
-    }
-
-    else if (video.msRequestFullscreen) {
-
+    } else if (video.msRequestFullscreen) {
       video.msRequestFullscreen();
-
-    }
-
-    else if (video.webkitRequestFullscreen) {
+    } else if (video.webkitRequestFullscreen) {
       video.webkitRequestFullScreen();
-
     }
   }
 
@@ -61,26 +48,13 @@ class Video extends React.Component {
   tetxClick = (video) => {
     console.log(video);
     if (video.requestFullscreen) {
-
       video.requestFullscreen();
-
-    }
-
-    else if (video.mozRequestFullScreen) {
-
+    } else if (video.mozRequestFullScreen) {
       video.mozRequestFullScreen();
-
-    }
-
-    else if (video.msRequestFullscreen) {
-
+    } else if (video.msRequestFullscreen) {
       video.msRequestFullscreen();
-
-    }
-
-    else if (video.webkitRequestFullscreen) {
+    } else if (video.webkitRequestFullscreen) {
       video.webkitRequestFullScreen();
-
     }
   };
 
@@ -104,16 +78,16 @@ class Video extends React.Component {
       <div>
         <Nav title={name} dispatch={this.props.dispatch} />
         <video key={1}
-               ref={el => this.video = el}
-               style={{ objectFit: 'contain' }}
-               width="100%"
-               preload="none"
-               poster={pic}
-               src={video}
-               controlsList="nodownload"
-               controls="controls"
+          ref={el => this.video = el}
+          style={{ objectFit: 'contain' }}
+          width="100%"
+          preload="none"
+          poster={pic}
+          src={video}
+          controlsList="nodownload"
+          controls="controls"
         />
-        <TitleBox title='视频课件' sup='' />
+        <TitleBox title="视频课件" sup="" />
         {cnIsArray(data) && data.map((data, i) => {
           return <LessonItem data={data} dispatch={this.props.dispatch} />;
         })}

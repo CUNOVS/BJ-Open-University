@@ -1,5 +1,5 @@
-/*WKC
-2018.10.11 17:52*/
+/* WKC
+2018.10.11 17:52 */
 /**
  * @author Lowkey
  * @date 2019/2/18
@@ -8,20 +8,18 @@
 import React from 'react';
 import styles from './index.less';
 import { connect } from 'dva';
+import { Tabs, WhiteSpace, Badge, Icon, Toast, PullToRefresh } from 'components';
 import TitleBox from 'components/titlecontainer';
-import { Tabs, WhiteSpace, Badge, Icon, Toast } from 'components';
 import LessonItem from 'components/lessonitem';
 import Introduction from 'components/introduction';
 import CourseList from 'components/courselist';
 import InnerHtml from 'components/innerhtml';
 import ReactDOM from 'react-dom';
-import { myNoteRow } from 'components/row';
-import { getOffsetTopByBody, getLocalIcon } from 'utils';
+import { getOffsetTopByBody, getLocalIcon, getImages } from 'utils';
 import { handlerChangeRouteClick } from 'utils/commonevents';
-import Photo from 'components/photo';
-import pic from './pic.jpg';
 import Photoheader from 'components/photoheader';
 import PhotoBox from 'components/photobox';
+import NoContent from 'components/nocontent';
 
 const PrefixCls = 'lessondetails';
 const tabs = [
@@ -245,8 +243,7 @@ class LessonDetails extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      height: cnhtmlHeight,
-      tabOffset: 0,
+      pullHeight: cnhtmlHeight,
     };
   }
 
@@ -255,40 +252,54 @@ class LessonDetails extends React.Component {
   }
 
   componentDidMount () {
-    const element = ReactDOM.findDOMNode(this.vl),
-      tabs = ReactDOM.findDOMNode(this.tabs),
-      currentHeight = getOffsetTopByBody(element);
-    console.log(currentHeight);
+    const hei = this.state.pullHeight - getOffsetTopByBody(ReactDOM.findDOMNode(this.ptr));
+    this.timer = setTimeout(() => {
+      this.setState({
+        pullHeight: hei,
+      });
+    }, 100);
+  }
 
-    this.setState({
-      height: cnhtmlHeight - currentHeight - 20,
-      tabOffset: getOffsetTopByBody(tabs),
-    });
+  componentWillUnmount () {
+    clearTimeout(this.timer);
   }
 
   render () {
-    const { name = '' } = this.props.location.query;
+    const { header = '' } = this.props.location.query,
+      { pathname } = this.props.location,
+      { data: { id = '', name = '', summary = '', summaryformat = 1, master = {}, tutor = {}, lessonImage, guide, resources, activityIndex }, refreshing } = this.props.lessondetails,
+      isLoading = this.props.loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/queryDetails`];
     const handlerChange = (key) => {
         if (key.join() * 1 > 1) {
           Toast.fail('该课程还未开放');
         }
       },
-      props = {
-        height: this.state.height,
+      onRefresh = () => {
+        this.props.dispatch({
+          type: 'lessondetails/queryDetails',
+          payload: {
+            refreshing: true,
+            courseid: 5,
+            userid: 7,
+          },
+        });
       };
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
         <Photoheader dispatch={this.props.dispatch} />
-        <PhotoBox bg={pic} master="彭海蕾" tutor="韩世梅"
-                  attendanceClick={handlerChangeRouteClick.bind(null, 'attendancedetails', { name: '考勤详情' }, this.props.dispatch)} />
+        <PhotoBox
+          bg={getImages(lessonImage)}
+          master={master.fullname}
+          tutor={tutor.fullname}
+          attendanceClick={handlerChangeRouteClick.bind(null, 'attendancedetails', { name: '考勤详情' }, this.props.dispatch)}
+        />
         <div className={styles[`${PrefixCls}-tagbox`]}>
           <Tabs
             tabs={tabs}
-            ref={el => this.tabs = el}
-            tabBarActiveTextColor='#22609c'
+            tabBarActiveTextColor="#22609c"
             tabBarInactiveTextColor="#b7b7b7"
             tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
-            initialPage={1}
+            initialPage={activityIndex > 0 ? 1 : 0}
             onChange={(tab, index) => {
               console.log('onChange', index, tab);
             }}
@@ -296,25 +307,64 @@ class LessonDetails extends React.Component {
               console.log('onTabClick', index, tab);
             }}
           >
-            <div ref={el => this.vl = el} className={styles[`${PrefixCls}-lessonInfo`]}
-                 style={{ height: this.state.height }}>
-              <WhiteSpace size='xs' />
-              <div className={styles[`${PrefixCls}-lessonInfo-title`]}>20180903 3-6岁儿童学习与发展</div>
-              <TitleBox title='课程简介' sup='' />
-              <Introduction />
-              <WhiteSpace size='xs' />
-              <TitleBox title='考勤要求' sup='' />
-              <InnerHtml
-                data='要求学生在每周周日晚12点之前登陆学习平台完成所有学习活动，如果有两周不能按时完成活动，则视为自动退课，退课的学生不计成绩。如果因特殊事由无法按时登陆平台完成学习活动，可以及时向辅导老师请假，但每人只有一次请假机会。' />
-              <div>
-                {cnIsArray(section0) && section0.map((data, i) => {
-                  return <LessonItem data={data} dispatch={this.props.dispatch}/>;
-                })}
-              </div>
-            </div>
-            <div style={{ height: this.state.height }}>
-              <CourseList data={row} dispatch={this.props.dispatch} handlerChange={handlerChange} />
-            </div>
+            <PullToRefresh
+              damping={60}
+              ref={el => this.ptr = el}
+              style={{
+                height: this.state.pullHeight,
+                overflow: 'auto',
+              }}
+              indicator={{ deactivate: '上拉可以刷新' }}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            >
+              {isLoading ?
+                <NoContent />
+                :
+                <div className={styles[`${PrefixCls}-lessonInfo`]}>
+                  <WhiteSpace size="xs" />
+                  <div className={styles[`${PrefixCls}-lessonInfo-title`]}>{name}</div>
+                  {
+                    summaryformat ?
+                      <div>
+                        <TitleBox title="课程简介" sup="" />
+                        <Introduction data={summary} />
+                      </div>
+                      :
+                      ''
+                  }
+                  <WhiteSpace size="xs" />
+                  <TitleBox title="考勤要求" sup="" />
+                  <InnerHtml />
+                  <WhiteSpace size="lg" />
+                  <div>
+                    {cnIsArray(guide) && guide.map((data, i) => {
+                      return <LessonItem key={data.id} data={data} dispatch={this.props.dispatch} />;
+                    })}
+                  </div>
+                </div>}
+            </PullToRefresh>
+            <PullToRefresh
+              damping={60}
+              ref={el => this.ptr = el}
+              style={{
+                height: this.state.pullHeight,
+                overflow: 'auto',
+              }}
+              indicator={{ deactivate: '上拉可以刷新' }}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            >
+              {isLoading ?
+                <NoContent />
+                : <div>
+                  <CourseList
+                    data={resources}
+                    activityIndex={activityIndex}
+                    dispatch={this.props.dispatch}
+                    handlerChange={handlerChange} />
+                </div>}
+            </PullToRefresh>
           </Tabs>
         </div>
       </div>

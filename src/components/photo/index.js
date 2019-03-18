@@ -6,7 +6,7 @@ import { getErrorImg, getImages, getLocalIcon } from 'utils';
 
 const Item = List.Item,
   Brief = Item.Brief,
-  PrefixCls='photo'
+  PrefixCls = 'photo';
 
 const Photo = (props) => (
   <div>

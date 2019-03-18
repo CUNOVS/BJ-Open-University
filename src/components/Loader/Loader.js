@@ -14,34 +14,34 @@ const Loader = ({ spinning }) => {
       <div className={styles.text}>Loading...</div>
       <div className={styles.horizontal}>
         <div className={styles.circlesup}>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
         </div>
         <div className={styles.circlesdwn}>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
         </div>
       </div>
       <div className={styles.vertical}>
         <div className={styles.circlesup}>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
         </div>
         <div className={styles.circlesdwn}>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
+          <div className={styles.circle} />
         </div>
       </div>
     </div>

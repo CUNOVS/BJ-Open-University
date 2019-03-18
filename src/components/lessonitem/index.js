@@ -4,26 +4,26 @@
  * @Description:
  */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { List } from 'antd-mobile';
+import propTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
-import { getOffsetTopByBody, getLocalIcon } from 'utils';
+import { getOffsetTopByBody, getLocalIcon, getImages } from 'utils';
 import InnerHtml from 'components/innerhtml';
+import Checkbox from 'components/checkbox';
 import styles from './index.less';
 
-const Item = List.Item;
-const LessonItem = (props) => {
+const PrefixCls = 'lessonitem';
 
-  const { icon, title, type, listType = 'list' } = props.data,
-    handlerCourseClick = ({ type, title = '' }) => {
-      if (type === 'homework') {
+const LessonItem = (props) => {
+  const { modname, name, modicon, description, url, uservisible, instance, id, state, tracking } = props.data,
+    handlerCourseClick = ({ modname, title = '' }) => {
+      if (modname === 'homework') {
         props.dispatch(routerRedux.push({
           pathname: '/homeworkdetails',
           query: {
             name: title,
           },
         }));
-      } else if (type === 'pdf') {
+      } else if (modname === 'pdf') {
         // cnOpen(url);
         props.dispatch(routerRedux.push({
           pathname: '/readpdf',
@@ -31,14 +31,14 @@ const LessonItem = (props) => {
             name: title,
           },
         }));
-      } else if (type === 'video') {
+      } else if (modname === 'video') {
         props.dispatch(routerRedux.push({
           pathname: '/video',
           query: {
             name: title,
           },
         }));
-      } else if (type === 'huodong') {
+      } else if (modname === 'huodong') {
         props.dispatch(routerRedux.push({
           pathname: '/forum',
           query: {
@@ -46,20 +46,39 @@ const LessonItem = (props) => {
           },
         }));
       }
+    },
+    handlerCheckboxClick = (e) => {
+      e.stopPropagation();
     };
-
-  if (listType === 'list') {
+  if (modname !== 'label') {
     return (
-      <div className={styles.outer}>
-        <Item
-          thumb={icon}
-          onClick={handlerCourseClick.bind(null, props.data)}
-        ><span>{title}</span></Item>
+      <div className={styles[`${PrefixCls}-outer`]}>
+        <div className={styles[`${PrefixCls}-outer-top`]}>
+          <div className={styles[`${PrefixCls}-outer-top-icon`]}>
+            <img src={getImages(modicon)} alt="" />
+          </div>
+          <div className={styles[`${PrefixCls}-outer-top-content`]}>
+            <div className={styles[`${PrefixCls}-outer-top-content-title`]}>
+              {name}
+            </div>
+            {
+              tracking > 0
+                ?
+                <div className={styles[`${PrefixCls}-outer-top-content-check`]}>
+                  <Checkbox state={state} tracking={tracking} handlerClick={handlerCheckboxClick} />
+                </div>
+                : ''
+            }
+          </div>
+        </div>
+        {description ? <div className={styles[`${PrefixCls}-outer-describe`]}>
+          <div dangerouslySetInnerHTML={{ __html: description }} />
+        </div> : ''}
       </div>
     );
-  } else if (listType === 'html') {
+  } else if (modname === 'label') {
     return (
-      <div className={styles.label}><InnerHtml data={title} /></div>
+      <InnerHtml data={description} />
     );
   }
 };

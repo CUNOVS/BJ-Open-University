@@ -60,9 +60,9 @@ export default modelExtend(model, {
       yield put({
         type: 'updateState',
         payload: {
-          data: data,
-          content: content,
-          title: title,
+          data,
+          content,
+          title,
         },
       });
     },

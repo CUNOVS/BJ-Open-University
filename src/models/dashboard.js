@@ -28,7 +28,7 @@ export default modelExtend(model, {
       yield put({
         type: 'updateState',
         payload: {
-          bannerNotice: bannerNotice,
+          bannerNotice,
         },
       });
     },

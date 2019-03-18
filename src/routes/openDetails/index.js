@@ -33,13 +33,13 @@ class OpenDetails extends React.Component {
     return (
       <div style={{ height: '100vh', background: 'white' }}>
         <Photoheader dispatch={this.props.dispatch} />
-        <Photobox hasAttendance={false} tutor='刘月玥' master='赵杨' bg={pic} />
+        <Photobox hasAttendance={false} tutor="刘月玥" master="赵杨" bg={pic} />
         <div ref={el => this.lv = el} className={styles[`${PrefixCls}-noticeBar`]}>
           <div className={styles[`${PrefixCls}-noticeBar-info`]}>
             <span><Icon type={getLocalIcon('/components/book.svg')} /></span>
             <span>{data.information}</span>
           </div>
-          <Status content='已结束' status={0} />
+          <Status content="已结束" status={0} />
         </div>
         <div className={styles[`${PrefixCls}-population`]}>
           <div style={{ backgroundImage: `url(${Cengji})` }} className={styles[`${PrefixCls}-population-achievement`]}>

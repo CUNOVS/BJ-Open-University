@@ -8,19 +8,21 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "cheerio": "^1.0.0-rc.2",
+    "classnames": "^2.2.5",
     "crypto-js": "^3.1.9-1",
     "crypto-md5": "^1.0.0",
     "dva": "^1.2.0",
     "dva-loading": "^0.2.0",
     "ejs-loader": "^0.3.0",
+    "escape-string-regexp": "^1.0.5",
     "exif-js": "^2.3.0",
-    "express": "^4.16.4",
     "js-beautify": "^1.6.14",
     "js-cookie": "^2.2.0",
     "jsonp": "^0.2.1",
     "less-vars-to-js": "^1.1.2",
     "lodash": "^4.17.4",
     "md5": "^2.2.1",
+    "mime": "^2.4.0",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^1.7.0",
     "prop-types": "^15.5.10",
@@ -30,9 +32,11 @@
     "react-fileupload": "^2.4.0",
     "react-helmet": "^5.1.3",
     "react-pdf": "^3.0.0",
+    "react-swipes": "^1.1.0",
     "react-wx-images-viewer": "^1.0.6",
     "redux": "^4.0.0",
-    "superagent": "^4.0.0"
+    "superagent": "^4.0.0",
+    "video-react": "^0.13.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -52,8 +56,6 @@
     "eslint-plugin-react": "^7.1.0",
     "html-webpack-plugin": "^2.29.0",
     "postcss-pxtorem": "^4.0.1",
-    "react-router-dom": "^4.3.1",
-    "react-transition-group": "^2.5.2",
     "redbox-react": "^1.2.10",
     "roadhog": "^1.2.1"
   },
@@ -67,17 +69,7 @@
     "build:dll": "roadhog buildDll",
     "build:new": "node version && roadhog build"
   },
-  "description": "运行前要将\r  \"react-swipes\": \"^1.1.0\",\r     \"react-wx-images-viewer\": \"^0.0.1\",\r     2个插件删除",
-  "main": ".roadhogrc.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CUNOVS/BJ-Open-University.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CUNOVS/BJ-Open-University/issues"
-  },
-  "homepage": "https://github.com/CUNOVS/BJ-Open-University#readme"
+  "theme": {
+    "hd": "2px"
+  }
 }

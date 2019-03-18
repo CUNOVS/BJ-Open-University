@@ -16,7 +16,7 @@ function Achievement ({ location, dispatch, achievement }) {
 
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title="我的成绩" hasShadow={true} dispatch={dispatch} />
+      <Nav title="我的成绩" hasShadow dispatch={dispatch} />
       <div>
         <WhiteSpace />
         {achievementRow(handlerChangeRouteClick.bind(null, 'achievementdetails', { name: '成绩详情' }, dispatch))}

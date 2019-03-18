@@ -39,13 +39,15 @@ class Purchase extends React.Component {
     let userMessage;
     if (this.props.lessonType === 'attend') {
       userMessage = (<div
-        className={classNames(styles[`${PrefixCls}-butt-button`], { [styles.back]: this.state.yep })}>
+        className={classNames(styles[`${PrefixCls}-butt-button`], { [styles.back]: this.state.yep })}
+      >
         <div className={styles[`${PrefixCls}-collect`]}>
           <div><span><Icon type={getLocalIcon('/buttons/collection.svg')} /></span></div>
           <div><span>收藏</span></div>
         </div>
         <div className={styles[`${PrefixCls}-attend`]}
-             onClick={this.participant.bind(this)}>{this.state.yep ? '立即参加' : '已成功加入'}</div>
+          onClick={this.participant.bind(this)}
+        >{this.state.yep ? '立即参加' : '已成功加入'}</div>
       </div>);
     } else if (this.props.lessonType === 'pay') {
       userMessage = (<div className={styles[`${PrefixCls}-butt-inHalf`]}>
@@ -62,9 +64,9 @@ class Purchase extends React.Component {
       userMessage = '';
     }
     return (
-        <div className={styles[`${PrefixCls}-butt`]}>
-          {userMessage}
-        </div>
+      <div className={styles[`${PrefixCls}-butt`]}>
+        {userMessage}
+      </div>
     );
   }
 }

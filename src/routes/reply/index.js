@@ -1,7 +1,7 @@
-import { Component } from 'react'
-import { createForm } from 'rc-form'
-import { connect } from 'dva'
-import Nav from 'components/nav'
+import { Component } from 'react';
+import { createForm } from 'rc-form';
+import { connect } from 'dva';
+import Nav from 'components/nav';
 import {
   List,
   InputItem,
@@ -9,20 +9,20 @@ import {
   Button,
   Toast,
   WhiteSpace,
-} from 'components'
-import styles from './index.less'
+} from 'components';
+import styles from './index.less';
 
 
-const PrefixCls = 'reply'
+const PrefixCls = 'reply';
 
 class Reply extends Component {
   changeValue = (obj) => {
     for (let i in obj) {
       if (typeof (obj[i]) === 'string') {
-        obj[i] = replaceSystemEmoji(obj[i])
+        obj[i] = replaceSystemEmoji(obj[i]);
       }
     }
-    return obj
+    return obj;
   }
 
   onSubmit = () => {
@@ -32,31 +32,30 @@ class Reply extends Component {
       if (!error) {
         const data = {
           ...this.props.form.getFieldsValue(),
-        }
+        };
         this.props.dispatch({
           type: 'opinion/sendOpinion',
           payload: {
             ...data,
           },
-        })
-
+        });
       } else {
-        Toast.fail('意见必须输入')
+        Toast.fail('意见必须输入');
       }
-    })
+    });
   }
   renderRight = () => {
     return (
       <div className={styles[`${PrefixCls}-sendbutton`]}>发送</div>
-    )
+    );
   }
   render () {
     const { name = '' } = this.props.location.query,
-      { getFieldProps, getFieldError } = this.props.form
+      { getFieldProps, getFieldError } = this.props.form;
 
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} renderNavRight={this.renderRight()}/>
+        <Nav title={name} dispatch={this.props.dispatch} renderNavRight={this.renderRight()} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
             <List.Item className={styles[`${PrefixCls}-outer-content`]}>
@@ -73,11 +72,11 @@ class Reply extends Component {
           </form>
         </div>
       </div>
-    )
+    );
   }
 }
 
 export default connect(({ loading, reply }) => ({
   loading,
   reply,
-}))(createForm()(Reply))
+}))(createForm()(Reply));

@@ -354,6 +354,15 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'conversation',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/conversation'));
+              cb(null, require('routes/conversation/'));
+            }, 'conversation');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

@@ -17,6 +17,12 @@
   color: @color-text-paragraph;
 }
 
+.textOverflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .img {
   width: 220px;
   height: 180px;
@@ -35,7 +41,7 @@
     }
   }
   &-title {
-    font-size: @commonFonetSize;
+    font-size: @smallFontSize;
     font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -85,38 +91,56 @@
 // taskRow Start
 
 .@{PrefixCls}-task {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-radius: @radius-lg;
-  box-shadow: 0 0 20px #ddd;
-  margin-bottom: 20px;
+  -webkit-box-shadow: @list-shadow;
+  -moz-box-shadow: @list-shadow;
+  box-shadow: @list-shadow;
+  margin-bottom: @list-bottom;
 
   &-top {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    &-title {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      .listTitle;
-      flex-basis: 70%;
-      & span {
-        margin-right: 10px;
-      }
+    &-type {
+      font-size: 24px;
+      background: #00c9ea;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: @radius-xs;
     }
-
     &-time {
       display: flex;
       align-items: center;
+      font-size: 26px;
       .listContent;
       & span {
-        margin-left: 10px;
+        margin-left: 5px;
       }
+    }
+  }
+  &-title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    .listTitle;
+    & span:first-child {
+      margin-right: 10px;
+    }
+    & span:nth-child(2) {
+      flex-grow: 1;
+      .listTitle;
     }
   }
   &-content {
     .listContent;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 
@@ -125,14 +149,15 @@
 //taskLesson Start
 
 .@{PrefixCls}-tasklesson {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-radius: @radius-lg;
-  box-shadow: 0 0 20px #ddd;
-  margin-bottom: 20px;
+  -webkit-box-shadow: @list-shadow;
+  -moz-box-shadow: @list-shadow;
+  box-shadow: @list-shadow;
+  margin-bottom: @list-bottom;
   display: flex;
   &-img {
-    flex-basis: 30%;
     margin-right: 20px;
     & img {
       .img;
@@ -141,14 +166,16 @@
   &-content {
     display: flex;
     width: 100%;
-    flex-basis: 70%;
     flex-direction: column;
     justify-content: space-around;
+    .textOverflow;
     &-title {
       .listTitle;
+      .textOverflow;
     }
     &-teacher, &-time {
       .listContent;
+      .textOverflow;
     }
   }
 }
@@ -158,10 +185,14 @@
 //closeLesson Start
 
 .@{PrefixCls}-closelesson {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
-  border-bottom: 1px solid @border-color-base;
+  //border-bottom: 1px solid @border-color-base;
+  -webkit-box-shadow: @list-shadow;
+  -moz-box-shadow: @list-shadow;
+  box-shadow: @list-shadow;
   display: flex;
+  margin-bottom: 20px;
   &-img {
     flex-basis: 30%;
     margin-right: 20px;
@@ -174,11 +205,14 @@
     flex-basis: 70%;
     flex-direction: column;
     justify-content: space-around;
+    .textOverflow;
     &-title {
       .listTitle;
+      .textOverflow;
     }
     &-teacher {
       .listContent;
+      .textOverflow;
     }
     &-info {
       display: flex;
@@ -194,24 +228,26 @@
 .@{PrefixCls}-openinglessonout {
   padding: 30px 20px 10px;
   background: #fff;
-  border-bottom: 1px solid @border-color-base;
+  //border-bottom: 1px solid @border-color-base;
+  -webkit-box-shadow: @list-shadow;
+  -moz-box-shadow: @list-shadow;
+  box-shadow: @list-shadow;
   margin-bottom: 20px;
 
   &-progress {
-    padding: 20px 0;
+    padding: 18px 0;
     display: flex;
     align-items: center;
     &-left {
       flex-basis: 88%;
       :global {
         .am-progress-outer {
-          height: 26px;
+          height: 28px;
           border-radius: 50px;
           background: linear-gradient(#e1e1e1, #fff);
-          border: @hd solid @border-color-base;
         }
         .am-progress-bar {
-          border: 11.5px solid #f34e14;
+          border: 11px solid #f34e14;
           border-radius: 50px;
         }
       }
@@ -243,17 +279,20 @@
     flex-basis: 70%;
     flex-direction: column;
     justify-content: space-around;
+    .textOverflow;
     &-title {
       .listTitle;
+      .textOverflow;
     }
     &-teacher, &-time {
       .listContent;
+      .textOverflow;
     }
     &-type {
       display: flex;
       align-items: center;
       &-ending, &-attendance {
-        padding: 10px;
+        padding: 6px 8px;
         margin-right: 20px;
         background: #ff9a1b;
         color: #fff;
@@ -274,7 +313,7 @@
 //achivement Start
 
 .@{PrefixCls}-achievement {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-bottom: 1px solid @border-color-base;
   display: flex;
@@ -290,8 +329,10 @@
     flex-basis: 70%;
     flex-direction: column;
     justify-content: space-around;
+    .textOverflow;
     &-title {
       .listTitle;
+      .textOverflow;
     }
     &-teacher {
       .listContent;
@@ -309,7 +350,7 @@
 // teachers Start
 
 .@{PrefixCls}-teachers {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-bottom: 1px solid @border-color-base;
   display: flex;
@@ -327,14 +368,18 @@
     flex-direction: column;
     justify-content: space-around;
     flex-basis: 80%;
+    .textOverflow;
     &-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       &-title {
+
         font-size: @titleFontSize;
         color: @color-text-base;
         font-weight: bold;
+        flex-basis: 76%;
+        .textOverflow;
       }
       &-type {
 
@@ -346,13 +391,8 @@
       justify-content: space-between;
       align-items: center;
       &-lesson {
-        font-size: @smallFontSize;
-        color: @color-text-paragraph;
-      }
-      &-button {
-        padding: 5px 10px;
-        color: @primary-color;
-        border: @hd solid @primary-color;
+        font-size: @mediumFontSize;
+        //color: @color-text-paragraph;
       }
     }
   }
@@ -363,7 +403,7 @@
 // attendance Start
 
 .@{PrefixCls}-attendance {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-bottom: 1px solid @border-color-base;
   display: flex;
@@ -379,10 +419,12 @@
     flex-basis: 70%;
     flex-direction: column;
     justify-content: space-around;
+    .textOverflow;
     &-title {
       .listTitle;
+      .textOverflow;
     }
-    &-teacher {
+    &-time {
       .listContent;
     }
     &-info {
@@ -394,16 +436,27 @@
 
 // attendace End
 
+//group Start
+.@{PrefixCls}-group {
+  :global {
+    .am-list-item .am-list-line .am-list-extra {
+      flex-basis: 20%;
+    }
+  }
+}
+
+// group End
+
 // groupList Start
 
 .@{PrefixCls}-groupList {
-  padding: 30px 20px;
+  padding: @padding-list;
   background: #fff;
   border-bottom: 1px solid @border-color-base;
   display: flex;
   &-img {
     margin-right: 10px;
-    flex-basis: 20%;
+    flex-basis: 30%;
     & img {
       width: 120px;
       height: 120px;
@@ -433,11 +486,6 @@
       display: flex;
       justify-content: flex-end;
 
-      &-button {
-        padding: 5px 10px;
-        color: @primary-color;
-        border: @hd solid @primary-color;
-      }
     }
   }
 }
@@ -557,7 +605,7 @@
     }
   }
   &-content {
-    font-size:@titleFontSize;
+    font-size: @titleFontSize;
     margin: 0.2rem 0;
     text-overflow: -o-ellipsis-lastline;
     overflow: hidden;

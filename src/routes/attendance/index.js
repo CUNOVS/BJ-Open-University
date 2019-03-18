@@ -17,7 +17,7 @@ function Attendance ({ location, dispatch, attendance }) {
 
   return (
     <div>
-      <Nav title={name} hasShadow={true} dispatch={dispatch} />
+      <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]}>
         {attendanceRow(handlerChangeRouteClick.bind(null, 'attendancedetails', { name: '考勤详情' }, dispatch))}

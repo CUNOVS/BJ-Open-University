@@ -12,7 +12,7 @@ function AboutUs ({ location, dispatch, aboutus }) {
     { content } = aboutus;
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} hasShadow={true} dispatch={dispatch} />
+      <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace size="md" />
       <h3 className={styles[`${PrefixCls}-title`]}>终身教学平台</h3>
       <div className={styles[`${PrefixCls}-content`]}>

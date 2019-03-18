@@ -4,20 +4,19 @@
  * @date 2018/10/24
  * @Description: 透明头部，滑动时出现
  */
-import React from 'react'
-import { Icon } from 'components/index'
-import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
-import styles from './index.less'
-import { getLocalIcon } from 'utils'
-import { routerRedux } from 'dva/router'
+import React from 'react';
+import { Icon } from 'components/index';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import styles from './index.less';
+import { getLocalIcon } from 'utils';
+import { routerRedux } from 'dva/router';
 
-const PrefixCls = 'transparentheader'
+const PrefixCls = 'transparentheader';
 
 class TransparentHeader extends React.Component {
   constructor (props) {
-    super()
-
+    super();
   }
 
   state = {
@@ -25,31 +24,32 @@ class TransparentHeader extends React.Component {
   }
 
   componentWillMount () {
-    this._isMounted = true
+    this._isMounted = true;
     if (this._isMounted) {
       document.body.onscroll = () => {
-        let sTop = document.documentElement.scrollTop || document.body.scrollTop
+        let sTop = document.documentElement.scrollTop || document.body.scrollTop;
         if (sTop > this.props.offset - 45) {
           this.setState({
             isScroll: true,
-          })
+          });
         } else {
           this.setState({
             isScroll: false,
-          })
+          });
         }
-      }
+      };
     }
+    console.log();
   }
 
   componentWillUnmount () {
-    this._isMounted = false
+    this._isMounted = false;
   }
 
   render () {
     const hanleBackClick = () => {
-      this.props.dispatch(routerRedux.goBack())
-    }
+      this.props.dispatch(routerRedux.goBack());
+    };
 
     return (
       <div>
@@ -57,38 +57,39 @@ class TransparentHeader extends React.Component {
           this.state.isScroll
             ?
             <div className={styles[`${PrefixCls}-outer`]}>
-              <div className={styles[`${PrefixCls}-outer-backBtn`]}>
-                <span onClick={hanleBackClick}><Icon style={{ verticalAlign: 'middle' }} type='left'
-                                                     color='#000'/></span>
+                <div className={styles[`${PrefixCls}-outer-backBtn`]}>
+                <span onClick={hanleBackClick}><Icon style={{ verticalAlign: 'middle' }}
+                    type="left"
+                    color="#000"
+                  /></span>
                 <span className={styles[`${PrefixCls}-outer-backBtn-title`]}>
-                {this.props.name}
-              </span>
+                    {this.props.name}
+                  </span>
               </div>
-              <div className={styles[`${PrefixCls}-outer-rightBtn`]}>
-
+                <div className={styles[`${PrefixCls}-outer-rightBtn`]} />
               </div>
-            </div>
             :
-            <div className={styles[`${PrefixCls}-transparentouter`]}
-                 style={{ background: `transparent` }}>
+              <div className={styles[`${PrefixCls}-transparentouter`]}
+              style={{ background: 'transparent' }}
+            >
               <div className={styles[`${PrefixCls}-transparentouter-backBtn`]} onClick={hanleBackClick}>
-                <Icon style={{ verticalAlign: 'middle' }} type='left' color='#fff'/>
-              </div>
+                  <Icon style={{ verticalAlign: 'middle' }} type="left" color="#fff" />
+                </div>
               <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]}>
-                {this.props.children}
-              </div>
+                  {this.props.children}
+                </div>
             </div>
         }
       </div>
-    )
+    );
   }
 }
 
 TransparentHeader.defaultProps = {
   name: '',
-}
+};
 TransparentHeader.propTypes = {
   dispatch: PropTypes.func.isRequired,
   children: PropTypes.element,
-}
-export default TransparentHeader
+};
+export default TransparentHeader;

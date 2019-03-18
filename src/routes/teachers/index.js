@@ -9,18 +9,15 @@ import styles from './index.less';
 
 const PrefixCls = 'teachers';
 
-
 function Teachers ({ location, dispatch, teachers }) {
-  const { name = '分类' } = location.query,
-    { listData } = teachers;
-  const { BaseLine } = Layout;
+  const { name = '分类' } = location.query;
 
   return (
     <div>
-      <Nav title="我的老师" hasShadow={true} dispatch={dispatch} />
+      <Nav title="我的老师" hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]}>
-        {teachersRow(handlerChangeRouteClick.bind(null, 'building', { name : '正在建设中' }, dispatch))}
+        {teachersRow(handlerChangeRouteClick.bind(null, 'building', { name: '正在建设中' }, dispatch))}
       </div>
 
     </div>

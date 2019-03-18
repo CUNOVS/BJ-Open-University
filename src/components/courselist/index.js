@@ -14,20 +14,19 @@ const PrefixCls = 'courselist';
 
 const CourseList = (props) => (
   <div className={styles[`${PrefixCls}-outer`]}>
-    <Accordion defaultActiveKey="1"
+    <Accordion defaultActiveKey={(props.activityIndex-1).toString()}
                className={styles[`${PrefixCls}-accordion`]}
                onChange={props.handlerChange}
     >
       {
-        props.data.map((d, i) => {
-
-          return <Accordion.Panel header={d.section}>
-            {d.part && d.part.map((p, i) => {
+        cnIsArray(props.data) && props.data.map((d, i) => {
+          return (<Accordion.Panel header={d.name} key={i} >
+            {d.modules && d.modules.map((p, i) => {
               return (
-                <LessonItem data={p} dispatch={props.dispatch} />
+                <LessonItem key={p.id} data={p} dispatch={props.dispatch} />
               );
             })}
-          </Accordion.Panel>;
+          </Accordion.Panel>);
         })
       }
     </Accordion>
@@ -36,8 +35,10 @@ const CourseList = (props) => (
 
 CourseList.propTypes = {
   data: PropTypes.array.isRequired,
-  handlerClick: PropTypes.func.isRequired,
+  handlerChange: PropTypes.func.isRequired,
 };
 
-CourseList.defaultProps = {};
+CourseList.defaultProps = {
+  data: [],
+};
 export default CourseList;

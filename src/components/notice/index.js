@@ -14,8 +14,10 @@ const Notice = (props) => {
         <img src={require('./bg.png')} style={{ width: '70%', marginLeft: '0.1rem' }} />
       </div>
       <div className={styles[`${PrefixCls}-tongzhi-div2`]}>
-        <p className={styles[`${PrefixCls}-tongzhi-div2-p1`]}>通知<Badge style={{ marginLeft: '5px' }} text={2}
-                                                                       overflowCount={55} /></p>
+        <p className={styles[`${PrefixCls}-tongzhi-div2-p1`]}>通知<Badge style={{ marginLeft: '5px' }}
+          text={2}
+          overflowCount={55}
+        /></p>
         <p className={styles[`${PrefixCls}-tongzhi-div2-p2`]} style={{ margin: '5px 0 0 0' }}>{123}</p>
       </div>
       <div style={{ flex: '10%' }}>

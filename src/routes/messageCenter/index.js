@@ -78,10 +78,12 @@ class MessageCenter extends React.Component {
   content = (data) => (
     <div style={{ height: this.state.height }}>
       <div className={styles[`${PrefixCls}-title`]}>
-        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon(`/WKCjob/duihuakuang.svg`)} />通知列表
+        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon('/WKCjob/duihuakuang.svg')} />通知列表
         </div>
-        <div style={{ color: this.state.color }} onClick={this.Click.bind(this, this.state.sign)}
-             className={styles[`${PrefixCls}-title-content`]}>全部标记为已读<Icon type={getLocalIcon(`/WKCjob/xuanze.svg`)} />
+        <div style={{ color: this.state.color }}
+          onClick={this.Click.bind(this, this.state.sign)}
+          className={styles[`${PrefixCls}-title-content`]}
+        >全部标记为已读<Icon type={getLocalIcon('/WKCjob/xuanze.svg')} />
         </div>
       </div>
       <List className={styles[`${PrefixCls}-zong`]}>
@@ -96,20 +98,23 @@ class MessageCenter extends React.Component {
                     <div style={{ display: 'inline-block' }}>{data.time}</div>
                   </div>
                   <div style={{ display: 'inline-block' }}
-                       className={styles[`${PrefixCls}-reply-title`]}>{data.content}</div>
+                    className={styles[`${PrefixCls}-reply-title`]}
+                  >{data.content}</div>
                 </div>
               </div>)
               :
               (<div>
                 <div className={styles[`${PrefixCls}-school`]}>
                   <div style={{ display: 'inline-block' }}
-                       className={styles[`${PrefixCls}-school-title`]}>{data.title}</div>
+                    className={styles[`${PrefixCls}-school-title`]}
+                  >{data.title}</div>
                   <div className={styles[`${PrefixCls}-school-small`]}>{data.time}</div>
                 </div>
                 <div className={styles[`${PrefixCls}-school`]}>
                   <div className={styles[`${PrefixCls}-school-small`]}><Icon
                     style={{ width: '0.3rem', height: '0.3rem', marginRight: '0.2rem' }}
-                    type={getLocalIcon(`/WKCjob/duigou.svg`)} />{data.state}</div>
+                    type={getLocalIcon('/WKCjob/duigou.svg')}
+                  />{data.state}</div>
                 </div>
                 <div className={styles[`${PrefixCls}-school`]}>
                   <div className={styles[`${PrefixCls}-school-bott`]}>{data.content}</div>
@@ -126,10 +131,12 @@ class MessageCenter extends React.Component {
   contentII = (data) => (
     <div style={{ height: this.state.height }}>
       <div className={styles[`${PrefixCls}-title`]}>
-        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon(`/WKCjob/duihuakuang.svg`)} />通知列表
+        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon('/WKCjob/duihuakuang.svg')} />通知列表
         </div>
-        <div style={{ color: this.state.color }} onClick={this.Click.bind(this, this.state.sign)}
-             className={styles[`${PrefixCls}-title-content`]}>全部标记为已读<Icon type={getLocalIcon(`/WKCjob/xuanze.svg`)} />
+        <div style={{ color: this.state.color }}
+          onClick={this.Click.bind(this, this.state.sign)}
+          className={styles[`${PrefixCls}-title-content`]}
+        >全部标记为已读<Icon type={getLocalIcon('/WKCjob/xuanze.svg')} />
         </div>
       </div>
       <List className={styles[`${PrefixCls}-zong`]}>
@@ -151,10 +158,12 @@ class MessageCenter extends React.Component {
   nan = () => (
     <div style={{ height: this.state.height }}>
       <div className={styles[`${PrefixCls}-title`]}>
-        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon(`/WKCjob/duihuakuang.svg`)} />通知列表
+        <div className={styles[`${PrefixCls}-title-content`]}><Icon type={getLocalIcon('/WKCjob/duihuakuang.svg')} />通知列表
         </div>
-        <div style={{ color: this.state.color }} onClick={this.Click.bind(this, this.state.sign)}
-             className={styles[`${PrefixCls}-title-content`]}>全部标记为已读<Icon type={getLocalIcon(`/WKCjob/xuanze.svg`)} />
+        <div style={{ color: this.state.color }}
+          onClick={this.Click.bind(this, this.state.sign)}
+          className={styles[`${PrefixCls}-title-content`]}
+        >全部标记为已读<Icon type={getLocalIcon('/WKCjob/xuanze.svg')} />
         </div>
       </div>
       <div style={{
@@ -164,8 +173,9 @@ class MessageCenter extends React.Component {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-      }}>
-        <Icon type={getLocalIcon(`/WKCjob/xiaoxi.svg`)} style={{ width: '20%', height: '20%' }} />
+      }}
+      >
+        <Icon type={getLocalIcon('/WKCjob/xiaoxi.svg')} style={{ width: '20%', height: '20%' }} />
         暂时没有新消息
       </div>
     </div>
@@ -183,15 +193,24 @@ class MessageCenter extends React.Component {
     return (
       <div>
         <div ref={el => this.vl = el}>
-          <Nav title='消息中心' dispatch={this.props.dispatch} />
+          <Nav title="消息中心" dispatch={this.props.dispatch} />
         </div>
         <Tabs
           className={styles[`${PrefixCls}-tabs`]}
           style={{ height: this.state.height }}
           ref={el => this.vll = el}
+          initialPage={0}
+          onChange={(tab, index) => {
+            console.log('onChange', index, tab);
+          }}
+          onTabClick={(tab, index) => {
+            console.log('onTabClick', index, tab);
+          }}
+          tabBarInactiveTextColor="#b7b7b7"
+          tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
           tabs={[
             { title: <Badge text={`${a.A}`}>课程活动</Badge> },
-            { title: <Badge text={`${a.B}`}>私信</Badge> },
+            { title: <Badge text={`${a.B}`}>消息</Badge> },
             { title: <Badge text={`${a.C}`}>系统通知</Badge> },
           ]}
         >

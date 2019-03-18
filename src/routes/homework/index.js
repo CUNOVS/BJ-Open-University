@@ -22,7 +22,7 @@ class Homework extends React.Component {
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch} />
-        <TitleBox title='课程' sup='' />
+        <TitleBox title="课程" sup="" />
         {homeworkRow(listData, this.Click.bind(null, this.props.dispatch))}
       </div>
     );

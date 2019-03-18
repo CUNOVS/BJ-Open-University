@@ -92,11 +92,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                  pathname: route,
-                  query: {
-                    ...appends,
-                  },
+                pathname: route,
+                query: {
+                  ...appends,
                 },
+              },
               ));
             },
           }, _);

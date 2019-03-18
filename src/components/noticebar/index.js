@@ -1,5 +1,5 @@
-/*WKC
- * Modal通知消息的弹出窗口,内容是用ref取的*/
+/* WKC
+ * Modal通知消息的弹出窗口,内容是用ref取的 */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Modal, NoticeBar, Icon } from 'antd-mobile';
@@ -43,7 +43,8 @@ class Notice extends React.Component {
             icon={<Icon style={{ marginRight: '5px' }} type={getLocalIcon('/components/notice.svg')} />}
             mode="closable"
             style={{ background: '#fdeeb9' }}
-            action={<span style={{ color: '#a1a1a1' }}>不再提示</span>}>
+            action={<span style={{ color: '#a1a1a1' }}>不再提示</span>}
+          >
             新学期就用新的移动端app啦，要加油哦.新学期就用新的移动端app啦，要加油哦
           </NoticeBar>
         </div>
@@ -53,7 +54,8 @@ class Notice extends React.Component {
           maskClosable={false}
           title="公告"
           footer={[{
-            text: 'Ok', onPress: () => {
+            text: 'Ok',
+            onPress: () => {
               console.log('ok');
               this.onClose('modal')();
             },
@@ -66,8 +68,7 @@ class Notice extends React.Component {
       </div>
     );
   }
-
-};
+}
 Notice.propTypes = {
   handleClick: PropTypes.func.isRequired,
 };

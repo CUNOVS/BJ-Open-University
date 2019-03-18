@@ -27,7 +27,7 @@ Status.PropTypes = {
 };
 
 Status.defaultProps = {
-  content: '合格',
+  content: '达标',
   status: '0',
 };
 export default Status;

@@ -32,7 +32,8 @@ import {
   Drawer,
   ActionSheet,
   Slider,
-  Progress
+  Progress,
+  PullToRefresh,
 } from 'antd-mobile';
 
 module.exports = {
@@ -69,5 +70,6 @@ module.exports = {
   Drawer,
   ActionSheet,
   Slider,
-  Progress
+  Progress,
+  PullToRefresh,
 };

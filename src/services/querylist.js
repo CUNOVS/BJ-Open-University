@@ -1,6 +1,0 @@
-import { request, config } from 'utils';
-
-const { api } = config;
-const {  } = api;
-
-

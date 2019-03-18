@@ -75,10 +75,10 @@ class ReadPdf extends React.Component {
     const { pageNumber, numPages } = this.state;
     return (
       <div className={styles[`${PrefixCls}-container`]}
-           onTouchStart={this.handlerTouchStart}
-           onTouchEnd={this.handlerTouchEnd}
+        onTouchStart={this.handlerTouchStart}
+        onTouchEnd={this.handlerTouchEnd}
       >
-        <Nav title={name} hasShadow={true} dispatch={this.props.dispatch} />
+        <Nav title={name} hasShadow dispatch={this.props.dispatch} />
         <div style={{ display: this.state.isPageNumShow ? 'block' : 'none' }}>
           <div className={styles[`${PrefixCls}-silder-box`]}>
             <div className={styles[`${PrefixCls}-font-small`]} onClick={this.handlerScaleDown}>
@@ -92,7 +92,7 @@ class ReadPdf extends React.Component {
         <div className={styles[`${PrefixCls}-pdfcontent`]}>
           <Document
             file={require('./default.pdf')}
-            loading={<Loader spinning={true} />}
+            loading={<Loader spinning />}
             onLoadSuccess={this.onDocumentLoadSuccess}
           >
             {Array.from(
@@ -103,7 +103,8 @@ class ReadPdf extends React.Component {
                     className={styles[`${PrefixCls}-page`]}
                     width={document.body.clientWidth * this.state.scale}
                     loading=""
-                    pageNumber={pageNumber} />
+                    pageNumber={pageNumber}
+                  />
                   <WhiteSpace />
                   <p
                     className={styles[`${PrefixCls}-pageNum`]}

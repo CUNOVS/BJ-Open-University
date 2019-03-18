@@ -17,7 +17,7 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
 
   return (
     <div>
-      <Nav title={name} hasShadow={true} dispatch={dispatch} />
+      <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]}>
         {groupListRow(handlerChangeRouteClick.bind(null, 'userpage', { name: '已开课程' }, dispatch))}
