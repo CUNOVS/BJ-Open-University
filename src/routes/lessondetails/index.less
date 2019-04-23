@@ -3,7 +3,6 @@
   max-height: 100vh;
 }
 
-
 .@{PrefixCls}-list {
   :global {
     .am-list-body {
@@ -23,18 +22,21 @@
   background: #fff;
 }
 
-
-.@{PrefixCls}-tagbox{
+.@{PrefixCls}-tagbox {
   padding-top: 80px;
   padding-bottom: 0;
-  background: #fff;
+  &-item{
+    background: #fff;
+  }
 }
-.@{PrefixCls}-lessonInfo{
+
+.@{PrefixCls}-lessonInfo {
   padding: 20px;
 
-  &-title{
+  &-title {
     font-size: @titleFontSize;
     color: @color-text-base;
     font-weight: bold;
+    padding: 20px ;
   }
 }

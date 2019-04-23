@@ -72,7 +72,7 @@ class ForumDetails extends React.Component {
             />
           </div>
           <div>
-            <Icon type={getLocalIcon('/WKCjob/xiaoxi.svg')} />回复
+            <Icon type={getLocalIcon('/components/xiaoxi.svg')} />回复
           </div>
         </div>
 

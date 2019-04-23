@@ -1,14 +1,15 @@
 import { request, config } from 'utils';
 
 const { api } = config;
-const { LoginApi } = api;
+const { Login } = api;
 
 export async function login (data, serverError = false) {
   return request({
-    url: LoginApi,
+    url: Login,
     method: 'post',
     data,
-    serverError
+    serverError,
+    hasToken: false,
   });
 }
 

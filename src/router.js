@@ -147,24 +147,6 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'homeworklist',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/homeworklist'));
-              cb(null, require('routes/homeworklist/'));
-            }, 'homeworklist');
-          },
-        },
-        {
-          path: 'homeworkdetails',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/homeworkdetails'));
-              cb(null, require('routes/homeworkdetails/'));
-            }, 'homeworkdetails');
-          },
-        },
-        {
           path: 'homepage',
           getComponent (nextState, cb) {
             require.ensure([], (require) => {
@@ -216,15 +198,6 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/openDetails'));
               cb(null, require('routes/openDetails/'));
             }, 'openDetails');
-          },
-        },
-        {
-          path: 'homeworkdetails',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/homeworkdetails'));
-              cb(null, require('routes/homeworkdetails/'));
-            }, 'homeworkdetails');
           },
         },
         {
@@ -360,6 +333,42 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/conversation'));
               cb(null, require('routes/conversation/'));
             }, 'conversation');
+          },
+        },
+        {
+          path: 'page',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/page'));
+              cb(null, require('routes/page/'));
+            }, 'page');
+          },
+        },
+        {
+          path: 'quiz',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/quiz'));
+              cb(null, require('routes/quiz/'));
+            }, 'quiz');
+          },
+        },
+        {
+          path: 'quizDetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/quizDetails'));
+              cb(null, require('routes/quizDetails/'));
+            }, 'quizDetails');
+          },
+        },
+        {
+          path: 'quizReview',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/quizReview'));
+              cb(null, require('routes/quizReview/'));
+            }, 'quizReview');
           },
         },
         {

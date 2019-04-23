@@ -1,32 +1,41 @@
-
 import { routerRedux } from 'dva/router';
-import { config, cookie, setLoginOut, postCurrentPosition } from 'utils';
+import { hashHistory } from 'react-router';
+import { config, cookie, setLoginOut } from 'utils';
 import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
+import { queryBaseInfo, logout } from 'services/app';
 
 
-const { userTag: { username, usertoken, userid, useravatar, usertype } } = config,
-  { _cs, _cr, _cg } = cookie,
+const { userTag: { username, usertoken, userid, useravatar } } = config,
+  { _cg } = cookie,
   getInfoUser = () => {
     const result = {};
     result[username] = _cg(username);
     result[usertoken] = _cg(usertoken);
     result[userid] = _cg(userid);
     result[useravatar] = _cg(useravatar);
-    result[usertype] = _cg(usertype);
     return result;
   },
   getUserLoginStatus = (users = '') => {
     users = users || getInfoUser();
     return users[userid] !== '' && users[usertoken] !== '' && users[username] !== '';
   },
-  appendIcon = (tar, i) => {
-    let { icon = '', selectedIcon = '', route = '/default' } = tar;
-    tar.key = ++i;
-    if (icon === '' || selectedIcon === '') {
-      route = route.substr(1);
-      tar = { ...tar, ...(defaultTabBarIcon[route || 'default'] || {}) };
-    }
-    return tar;
+
+  getCourse = (arr) => {
+    let res = [];
+    arr && arr.map(item => (
+      res.push(item.id)
+    ));
+    return res.join(',');
+  },
+  getGroups = (arr = [], course) => {
+    let obj = {};
+    arr.map((item, i) => {
+      obj = course.find(data => {
+        return data.id === item.courseid;
+      });
+      item.course = obj.fullname;
+    });
+    return arr;
   };
 
 export default {
@@ -35,24 +44,23 @@ export default {
     spinning: false,
     isLogin: getUserLoginStatus(),
     users: getInfoUser(),
-    tabBars: [],
-    updates: {},
-    showModal: false,
+    courseid: '',
+    coureData: [],
+    groups: [],
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
-      const others = {};
-      others[usertoken] = _cg(usertoken);
-      dispatch({
-        type: 'query',
-        payload: {
-          currentVersion: cnVersion,
-          systemType: cnDeviceType(),
-          ...others,
-        },
-      });
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/') {
+          const others = {};
+          others[userid] = _cg(userid);
+          others[usertoken] = _cg(usertoken);
+          dispatch({
+            type: 'query',
+            payload: {
+              ...others,
+            },
+          });
           dispatch({
             type: 'updateUsers',
           });
@@ -62,16 +70,25 @@ export default {
   },
   effects: {
     * query ({ payload }, { call, put }) {
-      let tabBars = defaultTabBars;
-
-      tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
-      yield put({
-        type: 'updateState',
-        payload: {
-          tabBars,
-        },
-      });
+      if (_cg(usertoken) === '') {
+        yield put(routerRedux.push({
+          pathname: '/login',
+        }));
+      } else {
+        const data = yield call(queryBaseInfo, payload);
+        if (data.success) {
+          yield put({
+            type: 'updateState',
+            payload: {
+              courseid: getCourse(data.courses),
+              coureData: data.courses,
+              groups: getGroups(data.groups, data.courses),
+            },
+          });
+        }
+      }
     },
+
     * logout ({}, { call, put, select }) {
       const data = yield call(logout);
       if (data) {

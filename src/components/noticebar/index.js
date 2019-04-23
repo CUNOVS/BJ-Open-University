@@ -1,3 +1,4 @@
+
 /* WKC
  * Modal通知消息的弹出窗口,内容是用ref取的 */
 import React from 'react';
@@ -18,6 +19,12 @@ class Notice extends React.Component {
     };
   }
 
+  onClose = key => () => {
+    this.setState({
+      [key]: false,
+    });
+  };
+
   showModal = key => (el) => {
     el.preventDefault();
     const element = ReactDOM.findDOMNode(this.vl);
@@ -25,11 +32,6 @@ class Notice extends React.Component {
     this.setState({
       [key]: true,
       connect: banner,
-    });
-  };
-  onClose = key => () => {
-    this.setState({
-      [key]: false,
     });
   };
 
@@ -69,7 +71,11 @@ class Notice extends React.Component {
     );
   }
 }
+
 Notice.propTypes = {
-  handleClick: PropTypes.func.isRequired,
+
+};
+Notice.defaultProps = {
+
 };
 export default Notice;

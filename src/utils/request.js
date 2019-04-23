@@ -1,18 +1,16 @@
 import { hashHistory } from 'react-router';
 import axios from 'axios';
 import qs from 'qs';
-import jsonp from 'jsonp';
 import lodash from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import { Toast } from 'antd-mobile';
 import { _cg } from './cookie';
 
-import { baseURL, userTag, token } from './config';
+import { baseURL, userTag } from './config';
 
+const { usertoken } = userTag;
 axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
-const { usertoken } = userTag;
-
 const doDecode = (json) => {
   return eval(`(${json})`);
 };
@@ -22,6 +20,7 @@ const fetch = (options) => {
     data,
     fetchType,
     url,
+    hasToken = true,
   } = options;
 
   const appendParams = {
@@ -47,7 +46,7 @@ const fetch = (options) => {
         delete cloneData[item.name];
       }
     }
-    url = domin + url + '/' + token;
+    url = hasToken ? domin + url + '/' + _cg(usertoken) : domin + url;
   } catch (e) {
     Toast.offline(e.message);
   }

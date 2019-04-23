@@ -1,6 +1,6 @@
 @import "../../themes/default";
 
-@PrefixCls: homepage;
+@PrefixCls: userpage;
 .@{PrefixCls}-top {
   position: relative;
   z-index: 999;
@@ -57,8 +57,19 @@
     margin-top: 20px;
     font-size: @smallFontSize;
     color: @color-text-paragraph;
+    p {
+      margin: 0;
+    }
   }
   &-button {
     margin-top: 30px;
+  }
+}
+.@{PrefixCls}-list {
+  margin-bottom:40px;
+  :global {
+    .am-list-item .am-list-line .am-list-extra {
+      flex-basis: 70%;
+    }
   }
 }

@@ -10,14 +10,16 @@ import styles from './index.less';
 const PrefixCls = 'teachers';
 
 function Teachers ({ location, dispatch, teachers }) {
-  const { name = '分类' } = location.query;
-
+  const { listData } = teachers;
   return (
     <div>
       <Nav title="我的老师" hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]}>
-        {teachersRow(handlerChangeRouteClick.bind(null, 'building', { name: '正在建设中' }, dispatch))}
+        {cnIsArray(listData) && listData.map((item) => {
+          return teachersRow(item, handlerChangeRouteClick,dispatch);
+        })
+        }
       </div>
 
     </div>

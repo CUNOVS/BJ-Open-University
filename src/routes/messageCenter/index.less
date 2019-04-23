@@ -1,94 +1,45 @@
-@PrefixCls:messageCenter;
+@PrefixCls: messageCenter;
+.@{PrefixCls}-message, .@{PrefixCls}-sys, .@{PrefixCls}-talk {
 
-.@{PrefixCls}-title{
-    padding: 0.2rem 0.3rem;
-    display:flex;
-    justify-content:space-between;
-    font-size: 0.26rem;
-    &-content{
-        align-items:center;
-        display:flex
+}
+
+.@{PrefixCls}-title {
+  padding: 0.2rem 0.3rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size:@mediumFontSize;
+  &-content {
+    align-items: center;
+    display: flex
+  }
+}
+
+.@{PrefixCls}-content {
+  :global {
+    .am-list-body {
+      padding: 0.2rem 0;
     }
+  }
+  margin: 0 0.3rem 0.3rem 0.3rem;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.@{PrefixCls}-messagelist {
+  display: flex;
+  &-title {
+    font-size: @titleFontSize;
+    color: @color-text-base;
+  }
+  &-details {
+
+  }
+  &-date {
+   text-align: right;
+    font-size: @smallFontSize;
+    color: @color-text-paragraph;
+  }
 }
 
 
-.@{PrefixCls}-zong{
-    :global{
-        .am-list-body{
-            padding: 0.2rem 0;
-        }
-    }
-    margin:0 0.3rem 0.3rem 0.3rem;
-    border-radius:15px;
-    overflow:hidden;
-}
-
-.@{PrefixCls}-school{
-    display:flex;
-    justify-content:space-between;
-    &-title{
-        width:70%;
-        text-overflow:ellipsis;
-        overflow:hidden;
-        white-space:nowrap;
-    }
-    &-small{
-       font-size: 0.23rem;
-       color: #888; 
-    }
-    &-bott{
-       font-size: 0.23rem;
-    }
-    &-right{
-        font-size: 0.3rem;
-        color: darkgreen;
-    }
-    div{
-        align-items:center;
-        display:flex;
-        padding-bottom:0.2rem;
-    }
-}
-
-.@{PrefixCls}-reply{
-    display:flex;
-    font-size: 0.23rem;
-    color: #888;
-    padding: 0.1rem 0;
-    &-left{
-        width: 80%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-    }
-    &-small{
-       font-size: 0.23rem;
-    }
-    &-conten{
-        display: flex;
-        justify-content: space-between;
-        white-space:pre;
-        div:nth-child(2){
-            color: black;
-        }   
-    }
-    &-title{
-        text-overflow:ellipsis;
-        overflow:hidden;
-        white-space:nowrap;
-    }
-    img{
-        width:15%;
-        height:15%;
-        margin-right: 0.2rem;
-    }
-}
-
-.@{PrefixCls}-twoLine{
-    white-space:pre-wrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical; 
-}

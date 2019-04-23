@@ -34,6 +34,7 @@ import {
   Slider,
   Progress,
   PullToRefresh,
+  NoticeBar,
 } from 'antd-mobile';
 
 module.exports = {
@@ -72,4 +73,5 @@ module.exports = {
   Slider,
   Progress,
   PullToRefresh,
+  NoticeBar
 };

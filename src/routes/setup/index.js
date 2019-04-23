@@ -118,7 +118,7 @@ class Setup extends React.Component {
             });
         },
       };
-    const { users: { username, useravatar, usertype } } = this.props.app;
+    const { users: { username, useravatar } } = this.props.app;
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch} hasShadow />
@@ -137,21 +137,12 @@ class Setup extends React.Component {
                 </FileUpload>
               </div>
             </Item>
-            {
-              usertype == 'isRegistUser' ?
-                <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
-                  更换昵称
-                </Item>
-                :
-                ''
-            }
-            {
-              usertype !== 'isRegistUser' ?
-                <Item onClick={this.handlePassWordClick.bind(null, username)}>
-                  修改密码
-                </Item>
-                : ''
-            }
+            <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
+              更换昵称
+            </Item>
+            <Item onClick={this.handlePassWordClick.bind(null, username)}>
+              修改密码
+            </Item>
             <Item onClick={this.handleAboutUsClick}>
               Email地址
             </Item>

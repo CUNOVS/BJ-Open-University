@@ -342,7 +342,7 @@ if (typeof String.prototype.startsWith != 'function') {
           cnSetStatusBarStyle();
         }
         cnClearBadge();
-        navigator.splashscreen.hide()
+        navigator.splashscreen.hide();
         if (cordova.InAppBrowser) {
           cnOpen = function (url, target, params, callback) {
             target = target || '_self';
@@ -424,10 +424,10 @@ if (typeof String.prototype.startsWith != 'function') {
     screenChangeEvents = ['webkitfullscreenchange', 'mozfullscreenchange', 'fullscreenchange', 'MSFullscreenChange'];
   for (var i = 0; i < screenChangeEvents.length; i++) {
     document.addEventListener(screenChangeEvents[i], function (e) {
-        if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
-          cnScreenChange(document.webkitIsFullScreen);
-        }
-      });
+      if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
+        cnScreenChange(document.webkitIsFullScreen);
+      }
+    });
   }
   window.cnPrintWebSocket = function () {
     console.log(cunovsWebSocket);

@@ -40,8 +40,12 @@
     font-size: @smallFontSize;
     color: @color-text-paragraph;
     margin-top: 10px;
-
-    p, h1, h2, h3, h4, h5, h6,ul {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    p, h1, h2, h3, h4, h5, h6, ul {
       margin: 0;
     }
   }

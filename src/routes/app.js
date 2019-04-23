@@ -9,15 +9,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { classnames, config, getLocalIcon } from 'utils';
+import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
 import { Loader, TabBar, Icon, Modal } from 'components';
 import './app.less';
 
 let lastHref,
   isFirst = true,
   progessStart = false;
+const appendIcon = (tar, i) => {
+  let { icon = '', selectedIcon = '', route = '/default' } = tar;
+  tar.key = ++i;
+  if (icon === '' || selectedIcon === '') {
+    route = route.substr(1);
+    tar = { ...tar, ...(defaultTabBarIcon[route || 'default'] || {}) };
+  }
+  return tar;
+};
+let tabBars = defaultTabBars;
+tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
+
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal } = app;
+  const { spinning = false, users, showModal } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -38,37 +51,37 @@ const App = ({ children, dispatch, app, loading, location }) => {
     progessStart = false;
     NProgress.done();
   }
-  const update = (url, upgraded) => {
-    if (upgraded) {
-      return (<Modal
-        visible
-        transparent
-        maskClosable={false}
-        title="当前版本过低"
-        footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
-      >
-        <div>
-          为保证正常使用，请先升级应用
-        </div>
-      </Modal>);
-    }
-    if (isFirst) {
-      Modal.alert('版本更新', '点击升级我的阿拉善', [
-        {
-          text: '暂不升级',
-          onPress: () => dispatch({
-            type: 'app/updateState',
-            payload: {
-              showModal: false,
-            },
-          }),
-          style: 'default',
-        },
-        { text: '立刻升级', onPress: () => cnUpdate(url) },
-      ]);
-      isFirst = false;
-    }
-  };
+  // const update = (url, upgraded) => {
+  //   if (upgraded) {
+  //     return (<Modal
+  //       visible
+  //       transparent
+  //       maskClosable={false}
+  //       title="当前版本过低"
+  //       footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
+  //     >
+  //       <div>
+  //         为保证正常使用，请先升级应用
+  //       </div>
+  //     </Modal>);
+  //   }
+  //   if (isFirst) {
+  //     Modal.alert('版本更新', '点击升级我的阿拉善', [
+  //       {
+  //         text: '暂不升级',
+  //         onPress: () => dispatch({
+  //           type: 'app/updateState',
+  //           payload: {
+  //             showModal: false,
+  //           },
+  //         }),
+  //         style: 'default',
+  //       },
+  //       { text: '立刻升级', onPress: () => cnUpdate(url) },
+  //     ]);
+  //     isFirst = false;
+  //   }
+  // };
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
     return (<div>
       <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
@@ -92,11 +105,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                pathname: route,
-                query: {
-                  ...appends,
+                  pathname: route,
+                  query: {
+                    ...appends,
+                  },
                 },
-              },
               ));
             },
           }, _);

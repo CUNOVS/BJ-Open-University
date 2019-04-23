@@ -6,12 +6,13 @@
 	 style="enable-background:new 0 0 48 48;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;}
-	.st1{fill:#0099CC;}
+	.st1{fill:#FF6633;}
 </style>
-<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview8" inkscape:current-layer="svg2" inkscape:cx="-39.040363" inkscape:cy="14.237288" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="853" inkscape:window-maximized="0" inkscape:window-width="1060" inkscape:window-x="38" inkscape:window-y="213" inkscape:zoom="4.9166667" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview8" inkscape:current-layer="svg2" inkscape:cx="-68.644068" inkscape:cy="24" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="853" inkscape:window-maximized="0" inkscape:window-width="1549" inkscape:window-x="38" inkscape:window-y="213" inkscape:zoom="4.9166667" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
 	</sodipodi:namedview>
 <path id="path4" class="st0" d="M0,0h48v48H0V0z"/>
-<path id="path6" inkscape:connector-curvature="0" class="st1" d="M41.8,5.4H31.2c-1.1-2.7-3.9-4.7-7.2-4.7s-6.1,2-7.2,4.7H6.2
-	c-2.8,0-5.1,2.1-5.1,4.7v32.6c0,2.6,2.3,4.7,5.1,4.7h35.6c2.8,0,5.1-2.1,5.1-4.7V10.1C46.9,7.5,44.6,5.4,41.8,5.4z M24,5.4
-	c1.4,0,2.5,1,2.5,2.3S25.4,10,24,10s-2.5-1-2.5-2.3S22.6,5.4,24,5.4z M18.9,38L8.7,28.7l3.6-3.3l6.6,6L35.7,16l3.6,3.3L18.9,38z"/>
+<path id="path6" inkscape:connector-curvature="0" class="st1" d="M42.1,5.4H31.2c-1.1-2.7-3.9-4.7-7.3-4.7s-6.2,2-7.3,4.7H5.8
+	c-2.9,0-5.2,2.1-5.2,4.7v32.6c0,2.6,2.3,4.7,5.2,4.7h36.3c2.9,0,5.2-2.1,5.2-4.7V10.1C47.3,7.5,44.9,5.4,42.1,5.4z M23.9,5.4
+	c1.4,0,2.6,1,2.6,2.3S25.3,10,23.9,10s-2.6-1-2.6-2.3S22.5,5.4,23.9,5.4z M18.7,38L8.4,28.7l3.7-3.3l6.7,6l17.1-15.3l3.7,3.3
+	L18.7,38z"/>
 </svg>

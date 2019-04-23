@@ -16,10 +16,9 @@ class Header extends React.Component {
       <div className={styles[`${PrefixCls}-logo-outer`]}>
         <div className={styles['logo-box']}>
           <img src={require('themes/images/logo.png')} alt="" />
-          <p>北京开放大学</p>
         </div>
         <div className={styles[`${PrefixCls}-logo-outer-messagebox`]} onClick={this.props.handlerClick}>
-          <Badge dot>
+          <Badge text={`${this.props.count > 0 ? this.props.count : ''}`}>
             <Icon type={getLocalIcon('/dashboard/message.svg')} color="#fff" />
           </Badge>
         </div>
@@ -27,9 +26,8 @@ class Header extends React.Component {
     );
   }
 }
-Header.defaultProps = {
 
-};
+Header.defaultProps = {};
 Header.propTypes = {
   handlerClick: PropTypes.func.isRequired,
 };

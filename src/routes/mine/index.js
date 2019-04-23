@@ -28,18 +28,16 @@ function Mine ({ location, dispatch, mine, app, login }) {
         <div className={styles[`${PrefixCls}-top-content`]}>
           <img src={getImages(useravatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-top-content-info`]}>
-            <div className={styles[`${PrefixCls}-top-content-info-username`]} onClick={handleLogin}>登录/注册</div>
+            <div className={styles[`${PrefixCls}-top-content-info-username`]} onClick={isLogin ? null : handleLogin}>
+              {isLogin ? username : '登录'}
+            </div>
             <Button
               onClick={handlerChangeRouteClick.bind(null, 'medalList', { name: '勋章' }, dispatch)}
               type="ghost"
               inline
               size="small"
               style={{ color: '#fff', borderColor: '#ff9a1b', padding: '2px' }}
-              icon={<Icon type={getLocalIcon('/mine/chapters.svg')}
-                inline
-                color="#ff9a1b"
-                size="xs"
-              />
+              icon={<Icon type={getLocalIcon('/mine/chapters.svg')} color="#ff9a1b" size="xs" />
               }
             >勋章</Button>
           </div>

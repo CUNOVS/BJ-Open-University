@@ -11,6 +11,7 @@ const app = dva({
     effects: true,
   }),
   onError (error) {
+    console.log(error);
     Toast.offline(error.message);
   },
 });

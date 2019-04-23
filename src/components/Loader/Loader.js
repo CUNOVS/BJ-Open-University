@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import styles from './Loader.less';
 
-const Loader = ({ spinning }) => {
+const Loader = ({ spinning = false }) => {
   return (
     <div className={classNames(styles.loader, { [styles.hidden]: !spinning })}>
       <div className={styles.text}>Loading...</div>

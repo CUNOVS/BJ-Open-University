@@ -26,28 +26,19 @@ const defaultDatas = [
 ];
 export default modelExtend(model, {
   namespace: 'mine',
-  state: {},
+  state: {
+    gridDatas: defaultDatas,
+  },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/mine') {
-          dispatch({
-            type: 'queryMessage',
-          });
+
         }
       });
     }
     ,
   },
-  effects: {
-    * queryMessage ({ payload }, { call, put, select }) {
-      yield put({
-        type: 'updateState',
-        payload: {
-          gridDatas: defaultDatas,
-        },
-      });
-    },
-  },
+  effects: {},
 
 });

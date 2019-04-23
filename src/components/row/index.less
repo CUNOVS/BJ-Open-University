@@ -365,16 +365,12 @@
   }
   &-content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
     flex-basis: 80%;
     .textOverflow;
     &-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       &-title {
-
         font-size: @titleFontSize;
         color: @color-text-base;
         font-weight: bold;
@@ -388,8 +384,7 @@
 
     &-bottom {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: flex-end;
       &-lesson {
         font-size: @mediumFontSize;
         //color: @color-text-paragraph;
@@ -456,7 +451,6 @@
   display: flex;
   &-img {
     margin-right: 10px;
-    flex-basis: 30%;
     & img {
       width: 120px;
       height: 120px;
@@ -465,9 +459,9 @@
   }
   &-content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex-basis: 80%;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
     &-top {
       display: flex;
       justify-content: space-between;
@@ -505,17 +499,14 @@
 
   &-top {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     margin-bottom: 26px;
-    &-left {
-      font-size: @mediumFontSize;
-      display: flex;
-      align-items: center;
-      & span {
-        margin-right: 10px;
-      }
+    font-size: @mediumFontSize;
+    span {
+      margin-right: 10px;
     }
   }
+
   &-bottom {
     display: flex;
     justify-content: space-between;
@@ -533,56 +524,46 @@
 // achievementdetails End
 
 //1111111111
-.@{PrefixCls}-topic {
-  background: white;
-  div {
-    white-space: pre-wrap;
+.@{PrefixCls}-forum {
+
+  &-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    & img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    &-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1;
+      font-size: @mediumFontSize;
+    }
   }
-  &-title {
+  &-content {
+    display: flex;
+    align-items: center;
+    &-text {
+      flex: 1;
+      .listTitle;
+
+    }
+  }
+
+  &-foot {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 0.15rem;
-
-    div:nth-child(1) {
+    color: @color-text-paragraph;
+    font-size: @mediumFontSize;
+    &-message {
       display: flex;
-      align-items: center;
-
-    }
-    div:nth-child(2) {
-      display: flex;
-      align-items: center;
-      img {
-        width: 60px;
-        height: 60px
-      }
-    }
-    &-text {
-      font-size: @titleFontSize;
-      font-weight: 600;
     }
   }
-  &-info {
-    display: flex;
-    &-content {
-      flex: 95%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      font-size: @mediumFontSize;
-      div {
-        display: flex;
-        justify-content: space-between;
-      }
-      div:nth-child(2) {
-        color: #888;
-      }
-    }
-    img {
-      flex: 15%;
-      width: 100px;
-      height: 100px;
-    }
-  }
+
 }
 
 .@{PrefixCls}-forumDetails {
@@ -635,4 +616,46 @@
   }
 }
 
-//111111111
+//MessageListRow Start
+.@{PrefixCls}-message {
+  display: flex;
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 20px;
+  &-img {
+    margin-right: 20px;
+    & img {
+      width: 100px;
+      height: 100px;
+      border-radius: @radius-xs;
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    &-top {
+      display: flex;
+      justify-content: space-between;
+      &-title {
+        font-size: @mediumFontSize;
+        font-weight: bold;
+        color: @color-text-base;
+      }
+      &-date {
+        font-size: @smallFontSize;
+        color: @color-text-paragraph;
+      }
+    }
+    &-details {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+  }
+}
+
+//MessageListRow End

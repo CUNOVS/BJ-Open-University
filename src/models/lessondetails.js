@@ -22,9 +22,9 @@ const getLessonList = (arr) => {
  * 修改返回值
  */
 const adapter = (data) => {
-  data.master = cnIsArray(data.master) && data.master[0];
-  data.tutor = cnIsArray(data.tutor) && data.tutor[0];
-  data.lessonImage = cnIsArray(data.overviewfiles) && data.overviewfiles[0].fileurl;
+  data.master = cnIsArray(data.master) && data.master[0] || { fullname: '未知', id: '' };
+  data.tutor = cnIsArray(data.tutor) && data.tutor[0] || { fullname: '未知', id: '' };
+  data.lessonImage = cnIsArray(data.overviewfiles) && data.overviewfiles.length > 0 ? data.overviewfiles[0].fileurl : '';
   data.guide = data.contents[0].modules;
   data.resources = getLessonList(data.contents);
   return data;
@@ -35,22 +35,28 @@ export default modelExtend(model, {
   state: {
     data: {},
     refreshing: false,
+    selectIndex: 0,
   },
   subscriptions: {
     setup ({ history, dispatch }) {
       history.listen(({ pathname, action, query }) => {
+        const { userid, courseid } = query;
         if (pathname === '/lessondetails') {
-          dispatch({
-            type: 'updateState',
-            payload: {
-              data: [],
-            },
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                data: [],
+                selectIndex: 0,
+                refreshing: false,
+              },
+            });
+          }
           dispatch({
             type: 'queryDetails',
             payload: {
-              courseid: 5,
-              userid: 7,
+              userid,
+              courseid,
             },
           });
         }
@@ -66,6 +72,12 @@ export default modelExtend(model, {
           payload: {
             data: adapter(data),
             refreshing: false,
+          },
+        });
+        yield put({
+          type: 'updateState',
+          payload: {
+            selectIndex: data.activityIndex > 0 ? 1 : 0,
           },
         });
       }

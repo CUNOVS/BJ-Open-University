@@ -1,7 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Nav from 'components/nav';
-import { connect } from 'dva';
 import styles from './index.less';
 
 const PrefixCls = 'CnBadge';
@@ -14,7 +11,8 @@ class CnBadge extends React.Component {
   render () {
     return (
       <div>
-        <div className={styles[`${PrefixCls}-one`]}
+        <div
+          className={styles[`${PrefixCls}-${this.props.size}`]}
           style={{ background: this.props.background, color: this.props.color }}
         >
           {this.props.text}
@@ -28,6 +26,7 @@ CnBadge.defaultProps = {
   background: 'red',
   color: 'white',
   text: '合格',
+  size: 'normal',
 };
 
 export default CnBadge;

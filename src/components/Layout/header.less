@@ -1,11 +1,12 @@
 @import '../../themes/default.less';
-@PrefixCls:header;
+
+@PrefixCls: header;
 .@{PrefixCls}-logo-outer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height:  @primary-header-height;
-  padding:0 40px;
+  height: @primary-header-height;
+  padding: 0 40px;
   background: -webkit-linear-gradient(@primary-color, #3574b0);
 
   & .logo-box {
@@ -13,16 +14,7 @@
     align-items: center;
     height: 100%;
     & img {
-      width: 50px;
-      height: 50px;
-    }
-    & P{
-      margin: 0;
-      font-size: 30px;
-      color: #fff;
-      font-weight: bold;
-      margin-left: 10px;
-      letter-spacing: .5em;
+      width: 100%;
     }
   }
 

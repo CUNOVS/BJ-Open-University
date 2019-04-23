@@ -1,20 +1,18 @@
 /* global window */
 
 import classnames from 'classnames';
-import config from './config';
+import config, { userTag } from './config';
 import request from './request';
 import cookie from './cookie';
 import defaultImg from 'themes/images/default/default.png';
 import defaultUserIcon from 'themes/images/default/userIcon.png';
 import defaultBg from 'themes/images/others/mineBg.png';
 import formsubmit from './formsubmit';
-import { token } from './config';
 
 
-const { userTag: { username, usertoken, userpower, userid, useravatar, usertype } } = config,
-  { _cs, _cr, _cg } = cookie;
-
-
+const { userTag: { username, usertoken, userpower, userid, useravatar } } = config,
+  { _cs, _cr, _cg } = cookie,
+  token = _cg(usertoken);
 // 日期格式化
 const DateChange = function () {
   let date = new Date();
@@ -22,7 +20,154 @@ const DateChange = function () {
   let newDate = `今天是${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${week}`;
   return newDate;
 };
+/**
+ *
+ * @param date
+ * @constructor
+ */
+const getCommonData = (date) => {
+  if (date) {
+    let currentDate = new Date();
+    const currentYear = currentDate.getFullYear(),
+      preDate = new Date(date * 1000),
+      week = '日一二三四五六'.charAt(preDate.getDay()),
+      year = preDate.getFullYear(),
+      hour = preDate.getHours() < 10 ? '0' + preDate.getHours() : preDate.getHours(),
+      minutes = preDate.getMinutes() < 10 ? '0' + preDate.getMinutes() : preDate.getMinutes(),
+      seconds = preDate.getSeconds();
+    return `${year}年${preDate.getMonth() + 1}月${preDate.getDate()}日 星期${week} ${hour}:${minutes}`;
+  }
+};
+/**
+ *
+ * @param date
+ * @constructor
+ */
+const changeLessonData = (date) => {
+  if (date) {
+    let currentDate = new Date();
+    const currentYear = currentDate.getFullYear(),
+      lessonDate = new Date(date * 1000),
+      year = lessonDate.getFullYear();
+    if (currentYear !== year) {
+      return `${year}年${lessonDate.getMonth() + 1}月${lessonDate.getDate()}日`;
+    }
+    return `${lessonDate.getMonth() + 1}月${lessonDate.getDate()}日`;
+  }
+};
+/**
+ * 任务列表时间转换
+ * @param date
+ * @returns {string}
+ */
+const isToday = (date) => {
+  if (date) {
+    let currentDate = new Date();
+    const lessonDate = new Date(date * 1000);
+    if (currentDate.toDateString() === lessonDate.toDateString()) {
+      return true;
+    }
+    return false;
+  }
+};
 
+const getMessageTime = (timeValue) => {
+  let time = timeValue * 1000;
+
+  function formatDateTime (time) {
+    let date = new Date(time);
+    let y = date.getFullYear();
+    let m = date.getMonth() + 1;
+    m = m < 10 ? ('0' + m) : m;
+    let d = date.getDate();
+    d = d < 10 ? ('0' + d) : d;
+    let h = date.getHours();
+    h = h < 10 ? ('0' + h) : h;
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+    minute = minute < 10 ? ('0' + minute) : minute;
+    second = second < 10 ? ('0' + second) : second;
+    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+  };
+
+  //判断传入日期是否为昨天
+  function isYestday (time) {
+    let date = (new Date()); //当前时间
+    let today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime(); //今天凌晨
+    let yestday = new Date(today - 24 * 3600 * 1000).getTime();
+    return time < today && yestday <= time;
+  };
+
+  //判断传入日期是否属于今年
+  function isYear (time) {
+    let takeNewYear = formatDateTime(new Date())
+      .substr(0, 4); //当前时间的年份
+    let takeTimeValue = formatDateTime(time)
+      .substr(0, 4); //传入时间的年份
+    return takeTimeValue === takeNewYear;
+  }
+
+  //60000 1分钟
+  //3600000 1小时
+  //86400000 24小时
+  //对传入时间进行时间转换
+  function timeChange (time) {
+    let timeNew = Date.parse(new Date()); //当前时间
+    let timeDiffer = timeNew - time; //与当前时间误差
+    let returnTime = '';
+
+    if (timeDiffer <= 60000) { //一分钟内
+
+      returnTime = '刚刚';
+
+    } else if (timeDiffer > 60000 && timeDiffer < 3600000) { //1小时内
+
+      returnTime = Math.floor(timeDiffer / 60000) + '分钟前';
+
+    } else if (timeDiffer >= 3600000 && timeDiffer < 86400000 && isYestday(time) === false) { //今日
+
+      returnTime = formatDateTime(time)
+        .substr(11, 5);
+
+    } else if (timeDiffer > 3600000 && isYestday(time) === true) { //昨天
+
+      returnTime = '昨天' + formatDateTime(time)
+        .substr(11, 5);
+
+    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === true) {	//今年
+
+      returnTime = formatDateTime(time)
+        .substr(5, 11);
+
+    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === false) { //不属于今年
+
+      returnTime = formatDateTime(time)
+        .substr(0, 10);
+
+    }
+
+    return returnTime;
+  }
+
+  return timeChange(time);
+};
+
+const getSurplusDay = (data) => {
+  const now = new Date();
+  if (data * 1000 > now) {
+    const time = data * 1000 - now;
+    let days = time / 1000 / 60 / 60 / 24;
+    let daysRound = Math.floor(days);
+    let hours = time / 1000 / 60 / 60 - (24 * daysRound);
+    let hoursRound = Math.floor(hours);
+    let minutes = time / 1000 / 60 - (24 * 60 * daysRound) - (60 * hoursRound);
+    let minutesRound = Math.floor(minutes);
+    let seconds = time / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
+    return `${daysRound}天${hoursRound}小时${minutesRound}分钟`;
+  } else {
+    return '已截止';
+  }
+};
 
 /**
  * @param   {String}
@@ -67,8 +212,8 @@ const getImages = (path = '', type = 'defaultImg') => {
   if (path === '' || !path) {
     return type === 'defaultImg' ? defaultImg : defaultUserIcon;
   }
-  return path.startsWith('http://') || path.startsWith('https://') ? path + '?token=' + token
-    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path + '?token=' + token);
+  return path.startsWith('http://') || path.startsWith('https://') ? `${path}?token=${token}`
+    : (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${token}`);
 };
 /** *
  * 用户信息默认背景图片
@@ -82,7 +227,7 @@ const getDefaultBg = (path = '') => {
   if (path === '' || !path) {
     return defaultBg;
   }
-  return path.startsWith('http://') || path.startsWith('https://') ? path
+  return path.startsWith('http://') || path.startsWith('https://') ? `${path}?token=${token}`
     : (config.baseURL + (path.startsWith('/') ? '' : '/') + path);
 };
 const getErrorImg = (el) => {
@@ -92,13 +237,12 @@ const getErrorImg = (el) => {
   }
 };
 
-const setLoginIn = ({ user_token, user_name, user_power, user_id, user_avatar, user_type }) => {
+const setLoginIn = ({ user_token, user_name, user_pwd, user_id, user_avatar }) => {
   _cs(username, user_name);
-  _cs(userpower, user_power);
+  _cs(userpower, user_pwd);
   _cs(usertoken, user_token);
   _cs(userid, user_id);
   _cs(useravatar, user_avatar);
-  _cs(usertype, user_type);
   cnSetAlias(user_name, user_token);
 };
 const setLoginOut = () => {
@@ -107,8 +251,7 @@ const setLoginOut = () => {
   _cr(usertoken);
   _cr(userid);
   _cr(useravatar);
-  _cr(usertype);
-  cnDeleteAlias(_cg(username), _cg(usertoken));
+  // cnDeleteAlias(_cg(username), _cg(usertoken));
 };
 const getLocalIcon = (icon) => {
   const regex = /\/([^\/]+?)\./g;
@@ -133,17 +276,7 @@ const getOffsetTopByBody = (el) => {
   }
   return offsetTop;
 };
-/**
- * @param str 字符串
- * @returns {string}
- */
 
-const postionsToString = ({ address = {}, latitude = '', longitude = '', radius = '' }) => JSON.stringify({
-  address,
-  latitude,
-  longitude,
-  radius,
-});
 
 const replaceSystemEmoji = (content) => {
   const ranges = [
@@ -167,13 +300,23 @@ const getTitle = (title) => {
   return title.length > 17 ? `${title.substring(0, 16)}...` : title;
 };
 
-const WKC = (i) => {
-  return title.replace(/yep/, true);
+/**
+ * 本地获取任务列表icon
+ * @param type
+ */
+const getTaskIcon = (type) => {
+  if (type === 'assign') {
+    return '/lessontype/homework.svg';
+  } else if (type === 'quiz') {
+    return '/lessontype/test.svg';
+  } else if (type === 'forum') {
+    return '/lessontype/huodong.svg';
+  }
+  return '';
 };
 
 
 module.exports = {
-  WKC,
   config,
   request,
   cookie,
@@ -189,10 +332,15 @@ module.exports = {
   isEmptyObject: (obj) => Object.keys(obj).length === 0,
   getLocalIcon,
   formsubmit,
-  postionsToString,
   setLoginOut,
   replaceSystemEmoji,
   hasSystemEmoji,
   DateChange,
   getTitle,
+  changeLessonData,
+  getTaskIcon,
+  isToday,
+  getMessageTime,
+  getCommonData,
+  getSurplusDay,
 };

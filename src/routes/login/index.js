@@ -1,17 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { createForm } from 'rc-form';
-import ReactDOM from 'react-dom';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
 import { InputItem, WhiteSpace, WingBlank, Button, Toast, ActivityIndicator, Icon } from 'components';
 import { getLocalIcon } from 'utils';
 import { config } from 'utils';
 import { _cg } from 'utils/cookie';
 import styles from './index.less';
 import user from 'themes/images/login/user.png';
-import pwd from 'themes/images/login/锁.png';
-import bgs from 'routes/login/bgs.png';
+import pwd from 'themes/images/login/lock.png';
+import bgs from 'themes/images/login/loginBg.png';
 
 
 const PrefixCls = 'login';
@@ -19,9 +16,7 @@ const PrefixCls = 'login';
 class Login extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   onSubmit = () => {
@@ -36,7 +31,7 @@ class Login extends React.Component {
           },
         });
       } else {
-        Toast.fail('请确认信息是否正确', 3);
+        Toast.fail('请确认信息是否正确', 2);
       }
     });
   };
@@ -44,41 +39,32 @@ class Login extends React.Component {
     this.refs.button.scrollIntoView(true);
   };
 
-  handleBack = () => {
-    this.props.dispatch(
-      routerRedux.goBack(),
-    );
-  };
 
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
-      userKey = 'usrMail',
-      powerKey = 'usrPwd';
+      userKey = 'username',
+      powerKey = 'password';
     return (
       <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: `url(${bgs})` }}>
-        <div className={styles[`${PrefixCls}-container-goback`]} onClick={this.handleBack}>
-          <Icon type={getLocalIcon('/login/goback.svg')} />
-        </div>
-        <div className={styles[`${PrefixCls}-phoneform`]}>
-          <form>
+        <div className={styles[`${PrefixCls}-logobox`]}>
+          <form className={styles[`${PrefixCls}-form`]}>
             <WingBlank size="md">
-              <div className={styles[`${PrefixCls}-phoneform-phonebox`]}>
+              <div className={styles[`${PrefixCls}-user`]}>
                 <InputItem placeholder="用户名"
-                  name="phoneNum"
-                  onFocus={this.moveInput.bind(this)}
-                  {...getFieldProps(userKey, {
-                    initialValue: _cg(userKey),
-                    rules: [{ required: true, message: '用户名必须输入' }, {
-                      min: 2,
-                      message:
+                           onFocus={this.moveInput.bind(this)}
+                           {...getFieldProps(userKey, {
+                             initialValue: _cg(userKey),
+                             rules: [{ required: true, message: '用户名必须输入' }, {
+                               min: 2,
+                               message:
                                  '用户名小于2个字符',
-                    }],
-                  })}
-                  clear
-                  error={!!getFieldError(userKey)}
-                  onErrorClick={() => {
-                    Toast.fail(getFieldError(userKey));
-                  }}
+                             }],
+                           })}
+                           clear
+                           error={!!getFieldError(userKey)}
+                           onErrorClick={() => {
+                             Toast.fail(getFieldError(userKey));
+                           }}
                 >
                   <div style={{
                     backgroundImage: `url(${user})`,
@@ -91,7 +77,7 @@ class Login extends React.Component {
               </div>
             </WingBlank>
             <WingBlank size="md">
-              <div className={styles[`${PrefixCls}-phoneform-codebox`]}>
+              <div className={styles[`${PrefixCls}-pwd`]}>
                 <InputItem
                   type="password"
                   placeholder="密码"
@@ -126,8 +112,8 @@ class Login extends React.Component {
                 {
                   this.props.login.buttonState ? (
                     <Button type="primary"
-                      className="am-button-borderfix"
-                      onClick={this.onSubmit.bind(this)}
+                            className="am-button-borderfix"
+                            onClick={this.onSubmit.bind(this)}
                     >
                       登录
                     </Button>

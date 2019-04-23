@@ -3,40 +3,43 @@ import modelExtend from 'dva-model-extend';
 import { getLocalIcon } from 'utils';
 import { model } from 'models/common';
 
-const data = {
-  image: require('../themes/images/WKC/t.png'),
-  name: '学习能手',
-  describe: '恭喜你荣升学习能手',
-  class: '高等数学',
-  effective: '2019年11月12日',
-  invalid: '2019年11月28日'
+const getDetail = (arr, id) => {
+  return arr.find(item => item.id === id);
 };
 
 export default modelExtend(model, {
   namespace: 'medal',
   state: {
-  	data: {}
+    detail: {},
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
+        const { id } = query;
         if (pathname === '/medal') {
-          dispatch({
-            type: 'queryMessage',
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'queryDetails',
+              payload: {
+                id,
+              },
+            });
+          }
         }
       });
     },
   },
   effects: {
-    * queryMessage ({ payload }, { call, put, select }) {
+    * queryDetails ({ payload }, { call, put, select }) {
+      const { data } = yield select(_ => _.medalList),
+        { id } = payload;
       yield put({
         type: 'updateState',
         payload: {
-          data
-        },				
+          detail: getDetail(data, id * 1),
+        },
       });
-    }
+    },
   },
 
 });

@@ -9,6 +9,7 @@ import styles from './index.less';
 const PrefixCls = 'conversation';
 
 const Conversation = ({ location, dispatch, conversation }) => {
+  const { name } = location.query();
   return (
     <div>
       <Nav title={name} dispatch={dispatch} hasShadow />

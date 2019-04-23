@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import propTypes from 'prop-types';
-import { routerRedux } from 'dva/router';
+import { handlerCourseClick } from 'utils/commonevents';
 import { getOffsetTopByBody, getLocalIcon, getImages } from 'utils';
 import InnerHtml from 'components/innerhtml';
 import Checkbox from 'components/checkbox';
@@ -15,44 +15,15 @@ const PrefixCls = 'lessonitem';
 
 const LessonItem = (props) => {
   const { modname, name, modicon, description, url, uservisible, instance, id, state, tracking } = props.data,
-    handlerCourseClick = ({ modname, title = '' }) => {
-      if (modname === 'homework') {
-        props.dispatch(routerRedux.push({
-          pathname: '/homeworkdetails',
-          query: {
-            name: title,
-          },
-        }));
-      } else if (modname === 'pdf') {
-        // cnOpen(url);
-        props.dispatch(routerRedux.push({
-          pathname: '/readpdf',
-          query: {
-            name: title,
-          },
-        }));
-      } else if (modname === 'video') {
-        props.dispatch(routerRedux.push({
-          pathname: '/video',
-          query: {
-            name: title,
-          },
-        }));
-      } else if (modname === 'huodong') {
-        props.dispatch(routerRedux.push({
-          pathname: '/forum',
-          query: {
-            name: title,
-          },
-        }));
-      }
-    },
+    courseid = props.courseid,
+    dispatch = props.dispatch,
     handlerCheckboxClick = (e) => {
       e.stopPropagation();
     };
   if (modname !== 'label') {
     return (
-      <div className={styles[`${PrefixCls}-outer`]}>
+      <div className={styles[`${PrefixCls}-outer`]}
+           onClick={handlerCourseClick.bind(null, props.data, courseid, dispatch)}>
         <div className={styles[`${PrefixCls}-outer-top`]}>
           <div className={styles[`${PrefixCls}-outer-top-icon`]}>
             <img src={getImages(modicon)} alt="" />
