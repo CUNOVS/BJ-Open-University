@@ -1,0 +1,45 @@
+@PrefixCls: messageCenter;
+.@{PrefixCls}-message, .@{PrefixCls}-sys, .@{PrefixCls}-talk {
+
+}
+
+.@{PrefixCls}-title {
+  padding: 0.2rem 0.3rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size:@mediumFontSize;
+  &-content {
+    align-items: center;
+    display: flex
+  }
+}
+
+.@{PrefixCls}-content {
+  :global {
+    .am-list-body {
+      padding: 0.2rem 0;
+    }
+  }
+  margin: 0 0.3rem 0.3rem 0.3rem;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.@{PrefixCls}-messagelist {
+  display: flex;
+  &-title {
+    font-size: @titleFontSize;
+    color: @color-text-base;
+  }
+  &-details {
+
+  }
+  &-date {
+   text-align: right;
+    font-size: @smallFontSize;
+    color: @color-text-paragraph;
+  }
+}
+
+

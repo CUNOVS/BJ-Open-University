@@ -2,32 +2,48 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Nav from 'components/nav';
 import { connect } from 'dva';
-import { Badge, Icon, List } from 'antd-mobile';
+import { Icon, List, Layout } from 'components';
 import { getImages, getLocalIcon } from 'utils';
-import styles from './index.less';
-import { forum } from 'components/row';
+import { handlerChangeRouteClick } from 'utils/commonevents';
 import TitleBox from 'components/titlecontainer';
-import ReactDOM from 'react-dom';
-import { forumDetails } from 'components/row';
-import huifu from './huifu.svg';
+import { forumDetailsRow } from 'components/row';
+import styles from './index.less';
 
-const PrefixCls = 'forumDetails',
-  Item = List.Item;
-
+const { BaseLine } = Layout;
 
 class ReplyAll extends React.Component {
+
+  getChildren = (arr, child) => {
+    return arr.filter(item => child.includes(item.id.toString()));
+  };
+
   render () {
-    	const { data } = this.props.replyAll;
+    const { data = {} } = this.props.forumDetails, { name, items } = this.props.location.query;
+    const children = items.split(',');
+
     return (
-      <div style={{ height: '100vh', background: 'white' }}>
-        <Nav title={name} dispatch={this.props.dispatch} />
-        {forumDetails(data)}                
-      </div>
+      <div style={{ height: '100vh', background: 'white' }} >
+        <Nav title={`回复${name}`} dispatch={this.props.dispatch} />
+        <div >
+          <TitleBox title="回复" sup="" />
+          <List >
+            {
+              cnIsArray(this.getChildren(data, children)) && this.getChildren(data, children).length > 0 ?
+                this.getChildren(data, children)
+                  .map(item => forumDetailsRow(item, handlerChangeRouteClick, this.props.dispatch))
+                :
+                <BaseLine />
+            }
+          </List >
+          <BaseLine />
+        </div >
+      </div >
     );
   }
 }
 
 
-export default connect(({ replyAll }) => ({
-  replyAll
+export default connect(({ replyAll, forumDetails, }) => ({
+  replyAll,
+  forumDetails
 }))(ReplyAll);

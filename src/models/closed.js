@@ -1,6 +1,6 @@
-import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
+import { Toast } from 'components';
 import { queryClosedLessons } from 'services/lesson';
 
 const adapter = (list) => {
@@ -16,14 +16,25 @@ export default modelExtend(model, {
   state: {
     list: [],
     refreshing: false,
+    scrollerTop: 0
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/closed') {
-          dispatch({
-            type: 'queryList',
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                list: [],
+                refreshing: false,
+                scrollerTop: 0
+              }
+            });
+            dispatch({
+              type: 'queryList',
+            });
+          }
         }
       });
     },
@@ -32,15 +43,17 @@ export default modelExtend(model, {
   effects: {
     * queryList ({ payload }, { call, put, select }) {
       const { users: { userid }, courseid } = yield select(_ => _.app),
-        data = yield call(queryClosedLessons, { userid: userid, value: courseid });
-      if (data.success) {
+        { success, message = '获取失败', data } = yield call(queryClosedLessons, { userid, value: courseid });
+      if (success) {
         yield put({
           type: 'updateState',
           payload: {
-            list: adapter(data.data),
+            list: adapter(data),
             refreshing: false,
           },
         });
+      } else {
+        Toast.fail(message);
       }
     },
 

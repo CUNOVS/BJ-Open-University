@@ -111,30 +111,12 @@ const Routers = function ({ history, app }) {
           },
         },
         {
-          path: 'moreMessage',
+          path: 'superclass',
           getComponent (nextState, cb) {
             require.ensure([], (require) => {
-              registerModel(app, require('models/moreMessage'));
-              cb(null, require('routes/moreMessage/'));
-            }, 'moreMessage');
-          },
-        },
-        {
-          path: 'moreMessageItem',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/moreMessageItem'));
-              cb(null, require('routes/moreMessageItem/'));
-            }, 'moreMessageItem');
-          },
-        },
-        {
-          path: 'video',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/video'));
-              cb(null, require('routes/video/'));
-            }, 'video');
+              registerModel(app, require('models/superClass'));
+              cb(null, require('routes/superClass/'));
+            }, 'superclass');
           },
         },
         {
@@ -147,21 +129,21 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'homeworkadd',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/homeworkadd'));
+              cb(null, require('routes/homeworkadd/'));
+            }, 'homeworkadd');
+          },
+        },
+        {
           path: 'homepage',
           getComponent (nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('models/homepage'));
               cb(null, require('routes/homepage/'));
             }, 'homepage');
-          },
-        },
-        {
-          path: 'reply',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/reply'));
-              cb(null, require('routes/reply/'));
-            }, 'reply');
           },
         },
         {
@@ -189,15 +171,6 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/messageCenter'));
               cb(null, require('routes/messageCenter/'));
             }, 'messageCenter');
-          },
-        },
-        {
-          path: 'openDetails',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/openDetails'));
-              cb(null, require('routes/openDetails/'));
-            }, 'openDetails');
           },
         },
         {
@@ -300,6 +273,15 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'sendForum',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/sendForum'));
+              cb(null, require('routes/sendForum/'));
+            }, 'sendForum');
+          },
+        },
+        {
           path: 'replyAll',
           getComponent (nextState, cb) {
             require.ensure([], (require) => {
@@ -315,15 +297,6 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/userpage'));
               cb(null, require('routes/userpage/'));
             }, 'userpage');
-          },
-        },
-        {
-          path: 'noticeDetails',
-          getComponent (nextState, cb) {
-            require.ensure([], (require) => {
-              registerModel(app, require('models/noticeDetails'));
-              cb(null, require('routes/noticeDetails/'));
-            }, 'noticeDetails');
           },
         },
         {
@@ -369,6 +342,77 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/quizReview'));
               cb(null, require('routes/quizReview/'));
             }, 'quizReview');
+          },
+        },
+        {
+          path: 'quizComplete',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/quizComplete'));
+              cb(null, require('routes/quizComplete/'));
+            }, 'quizComplete');
+          },
+        },
+        {
+          path: 'details',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/details'));
+              cb(null, require('routes/details/'));
+            }, 'details');
+          },
+        },
+        {
+          path: 'url',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/url'));
+              cb(null, require('routes/url/'));
+            }, 'url');
+          },
+        },
+        {
+          path: 'feedback',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/feedback'));
+              cb(null, require('routes/feedback/'));
+            }, 'feedback');
+          },
+        },
+        {
+          path: 'feedbackdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/feedbackdetails'));
+              cb(null, require('routes/feedbackdetails/'));
+            }, 'feedbackdetails');
+          },
+        },
+        {
+          path: 'feedbackresult',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/feedbackresult'));
+              cb(null, require('routes/feedbackresult/'));
+            }, 'feedbackresult');
+          },
+        },
+        {
+          path: 'feedbackresultdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/feedbackresult'));
+              cb(null, require('routes/feedbackresultdetails/'));
+            }, 'feedbackresultdetails');
+          },
+        },
+        {
+          path: 'test',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              cb(null, require('routes/test/'));
+            }, 'test');
           },
         },
         {

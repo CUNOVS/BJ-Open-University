@@ -11,7 +11,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(location => {
         let { pathname, action } = location;
-        if (pathname.startsWith('/aboutus')) {
+        if (pathname.startsWith('/readpdf')) {
           if (action === 'PUSH') {
             dispatch({
               type: 'query',

@@ -2,6 +2,7 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { config, cookie } from 'utils';
 import { model } from 'models/common';
+import { Toast } from 'components';
 import { queryCurrentTask, queryAllTask } from 'services/task';
 import * as query from 'services/message';
 
@@ -66,15 +67,16 @@ export default modelExtend(model, {
       }
     },
     * queryCount ({ payload }, { call, put, select }) {
-      const { users: { userid } } = yield select(_ => _.app),
-        data = yield call(query.queryMessageCount, { userid });
-      if (data.success) {
+      const { success, message = '获取失败', messageCount } = yield call(query.queryMessageCount, { userid: _cg(userid) });
+      if (success) {
         yield put({
           type: 'updateState',
           payload: {
-            count: data.messageCount,
+            count: messageCount,
           },
         });
+      } else {
+        Toast.fail(message);
       }
     },
   },

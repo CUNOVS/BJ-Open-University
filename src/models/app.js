@@ -1,8 +1,9 @@
 import { routerRedux } from 'dva/router';
 import { hashHistory } from 'react-router';
+import { Toast } from 'components';
 import { config, cookie, setLoginOut } from 'utils';
 import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
-import { queryBaseInfo, logout } from 'services/app';
+import { queryBaseInfo, logout, accessTime, logApi } from 'services/app';
 
 
 const { userTag: { username, usertoken, userid, useravatar } } = config,
@@ -36,7 +37,10 @@ const { userTag: { username, usertoken, userid, useravatar } } = config,
       item.course = obj.fullname;
     });
     return arr;
-  };
+  },
+
+  getContats = (obj = {}) => [...obj.online, ...obj.offline];
+
 
 export default {
   namespace: 'app',
@@ -47,6 +51,8 @@ export default {
     courseid: '',
     coureData: [],
     groups: [],
+    contacts: [],
+    showBackModal: false
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
@@ -83,8 +89,20 @@ export default {
               courseid: getCourse(data.courses),
               coureData: data.courses,
               groups: getGroups(data.groups, data.courses),
+              contacts: getContats(data.contacts)
             },
           });
+          yield put({
+            type: 'userpage/updateState',
+            payload: {
+              contacts: getContats(data.contacts)
+            },
+          });
+        } else {
+          Toast.fail(data.message);
+          yield put(routerRedux.push({
+            pathname: '/login',
+          }));
         }
       }
     },
@@ -106,6 +124,14 @@ export default {
       }
     },
 
+    * accessTime ({ payload }, { call }) {
+      yield call(accessTime, { ...payload, userid: _cg(userid) });
+    },
+
+
+    * logApi ({ payload }, { call }) {
+      yield call(logApi, { ...payload, userid: _cg(userid) });
+    },
 
   },
   reducers: {
@@ -127,6 +153,13 @@ export default {
         isLogin,
       };
     },
+
+    updateBackModal (state, { payload }) {
+      return {
+        ...state,
+        showBackModal: payload.showBackModal
+      };
+    }
 
   }
   ,

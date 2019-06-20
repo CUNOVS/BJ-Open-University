@@ -39,12 +39,24 @@
   &-describe {
     font-size: @smallFontSize;
     color: @color-text-paragraph;
-    margin-top: 10px;
+    margin-top: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    p, h1, h2, h3, h4, h5, h6, ul {
+      margin: 0;
+    }
+  }
+  &-available{
+    font-size: @smallFontSize;
+    color: #c83737;
+    margin-top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
     p, h1, h2, h3, h4, h5, h6, ul {
       margin: 0;
     }

@@ -8,6 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { getOffsetTopByBody } from 'utils';
+import styles from './index.less';
 
 class NoContent extends React.Component {
   constructor (props) {
@@ -27,10 +28,10 @@ class NoContent extends React.Component {
 
   render () {
     return (
-      <div ref={el => this.lv = el} style={{ textAlign: 'center', paddingTop: '50px', height: this.state.height }}>
+      <div ref={el => this.lv = el} style={{ textAlign: 'center', paddingTop: '50px', height: this.state.height }} >
         <img style={{ width: '60px' }} src={this.props.images} alt="" />
-        <p>{this.props.context}</p>
-      </div>
+        <p className={styles.content}>{this.props.context}</p >
+      </div >
     );
   }
 }

@@ -10,25 +10,26 @@ import styles from './index.less';
 const PrefixCls = 'contacts';
 
 const Contacts = ({ location, dispatch, contacts }) => {
-  const { name } = location.query;
+  const { name } = location.query,
+    { onLine = [], offLine = [] } = contacts;
   return (
-    <div>
+    <div >
       <Nav title={name} dispatch={dispatch} hasShadow />
       <WhiteSpace />
-      <div className={styles[`${PrefixCls}-searchbox`]}>
-        <SearchBar placeholder="搜索联系人" />
-      </div>
-      <div className={styles[`${PrefixCls}-contactsbox`]}>
-        <Accordion defaultActiveKey="0" className="my-accordion">
-          <Accordion.Panel header="在线">
-            {contactsRow(handlerChangeRouteClick.bind(null, 'conversation', { name: '已开课程' }, dispatch))}
-          </Accordion.Panel>
-          <Accordion.Panel header="离线">
-
-          </Accordion.Panel>
-        </Accordion>
-      </div>
-    </div>
+      <div className={styles[`${PrefixCls}-searchbox`]} >
+        {/*<SearchBar placeholder="搜索联系人" />*/}
+      </div >
+      <div className={styles[`${PrefixCls}-contactsbox`]} >
+        <Accordion defaultActiveKey="0" className="my-accordion" >
+          <Accordion.Panel header={<span style={{ color: '#00ce41' }} >{`在线(${onLine.length})`}</span >} >
+            {contactsRow(onLine, handlerChangeRouteClick, dispatch)}
+          </Accordion.Panel >
+          <Accordion.Panel header={`离线(${offLine.length})`} >
+            {contactsRow(offLine, handlerChangeRouteClick, dispatch)}
+          </Accordion.Panel >
+        </Accordion >
+      </div >
+    </div >
   );
 };
 

@@ -8,14 +8,17 @@ export default modelExtend(model, {
   state: {
     listData: [],
     refreshing: false,
+    scrollerTop: 0
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/group') {
-          dispatch({
-            type: 'query',
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'query',
+            });
+          }
         }
       });
     },

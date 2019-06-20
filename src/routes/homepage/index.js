@@ -28,7 +28,7 @@ function HomePage ({ location, dispatch, homepage, app }) {
     showAlert = () => {
       Modal.alert('退出', '学习平台', [
         {
-          text: ' 残忍退出',
+          text: ' 退出',
           onPress: handleLoginout,
         },
         { text: '再看看', onPress: () => console.log('cancel') },

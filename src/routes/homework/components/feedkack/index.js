@@ -4,15 +4,15 @@
  * @Description:
  */
 import { Icon } from 'components';
-import { getLocalIcon, getCommonData } from 'utils';
+import { getLocalIcon, getCommonDate } from 'utils';
 import Breviary from 'components/breviary';
-import Enclosure from '../enclosure';
+import Enclosure from 'components/enclosure';
 import styles from './index.less';
 import InnerHtml from '../../../../components/innerhtml';
 
 
 const FeedBack = (props) => {
-  const { data = [] } = props;
+  const { data = [] , fileIdPrefix} = props;
   return (
     <div className={styles.outer}>
       {data && data.map((item, i) => {
@@ -22,9 +22,9 @@ const FeedBack = (props) => {
             {
               item.type === 'comments'
                 ?
-                <InnerHtml data={item.editorfields[0].text} />
+                <InnerHtml data={item.editorfields[0].text}/>
                 :
-                item.fileareas[0].files.length > 0 ? <Enclosure data={item.fileareas[0].files} /> : '未提交文件'
+                item.fileareas[0].files.length > 0 ? <Enclosure data={item.fileareas[0].files} fileIdPrefix={fileIdPrefix} /> : '未提交文件'
             }
           </div>
         );

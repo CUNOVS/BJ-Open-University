@@ -17,7 +17,7 @@
       padding: 0 40px;
       background: #2087ca;
       margin-bottom: 10px;
-      border-radius: @radius-xs;
+      border-radius: @radius-xs  @radius-xs 0 0;
     }
     .am-accordion .am-accordion-item .am-accordion-content .am-accordion-content-box {
       border-bottom: 0 none;
@@ -36,3 +36,10 @@
   border: 0 none;
 }
 
+.@{PrefixCls}-header{
+  display: flex;
+  align-items: center;
+  & span {
+    margin-right: 20px;
+  }
+}

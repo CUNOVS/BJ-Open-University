@@ -3,12 +3,11 @@ import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import { InputItem, WhiteSpace, WingBlank, Button, Toast, ActivityIndicator, Icon } from 'components';
 import { getLocalIcon } from 'utils';
-import { config } from 'utils';
 import { _cg } from 'utils/cookie';
-import styles from './index.less';
 import user from 'themes/images/login/user.png';
 import pwd from 'themes/images/login/lock.png';
 import bgs from 'themes/images/login/loginBg.png';
+import styles from './index.less';
 
 
 const PrefixCls = 'login';
@@ -45,26 +44,27 @@ class Login extends React.Component {
       userKey = 'username',
       powerKey = 'password';
     return (
-      <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: `url(${bgs})` }}>
-        <div className={styles[`${PrefixCls}-logobox`]}>
-          <form className={styles[`${PrefixCls}-form`]}>
-            <WingBlank size="md">
-              <div className={styles[`${PrefixCls}-user`]}>
-                <InputItem placeholder="用户名"
-                           onFocus={this.moveInput.bind(this)}
-                           {...getFieldProps(userKey, {
-                             initialValue: _cg(userKey),
-                             rules: [{ required: true, message: '用户名必须输入' }, {
-                               min: 2,
-                               message:
-                                 '用户名小于2个字符',
-                             }],
-                           })}
-                           clear
-                           error={!!getFieldError(userKey)}
-                           onErrorClick={() => {
-                             Toast.fail(getFieldError(userKey));
-                           }}
+      <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: `url(${bgs})` }} >
+        <div className={styles[`${PrefixCls}-logobox`]} >
+          <form className={styles[`${PrefixCls}-form`]} >
+            <WingBlank size="md" >
+              <div className={styles[`${PrefixCls}-user`]} >
+                <InputItem
+                  placeholder="用户名"
+                  onFocus={this.moveInput.bind(this)}
+                  {...getFieldProps(userKey, {
+                    initialValue: _cg(userKey),
+                    rules: [{ required: true, message: '用户名必须输入' }, {
+                      min: 1,
+                      message:
+                        '用户名小于1个字符',
+                    }],
+                  })}
+                  clear
+                  error={!!getFieldError(userKey)}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError(userKey));
+                  }}
                 >
                   <div style={{
                     backgroundImage: `url(${user})`,
@@ -73,11 +73,11 @@ class Login extends React.Component {
                     width: '22px',
                   }}
                   />
-                </InputItem>
-              </div>
-            </WingBlank>
-            <WingBlank size="md">
-              <div className={styles[`${PrefixCls}-pwd`]}>
+                </InputItem >
+              </div >
+            </WingBlank >
+            <WingBlank size="md" >
+              <div className={styles[`${PrefixCls}-pwd`]} >
                 <InputItem
                   type="password"
                   placeholder="密码"
@@ -103,30 +103,31 @@ class Login extends React.Component {
                     width: '22px',
                   }}
                   />
-                </InputItem>
-              </div>
+                </InputItem >
+              </div >
               <WhiteSpace size="lg" />
-            </WingBlank>
-            <WingBlank size="md">
-              <div ref="button">
+            </WingBlank >
+            <WingBlank size="md" >
+              <div ref="button" >
                 {
                   this.props.login.buttonState ? (
-                    <Button type="primary"
-                            className="am-button-borderfix"
-                            onClick={this.onSubmit.bind(this)}
+                    <Button
+                      type="primary"
+                      className="am-button-borderfix"
+                      onClick={this.onSubmit.bind(this)}
                     >
                       登录
-                    </Button>
-                  ) : <Button loading type="primary" className="am-button-borderfix" disabled>
-                    <span style={{ color: '#fff' }}>登录中...</span>
-                  </Button>
+                    </Button >
+                  ) : <Button loading type="primary" className="am-button-borderfix" disabled >
+                    <span style={{ color: '#fff' }} >登录中...</span >
+                  </Button >
                 }
-              </div>
-            </WingBlank>
+              </div >
+            </WingBlank >
             <WhiteSpace size="lg" />
-          </form>
-        </div>
-      </div>
+          </form >
+        </div >
+      </div >
     );
   }
 }

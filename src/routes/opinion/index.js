@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -71,17 +71,17 @@ class Opinion extends Component {
       { getFieldProps, getFieldError } = this.props.form;
 
     return (
-      <div>
+      <div >
         <Nav title={name} dispatch={this.props.dispatch} hasShadow />
-        <div className={styles[`${PrefixCls}-outer`]}>
-          <div className={styles[`${PrefixCls}-outer-title`]}>您有什么问题或建议想对我们说？</div>
-          <form>
-            <List>
-              <Picker data={type} cols={1} {...getFieldProps('district3')} className="forss">
-                <List.Item arrow="horizontal">意见类型：</List.Item>
-              </Picker>
-            </List>
-            <List.Item className={styles[`${PrefixCls}-outer-content`]}>
+        <div className={styles[`${PrefixCls}-outer`]} >
+          <div className={styles[`${PrefixCls}-outer-title`]} >您有什么问题或建议想对我们说？</div >
+          <form >
+            <List >
+              <Picker data={type} cols={1} {...getFieldProps('district3')} className="forss" >
+                <List.Item arrow="horizontal" >意见类型：</List.Item >
+              </Picker >
+            </List >
+            <List.Item className={styles[`${PrefixCls}-outer-content`]} >
               <TextareaItem
                 {...getFieldProps('content', {
                   initialValue: '',
@@ -90,16 +90,16 @@ class Opinion extends Component {
                 rows={10}
                 placeholder={'您的宝贵意见，就是我们进步的源泉'}
               />
-            </List.Item>
-            <div className={styles[`${PrefixCls}-outer-button`]}>
-              <Button type="ghost" onClick={this.onSubmit.bind(this, isPatry)}>提交</Button>
-            </div>
-          </form>
-          <div className={styles[`${PrefixCls}-outer-footer`]}>
+            </List.Item >
+            <div className={styles[`${PrefixCls}-outer-button`]} >
+              <Button type="ghost" onClick={this.onSubmit.bind(this, isPatry)} >提交</Button >
+            </div >
+          </form >
+          <div className={styles[`${PrefixCls}-outer-footer`]} >
             (*^_^*)欢迎为我们提出宝贵的意见或建议
-          </div>
-        </div>
-      </div>
+          </div >
+        </div >
+      </div >
     );
   }
 }

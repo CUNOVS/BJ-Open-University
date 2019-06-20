@@ -1,3 +1,4 @@
+import React from 'react';
 import { connect } from 'dva';
 import { WhiteSpace, Icon, List, Layout } from 'components';
 import { getLocalIcon } from 'utils';
@@ -12,20 +13,23 @@ const PrefixCls = 'attendancedetails';
 
 
 function AttendanceDetails ({ location, dispatch, attendancedetails }) {
-  const { name = '考勤详情' } = location.query,
-    { listData } = attendancedetails;
-  const { BaseLine } = Layout;
-
+  const { name = '考勤详情', fullname = '', startdate, enddate } = location.query,
+    { data } = attendancedetails;
+  const headProps = {
+    fullname,
+    startdate,
+    enddate,
+    attendance: data
+  };
   return (
-    <div>
+    <div >
       <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
-      <div className={styles[`${PrefixCls}-outer`]}>
-        <AttendanceHead />
-        <WeekBox />
-      </div>
-
-    </div>
+      <div className={styles[`${PrefixCls}-outer`]} >
+        <AttendanceHead {...headProps} />
+        <WeekBox attendance={data} />
+      </div >
+    </div >
   );
 }
 

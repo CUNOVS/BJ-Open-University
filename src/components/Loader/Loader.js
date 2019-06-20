@@ -10,41 +10,12 @@ import styles from './Loader.less';
 
 const Loader = ({ spinning = false }) => {
   return (
-    <div className={classNames(styles.loader, { [styles.hidden]: !spinning })}>
-      <div className={styles.text}>Loading...</div>
-      <div className={styles.horizontal}>
-        <div className={styles.circlesup}>
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-        </div>
-        <div className={styles.circlesdwn}>
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-        </div>
-      </div>
-      <div className={styles.vertical}>
-        <div className={styles.circlesup}>
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-        </div>
-        <div className={styles.circlesdwn}>
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-          <div className={styles.circle} />
-        </div>
-      </div>
-    </div>
+
+    <div className={classNames(styles.ldsCss, styles.ngScope, { [styles.hidden]: !spinning })} >
+      <div style={{ width: ' 100 % ', height: '100 % ' }} className={styles.ldsRolling} >
+        <div ></div >
+      </div >
+    </div >
 
   );
 };

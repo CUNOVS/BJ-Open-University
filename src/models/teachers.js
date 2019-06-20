@@ -11,6 +11,8 @@ export default modelExtend(model, {
   namespace: 'teachers',
   state: {
     listData: [],
+    refreshing: false,
+    scrollerTop: 0
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -18,7 +20,15 @@ export default modelExtend(model, {
         if (pathname === '/teachers') {
           if (action === 'PUSH') {
             dispatch({
-              type: 'query',
+              type: 'updateState',
+              payload: {
+                listData: [],
+                refreshing: false,
+                scrollerTop: 0
+              }
+            });
+            dispatch({
+              type: 'queryList',
             });
           }
 
@@ -28,7 +38,7 @@ export default modelExtend(model, {
   },
 
   effects: {
-    * query ({}, { call, put, select }) {
+    * queryList ({}, { call, put, select }) {
       const { coureData } = yield select(_ => _.app),
         response = yield call(queryList.queryTeachers, { coureData: JSON.stringify(coureData) });
       if (response.success) {
@@ -36,6 +46,7 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             listData: getTeachers(response.mentors),
+            refreshing: false,
           },
         });
       }

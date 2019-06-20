@@ -1,6 +1,6 @@
 import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
-import { getLocalIcon } from 'utils';
+import { queryMedalList } from 'services/app';
 import { model } from 'models/common';
 
 const getDetail = (arr, id) => {
@@ -10,28 +10,56 @@ const getDetail = (arr, id) => {
 export default modelExtend(model, {
   namespace: 'medal',
   state: {
+    data: [],
     detail: {},
+    id: ''
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         const { id } = query;
-        if (pathname === '/medal') {
-          if (action === 'PUSH') {
-            dispatch({
-              type: 'queryDetails',
-              payload: {
-                id,
-              },
-            });
+        dispatch({
+          type: 'updateState',
+          payload: {
+            id
           }
+        });
+        if (pathname === '/medal') {
+          dispatch({
+            type: 'updateState',
+            payload: {
+              detail: {},
+            }
+          });
+          dispatch({
+            type: 'queryList',
+          });
         }
       });
     },
   },
   effects: {
+    * queryList ({ payload }, { call, put, select }) {
+      const { users: { userid } } = yield select(_ => _.app),
+        { id } = yield select(_ => _.medal),
+        data = yield call(queryMedalList, { userid });
+      if (data) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            data: data.data,
+          },
+        });
+        yield put({
+          type: 'queryDetails',
+          payload: {
+            id
+          }
+        });
+      }
+    },
     * queryDetails ({ payload }, { call, put, select }) {
-      const { data } = yield select(_ => _.medalList),
+      const { data } = yield select(_ => _.medal),
         { id } = payload;
       yield put({
         type: 'updateState',

@@ -1,56 +1,102 @@
 import React from 'react';
-import { Icon } from 'components';
+import { Icon, WhiteSpace } from 'components';
 import { getLocalIcon } from 'utils';
-import Stauts from 'components/status';
+import CnBadge from 'components/cnBadge';
 import styles from './index.less';
 
 const PrefixCls = 'weekbox',
   grid = [
-    { text: '一', num: '1' },
-    { text: '二', num: '2' },
-    { text: '三', num: '0' },
-    { text: '四', num: '0' },
-    { text: '五', num: '0' },
-    { text: '六', num: '0' },
-    { text: '日', num: '1' },
+    { day1: 0 },
+    { day2: 0 },
+    { day3: 0 },
+    { day4: 0 },
+    { day5: 0 },
+    { day6: 0 },
+    { day7: 0 },
   ];
+
+const getGrid = (obj) => {
+  const arr = [];
+  Object.keys(obj)
+    .map((items, i) => {
+      let o = {};
+      o[items] = obj[items];
+      arr.push(o);
+    });
+  return arr;
+};
+
 
 class WeekBox extends React.Component {
   constructor (props) {
     super(props);
   }
 
+  getWeekAttendance = (arr) => (arr.filter(item => item === 1).length);
+
+
   render () {
+    const { attendance } = this.props,
+      { currentData, weekStat, passed_weeks } = attendance;
     return (
-      <div className={styles[`${PrefixCls}-population`]}>
-        <div className={styles[`${PrefixCls}-firstLine`]}>
-          <div className={styles[`${PrefixCls}-firstLine-title`]}>
-            <span><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span>
-            <span> 第一周</span>
-          </div>
-          <div className={styles[`${PrefixCls}-firstLine-time`]}>2018.9.18至2018.9.25</div>
-        </div>
-        <div style={{ paddingBottom: '0.2rem' }}>
-          <div className={styles[`${PrefixCls}-week`]}>
-            {grid.map((data, index) => (
-              <div className={styles[`${PrefixCls}-week-div`]}>
-                {data.text}
-              </div>
-            ))}
-          </div>
-          <div className={styles[`${PrefixCls}-week`]}>
-            {grid.map((data, index) => (
-              <div className={styles[`${PrefixCls}-week-divII`]}>
-                {data.num}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-bottom`]}>
-          <div>周出勤天数:4</div>
-          <Stauts content="已达标" />
-        </div>
-      </div>
+      <div >
+        <div className={styles[`${PrefixCls}-population`]} >
+          <div className={styles[`${PrefixCls}-firstLine`]} >
+            <div className={styles[`${PrefixCls}-firstLine-title`]} >
+              <span ><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span >
+              <span > 当前周</span >
+            </div >
+          </div >
+          <div style={{ paddingBottom: '0.2rem' }} >
+            <div className={styles[`${PrefixCls}-week`]} >
+              {grid.map((data, index) => (
+                <div key={index} className={styles[`${PrefixCls}-week-div`]} >
+                  {['一', '二', '三', '四', '五', '六', '日'][index]}
+                </div >
+              ))}
+            </div >
+            <div className={styles[`${PrefixCls}-week`]} >
+              {getGrid(Object.assign(...grid, currentData))
+                .map((data, index) => (
+                  <div key={index} className={styles[`${PrefixCls}-week-divII`]} >
+                    {data[`day${index + 1}`]}
+                  </div >
+                ))}
+            </div >
+          </div >
+          <div className={styles[`${PrefixCls}-bottom`]} >
+            <div >
+              {`周出勤天数:${this.getWeekAttendance(getGrid(Object.assign(...grid, currentData)))}`}
+            </div >
+            <CnBadge
+              text={weekStat ? '达标' : '未达标'}
+              background={weekStat ? '#1eb259' : '#f34e14'}
+              color="#fff"
+              size="normal"
+            />
+          </div >
+        </div >
+        {cnIsArray(passed_weeks) && passed_weeks.map(item => (
+          <div >
+            <WhiteSpace />
+            <div className={styles[`${PrefixCls}-population`]} >
+              <div className={styles[`${PrefixCls}-firstLine`]} >
+                <div className={styles[`${PrefixCls}-firstLine-title`]} >
+                  <span ><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span >
+                  <span > {`第${item.slot}周`}</span >
+                </div >
+                <CnBadge
+                  text={item.stat ? '达标' : '未达标'}
+                  background={item.stat ? '#1eb259' : '#f34e14'}
+                  color="#fff"
+                  size="normal"
+                />
+              </div >
+
+            </div >
+          </div >
+        ))}
+      </div >
     );
   }
 }

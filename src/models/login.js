@@ -27,7 +27,7 @@ export default modelExtend(pageModel, {
           buttonState: false,
         },
       });
-      const { from = '/', password = '' } = payload;
+      const { from = '/', password = '', username: userloginname } = payload;
       const data = yield call(login, payload, true);
       yield put({
         type: 'updateState',
@@ -36,26 +36,25 @@ export default modelExtend(pageModel, {
         },
       });
       if (data && data.success) {
-        if (data.error) {
-          Toast.offline(data.error);
-        } else {
-          const { fullname = '', userid = '', token = '', userpictureurl = '' } = data,
-            users = {
-              user_name: fullname,
-              user_pwd: password,
-              user_token: token,
-              user_id: userid,
-              user_avatar: userpictureurl,
-            };
-          setLoginIn(users);
-          yield put({
-            type: 'app/updateUsers',
-            payload: {},
-          });
-          yield put(routerRedux.replace({
-            pathname: from,
-          }));
-        }
+        const { fullname = '', userid = '', token = '', userpictureurl = '' } = data,
+          users = {
+            user_name: fullname,
+            user_pwd: password,
+            user_token: token,
+            user_id: userid,
+            user_avatar: userpictureurl,
+            user_login_name: userloginname
+          };
+        setLoginIn(users);
+        yield put({
+          type: 'app/updateUsers',
+          payload: {},
+        });
+        yield put(routerRedux.replace({
+          pathname: from,
+        }));
+      } else {
+        Toast.offline(data.error);
       }
     },
   },

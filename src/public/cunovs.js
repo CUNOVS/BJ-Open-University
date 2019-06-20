@@ -1,8 +1,25 @@
+/* global cordova requestFileSystem LocalFileSystem window */
+
 var cunovs = {
   cnVersion: '0.0.1',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
+  cnApiServiceUrl: 'http://192.168.0.202',
+  cnMoodleServeUrl: 'http://192.168.0.122',
+  cnSysUrl: 'http://192.168.0.203:8082',
+  cnDownloadFileTag: 'tag_cunovs_download_files',
+  cnMiniType: {
+    '.doc': 'application/msword',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.xls': 'application/vnd.ms-excel',
+    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.ogg': 'audio/ogg',
+    '.pdf': 'application/pdf',
+    '.pps': 'application/vnd.ms-powerpoint',
+    '.ppt': 'application/vnd.ms-powerpoint',
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  },
   cnId: function () {
     return cnGlobalIndex++;
   },
@@ -40,17 +57,17 @@ var cunovs = {
         switch (router) {
           case '/mine': {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           case '/closed': {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           default: {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#22609c');
           }
         }
       } else {
@@ -59,12 +76,12 @@ var cunovs = {
           case '/':
           case '/dashboard': {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           default: {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#22609c');
           }
         }
       }
@@ -257,6 +274,8 @@ var cunovs = {
       });
     }
   },
+
+
   cnDeleteAlias: function (alias, accessToken) {
     if (cnIsiOS() && typeof (window.JPush) !== 'undefined') {
       window.JPush.deleteAlias({
@@ -314,6 +333,170 @@ var cunovs = {
     states[Connection.NONE] = '无网络连接';
     return (states[networkState]);
   },
+  cnHasPlugin: function (key) {
+    if (cnIsDevice() && cnIsDefined(cordova) && cordova.plugins) {
+      return !cnIsDefined(key) || cordova.plugins[key];
+    }
+    return false;
+  },
+  cnPrints: function (obj) {
+    console.log(obj);
+  },
+  cnGetFileMiniType: function (name) {
+    var index = -1;
+    if (name && (index = name.lastIndexOf('.')) != -1) {
+      return cnMiniType[name.substring(index)] || '';
+    }
+    return '';
+  },
+  cnOpener2File: function (filePath, miniType, onSuccess, onError) {
+    onError = onError || cnPrints;
+    var tag = 'fileOpener2';
+    if (cnHasPlugin(tag)) {
+      var errorMessage = '';
+      miniType = miniType || cnGetFileMiniType(filePath);
+      if (!filePath || !miniType) {
+        errorMessage = (!filePath ? '文件路径' : '文件类型') + '必须提供。';
+      }
+      if (errorMessage === '') {
+        onSuccess = onSuccess || cnPrints;
+        cordova.plugins.fileOpener2.showOpenWithDialog(
+          filePath,
+          miniType,
+          onSuccess,
+          onError
+        );
+      } else {
+        onError({ 'message': errorMessage });
+      }
+    } else {
+      onError({ 'message': '没有找到插件[' + tag + ']' });
+    }
+  },
+  cnGetLocalFile: function (fileName, options, onSuccess, onError) {
+    onError = onError || cnPrints;
+    if (!!fileName && cnHasPlugin() && requestFileSystem) {
+      options = options || {};
+      onSuccess = onSuccess || cnPrints;
+      var size = options.size || 0;
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, size, function (fs) {
+        fs.root.getFile(decodeURI(fileName), {
+          create: options.create === true,
+          exclusive: options.exclusive === true
+        }, onSuccess, onError);
+      }, onError);
+    } else {
+      onError({ 'message': !fileName ? '需要获取的文件名必须提供。' : '无法使用文件读取插件。' });
+    }
+  },
+  cnDownloadFile: function (fileUrl, fileName, options, onSuccess, onError, onProgress) {
+    onError = onError || cnPrints;
+    onProgress = onProgress || function (e) {
+      if (e.lengthComputable) {
+        var progress = e.loaded / e.total;
+        // 显示下载进度
+        console.log((progress * 100).toFixed(2));
+      }
+    };
+    if (cnHasPlugin() && FileTransfer && requestFileSystem) {
+      var errorMessage = '';
+      if (!fileUrl || !fileName) {
+        errorMessage = (!fileUrl ? '下载文件路径' : '文件名称') + '必须提供。';
+      }
+      if (errorMessage === '') {
+        onSuccess = onSuccess || cnPrints;
+        options = options || { create: true };//默认创建文件
+        cnGetLocalFile(decodeURI(fileName), options, function (fileEntry) {
+          var fileTransfer = new FileTransfer(),
+            fileUri = options.needEncode === true ? encodeURI(fileUrl) : fileUrl;
+          fileTransfer.onprogress = onProgress;
+          fileTransfer.download(
+            fileUri,         //uri网络下载路径
+            fileEntry.nativeURL,      //url本地存储路径
+            function (entry) {
+              if (localStorage && JSON) {
+                entry.file(function (file) {
+                  var value = JSON.parse(localStorage.getItem(cnDownloadFileTag) || '[]');
+                  value.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    localURL: file.localURL,
+                    lastModified: file.lastModified
+                  });
+                  localStorage.setItem(cnDownloadFileTag, JSON.stringify(value));
+                });
+              }
+              onSuccess(entry);
+            },
+            onError
+          );
+        }, onError);
+      } else {
+        onError({ 'message': errorMessage });
+      }
+    } else {
+      onError({ 'message': '无法使用文件下载插件。' });
+    }
+  },
+  cnGetOrDownAndOpenFile: function (file, onSuccess, onError, onProgress) {
+    file = file || {};
+    onError = onError || cnPrints;
+    var fileName = file.fileName || '',
+      fileUrl = file.fileUrl || '',
+      mimeType = file.mimeType || '';
+    if (!fileName) {
+      onError({ 'message': '获取本地文件，文件名不能为空。' });
+      return;
+    }
+    var fileExistAndOpen = function (entry) {
+      cnOpener2File(entry.toInternalURL(), mimeType, onSuccess, onError);
+    };
+    cnGetLocalFile(fileName, {}, fileExistAndOpen, function (error) {
+      if (!fileUrl) {
+        onError({ 'message': '本地文件不存在，获取网络文件，网络地址不能为空。' });
+        return;
+      }
+      if (!error || !error.code || error.code !== 1) {
+        onError({ 'message': '获取本地文件时发生未知错误。' });
+        return;
+      }
+      cnDownloadFile(fileUrl, fileName, null, fileExistAndOpen, onError, onProgress);
+    });
+
+  },
+  cnDoScan: function (onSuccess, onError) {
+    onError = onError || cnPrints;
+    var tag = 'barcodeScanner';
+    if (cnHasPlugin(tag)) {
+      onSuccess = onSuccess || function (result) {
+        if (!result.cancelled) {
+          alert('扫码获得的内容\n' +
+            '返回结果: ' + result.text + '\n' +
+            '格式化标准: ' + result.format + '\n' +
+            '是否取消: ' + result.cancelled);
+        }
+      };
+      cordova.plugins.barcodeScanner.scan(
+        onSuccess,
+        onError,
+        {
+          preferFrontCamera: false, // iOS and Android
+          showFlipCameraButton: false, // iOS and Android
+          showTorchButton: false, // iOS and Android
+          torchOn: false, // Android, launch with the torch switched on (if available)
+          prompt: '请将二维码至于取景框内扫描', // Android
+          resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+          formats: 'QR_CODE,PDF_417', // default: all but PDF_417 and RSS_EXPANDED
+          orientation: 'portrait', // Android only (portrait|landscape), default unset so it rotates with the device
+          disableAnimations: true, // iOS
+          disableSuccessBeep: false // iOS
+        }
+      );
+    } else {
+      onError({ 'message': '没有找到插件[' + tag + ']' });
+    }
+  }
 };
 
 window.cnApply = cunovs.cnIsDefined(Object.assign) ? Object.assign : function (target, source) {
@@ -334,6 +517,16 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
+if (typeof Array.prototype.remove != 'function') {
+  // see below for better implementation!
+  Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+      this.splice(index, 1);
+    }
+  };
+}
+
 (function () {
   var onDeviceReady = function () {
       try {
@@ -346,7 +539,7 @@ if (typeof String.prototype.startsWith != 'function') {
         if (cordova.InAppBrowser) {
           cnOpen = function (url, target, params, callback) {
             target = target || '_self';
-            params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#22609c,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
             callback = callback || new Function();
             var ref = cordova.InAppBrowser.open(url, target, params, callback),
               spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>';

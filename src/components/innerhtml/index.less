@@ -5,9 +5,21 @@
 .@{PrefixCls}-outer {
   padding: 20px;
   overflow: hidden;
+  font-size: 30px;
   line-height: 1.5em;
   & p, h1, h2, h3, h4, h5, h6, ul, ol {
-    margin: 1em 0;
+    margin: 0.1em 0;
+  }
+
+  table {
+    > tbody {
+      > tr {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: center;
+      }
+    }
   }
 }
 

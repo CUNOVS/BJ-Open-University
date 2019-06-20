@@ -18,6 +18,6 @@ InnerHtml.propTypes = {
 
 InnerHtml.defaultProps = {
   data: '',
-  handleClick: null
+  handleClick: null,
 };
 export default InnerHtml;

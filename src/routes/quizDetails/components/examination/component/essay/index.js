@@ -1,15 +1,14 @@
 import React from 'react';
 import { connect } from 'dva';
-import { TextareaItem  } from 'components';
+import { TextareaItem } from 'components';
+import { createForm } from 'rc-form';
 import styles from './index.less';
 
-
+@createForm()
 class Essay extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   componentWillMount () {
@@ -20,12 +19,26 @@ class Essay extends React.Component {
 
   }
 
-  render () {
+  textChange = (value) => {
+    this.props.dispatch({
+      type: 'quizDetails/updateTextVal',
+      payload: {
+        value,
+      }
+    });
+  };
 
+  render () {
+    const { answer, form } = this.props;
+    const { getFieldProps } = form;
     return (
       <TextareaItem
-        placeholder="auto focus in Alipay client"
-        autoHeight
+        {...getFieldProps(answer.name, {
+          initialValue: answer.value,
+        })}
+        onChange={(val) => this.textChange(val)}
+        placeholder="请回答"
+        rows={answer.rows || 3}
       />
     );
   }

@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'dva';
 import { InputItem } from 'components';
+import { createForm } from 'rc-form';
 import styles from './index.less';
 
-
+@createForm()
 class ShortAnswer extends React.Component {
   constructor (props) {
     super(props);
@@ -18,12 +19,26 @@ class ShortAnswer extends React.Component {
 
   }
 
-  render () {
+  textChange = (value) => {
+    this.props.dispatch({
+      type: 'quizDetails/updateTextVal',
+      payload: {
+        value,
+      }
+    });
+  };
 
+  render () {
+    const { answer, form } = this.props;
+    const { getFieldProps } = form;
     return (
       <InputItem
-        placeholder="请答题"
-        autoHeight
+        {...getFieldProps(answer.name, {
+          initialValue: answer.value,
+        })}
+        onChange={(val) => this.textChange(val)}
+        clear
+        placeholder="请回答"
       />
     );
   }

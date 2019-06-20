@@ -10,7 +10,7 @@ import { baseURL, userTag } from './config';
 
 const { usertoken } = userTag;
 axios.defaults.baseURL = baseURL;
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;  //设置不带cookie 不然存在跨域问题
 const doDecode = (json) => {
   return eval(`(${json})`);
 };
@@ -50,27 +50,36 @@ const fetch = (options) => {
   } catch (e) {
     Toast.offline(e.message);
   }
-
-  switch (method.toLowerCase()) {
-    case 'get':
-      return axios.get(url, {
-        params: cloneData,
-      });
-    case 'delete':
-      return axios.delete(url, {
-        data: cloneData,
-      });
-    case 'post':
-      return axios.post(url, qs.stringify(cloneData, {
-        indices: false,
-      }));
-    case 'put':
-      return axios.put(url, cloneData);
-    case 'patch':
-      return axios.patch(url, cloneData);
-    default:
-      return axios(options);
+  if (data instanceof FormData) {
+    axios.defaults.withCredentials = false;  //设置不带cookie 不然存在跨域问题
+    return axios.post(url, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } else {
+    switch (method.toLowerCase()) {
+      case 'get':
+        return axios.get(url, {
+          params: cloneData,
+        });
+      case 'delete':
+        return axios.delete(url, {
+          data: cloneData,
+        });
+      case 'post':
+        return axios.post(url, qs.stringify(cloneData, {
+          indices: false,
+        }));
+      case 'put':
+        return axios.put(url, cloneData);
+      case 'patch':
+        return axios.patch(url, cloneData);
+      default:
+        return axios(options);
+    }
   }
+
 };
 
 const getResponeseErrMsg = (status) => {

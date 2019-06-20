@@ -5,38 +5,36 @@ import { Css3Loading, LoadingFail } from 'components/loading';
 
 const PrefixCls = 'bubble',
   showStatus = (status = 0) => {
-    return status == 0 ? '' : status == 1 ? <Css3Loading /> : <LoadingFail />;
+    return status === 0 ? '' : status === 1 ? <Css3Loading /> : <LoadingFail />;
   };
 module.exports = {
   ReceiveBubble: (props) => {
-    const { cuName, msgInfo, msgcDate, userPhoto } = props;
+    const { details, avatar } = props;
     return (
-      <div className={styles[`${PrefixCls}-left`]}>
-        <div className={styles[`${PrefixCls}-left-user`]}>{cuName}</div>
-        <span className={styles[`${PrefixCls}-left-iconbox`]}>
-          <img src={getImages(userPhoto, 'user')} />
-        </span>
-        <div className={styles[`${PrefixCls}-left-contentbox`]}>
-          {msgInfo}
-        </div>
-        <div>{msgcDate}</div>
-      </div>
+      <div className={styles[`${PrefixCls}-left`]} >
+        <span className={styles[`${PrefixCls}-left-iconbox`]} >
+          <img src={getImages(avatar, 'user')} />
+        </span >
+        <div className={styles[`${PrefixCls}-left-contentbox`]} >
+          {details}
+        </div >
+      </div >
     );
   },
 
   ReplyBubble: (props) => {
     // status : 0 发送成功 , 1 发送中 , 2 发送失败
-    const { cuName, msgInfo, useravatar, _status = 0 } = props;
+    const { details, selfavatar, state = 0 } = props;
     return (
-      <div className={styles[`${PrefixCls}-right`]}>
-        <span className={styles[`${PrefixCls}-right-iconbox`]}>
-          <img src={getImages(useravatar, 'user')} />
-        </span>
-        <div className={styles[`${PrefixCls}-right-contentbox`]}>
-          {msgInfo}
-        </div>
-        <div className={styles[`${PrefixCls}-right-loading`]}>{showStatus(_status)}</div>
-      </div>
+      <div className={styles[`${PrefixCls}-right`]} >
+        <span className={styles[`${PrefixCls}-right-iconbox`]} >
+          <img src={getImages(selfavatar, 'user')} />
+        </span >
+        <div className={styles[`${PrefixCls}-right-contentbox`]} >
+          {details}
+        </div >
+        <div className={styles[`${PrefixCls}-right-loading`]} >{showStatus(state)}</div >
+      </div >
     );
   },
 

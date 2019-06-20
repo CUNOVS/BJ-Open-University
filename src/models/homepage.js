@@ -13,9 +13,17 @@ export default modelExtend(model, {
       history.listen(location => {
         let { pathname, action } = location;
         if (pathname.startsWith('/homepage')) {
-          dispatch({
-            type: 'query',
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                data: {},
+              }
+            });
+            dispatch({
+              type: 'query',
+            });
+          }
         }
       });
     },
@@ -24,13 +32,13 @@ export default modelExtend(model, {
     * query ({ payload }, { call, put, select }) {
       const { users: { userid } } = yield select(_ => _.app),
         data = yield call(queryUserInfo, { userid });
-      if(data){
+      if (data) {
         yield put({
-          type:'updateState',
-          payload:{
+          type: 'updateState',
+          payload: {
             data
           }
-        })
+        });
       }
     },
   },

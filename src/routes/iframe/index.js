@@ -13,7 +13,7 @@ function Comp ({ location, dispatch, app }) {
   return (
     <div style={{ overflow: 'hidden' }}>
       <Nav title={name} dispatch={dispatch} />
-      {htmlBody != '' ? <div dangerouslySetInnerHTML={getContents()} /> :
+      {htmlBody !== '' ? <div dangerouslySetInnerHTML={getContents()} /> :
       <Iframes src={externalUrl} dispatch={dispatch} />}
     </div>
   );

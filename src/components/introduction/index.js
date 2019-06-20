@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 import styles from './index.less';
 import { Icon } from 'components';
 import InnerHtml from 'components/innerhtml';
+import { handlerDivInnerHTMLClick } from 'utils/commonevents';
 import classNames from 'classnames';
 
 const PrefixCls = 'introduction';
@@ -38,7 +39,15 @@ class Introduction extends React.Component {
           isShow: true,
         });
       }
-    }, 300);
+    }, 5000);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.dataSource !== this.props.dataSource) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
+      });
+    }
   }
 
   componentWillUnmount () {
@@ -46,19 +55,24 @@ class Introduction extends React.Component {
   }
 
   render () {
+    const { data, courseid, dispatch } = this.props,
+      handleDivClick = (e) => {
+        handlerDivInnerHTMLClick(e, courseid, dispatch);
+      };
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
         <div
           ref={el => this.out = el}
           className={classNames(styles[`${PrefixCls}-outer-content`], { [styles.open]: this.state.isOpen })}
         >
-          <div ref={el => this.inner = el}><InnerHtml data={this.props.data} /></div>
+          <div ref={el => this.inner = el}><InnerHtml data={data} handleClick={handleDivClick.bind(null)} />
+          </div>
         </div>
         {this.state.isShow ?
           <div className={classNames(styles[`${PrefixCls}-mask`], { [styles.vague]: !this.state.isOpen })}
                onClick={this.handleClick}
           >
-            <Icon type={this.state.isOpen ? 'up' : 'down'} size="lg" color="#22609c" />
+            <Icon type={this.state.isOpen ? 'up' : 'down'} size="lg" color="#22609c"/>
           </div>
           :
           ''
@@ -70,6 +84,8 @@ class Introduction extends React.Component {
 
 Introduction.defaultProps = {
   data: '',
+  dispatch: null,
+  courseid: ''
 };
 Introduction.propTypes = {};
 

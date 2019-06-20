@@ -3,12 +3,14 @@
  * @date 2019/04/02 14:39:52
  * @Description:
  */
+import React from 'react';
 import { Icon, WhiteSpace, Tabs, Button, WingBlank, List } from 'components';
 import CnBadge from 'components/cnBadge';
 import InnerHtml from 'components/innerhtml';
 import TitleBox from 'components/titlecontainer';
+import { handlerChangeRouteClick } from 'utils/commonevents';
+import { getCommonDate, getLocalIcon, getSurplusDay, getImages } from 'utils';
 import FeedBack from '../feedkack';
-import { getCommonData, getLocalIcon, getSurplusDay, getImages } from 'utils';
 import SelfFiles from '../selfFiles';
 import styles from './index.less';
 
@@ -37,6 +39,18 @@ const PrefixCls = 'status',
       default :
         return <CnBadge text="未知" background="#ff9a1b" />;
     }
+  },
+
+  getStyle = (type, data, timemodified = 0) => {
+    if (type === 'submitted') {
+      if (data * 1000 < new Date() && data > timemodified) {
+        return { color: '#1eb259' };
+      } else if (data * 1000 < new Date() && data < timemodified) {
+        return { color: '#f34e14' };
+      }
+      return null;
+    }
+    return null;
   },
 
   getGradeStatus = (status) => {
@@ -69,116 +83,172 @@ const PrefixCls = 'status',
         return <CnBadge text="未评分" background="#f34e14" />;
     }
   },
-  getButton = (type) => {
-    if (type === 'new') {
-      return '添加提交';
-    } else if (type === 'submitted') {
-      return '编辑提交的作业';
-    }
-  };
+  getButton = (type) => (
+    type === 'new' ? '添加提交' : '编辑提交的作业'
+  );
 const Status = (props) => {
-  const { submitStatus, gradingstatus, duedate, timemodified = 0, submitDataType, grade = {} } = props;
+  const { submitStatus, gradingstatus, duedate = 0, cutoffdate = 0, allowsubmissionsfromdate, timemodified = 0, submitDataType, grade = {}, fileIdPrefix } = props;
   return (
-    <div className={styles[`${PrefixCls}-status`]}>
-      <div className={styles[`${PrefixCls}-status-head`]}>
-        <div className={styles[`${PrefixCls}-status-head-left`]}>
-          <span><Icon type="down" color="#22609c" /></span>
-          <span>提交状态</span>
-        </div>
-        <div className={styles[`${PrefixCls}-status-head-right`]}>
-          <span>{getSubmitStatus(submitStatus)}</span>
-          <span>{getGradeStatus(gradingstatus)}</span>
-        </div>
-      </div>
+    <div className={styles[`${PrefixCls}-status`]} >
+      <div className={styles[`${PrefixCls}-status-head`]} >
+        <div className={styles[`${PrefixCls}-status-head-left`]} >
+          <span ><Icon type="down" color="#22609c" /></span >
+          <span >提交状态</span >
+        </div >
+        <div className={styles[`${PrefixCls}-status-head-right`]} >
+          <span >{getSubmitStatus(submitStatus)}</span >
+          <span >{getGradeStatus(gradingstatus)}</span >
+        </div >
+      </div >
       {
         gradingstatus === 'graded'
-          ?
-          <Tabs tabs={tabs}
-                initialPage={0}
-                tabBarInactiveTextColor="#b7b7b7"
-                tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
+          ? <Tabs
+            tabs={tabs}
+            initialPage={0}
+            tabBarInactiveTextColor="#b7b7b7"
+            tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
           >
-            <div>
+            <div >
               {submitStatus !== 'new'
-                ?
-                <SelfFiles data={submitDataType} />
+                ? <SelfFiles data={submitDataType} dispatch={props.dispatch} />
                 :
                 ''
               }
               <WhiteSpace />
-              <div className={styles[`${PrefixCls}-status-time`]}>
-        <span>
-          <Icon type={getLocalIcon('/components/enddate.svg')} size="xs" />
-          <span>截止时间</span>
-        </span>
-                <span>{getCommonData(duedate)}</span>
-              </div>
-              <div className={styles[`${PrefixCls}-status-time`]}>
-                <span><Icon type={getLocalIcon('/components/surplus.svg')} size="xs" /><span>剩余时间</span></span>
-                <span>{getSurplusDay(duedate)}</span>
-              </div>
-              <div className={styles[`${PrefixCls}-status-time`]}>
-                <span><Icon type={getLocalIcon('/components/modify.svg')} size="xs" /><span>最后修改</span></span>
-                <span>{timemodified ? getCommonData(timemodified) : '-'}</span>
-              </div>
+              {
+                duedate > 0 ?
+                  <div className={styles[`${PrefixCls}-status-time`]} >
+                    <span >
+                      <Icon type={getLocalIcon('/components/enddate.svg')} size="xs" />
+                      <span >截止时间</span >
+                    </span >
+                    <span >{getCommonDate(duedate)}</span >
+                  </div >
+                  :
+                  null
+              }
+              {
+                duedate > 0 ?
+                  <div className={styles[`${PrefixCls}-status-time`]} >
+                    <span ><Icon type={getLocalIcon('/components/surplus.svg')} size="xs" /><span >剩余时间</span ></span >
+                    {getSurplusDay(duedate, submitStatus, timemodified)}
+                  </div >
+                  :
+                  null
+              }
+              <div className={styles[`${PrefixCls}-status-time`]} >
+                <span ><Icon type={getLocalIcon('/components/modify.svg')} size="xs" /><span >最后修改</span ></span >
+                <span >{submitStatus !== 'new' ? getCommonDate(timemodified) : '-'}</span >
+              </div >
               <WhiteSpace size="lg" />
-              <WingBlank>
-                <Button type="primary">{getButton(submitStatus)}</Button>
-              </WingBlank>
-            </div>
+              <WingBlank >
+                {/* <Button type="primary" >{getButton(submitStatus)}</Button > */}
+                <Button
+                  type="primary"
+                  onClick={(e) => (handlerChangeRouteClick(
+                    'homeworkadd',
+                    { assignId: props.assignId },
+                    props.dispatch, e))}
+                >
+                  {getButton(submitStatus)}
+                </Button >
+              </WingBlank >
+            </div >
 
-            <div>
-              <div>
+            <div >
+              <div >
                 <TitleBox title="最终成绩" sup="" />
                 <InnerHtml data={grade.gradefordisplay} />
-              </div>
-              <FeedBack data={grade.feedbackplugins} />
+              </div >
+              <FeedBack data={grade.feedbackplugins} fileIdPrefix={fileIdPrefix} />
               <TitleBox title="评分人" sup="" />
-              <List className={styles[`${PrefixCls}-list`]}>
+              <List className={styles[`${PrefixCls}-list`]} >
                 <List.Item
                   arrow="horizontal"
                   thumb={getImages(grade.gradeUser.avatar, 'user')}
                   multipleLine
-                  onClick={() => {
+                  onClick={(e) => {
+                    if (grade.gradeUserId) {
+                      handlerChangeRouteClick('userpage', { userid: grade.gradeUserId }, props.dispatch, e);
+                    }
                   }}
                 >
                   {grade.gradeUser.userName}
-                  <List.Item.Brief>{getCommonData(grade.timemodified)}</List.Item.Brief>
-                </List.Item>
-              </List>
-            </div>
-          </Tabs>
+                  <List.Item.Brief >{getCommonDate(grade.timemodified)}</List.Item.Brief >
+                </List.Item >
+              </List >
+            </div >
+          </Tabs >
           :
-          <div>
+          <div >
             {submitStatus !== 'new'
               ?
-              <SelfFiles data={submitDataType} />
+              <SelfFiles data={submitDataType} fileIdPrefix={fileIdPrefix} dispatch={props.dispatch} />
               :
               ''
             }
             <WhiteSpace />
-            <div className={styles[`${PrefixCls}-status-time`]}>
-        <span>
-          <Icon type={getLocalIcon('/components/enddate.svg')} size="xs" />
-          <span>截止时间</span>
-        </span>
-              <span>{getCommonData(duedate)}</span>
-            </div>
-            <div className={styles[`${PrefixCls}-status-time`]}>
-              <span><Icon type={getLocalIcon('/components/surplus.svg')} size="xs" /><span>剩余时间</span></span>
-              <span>{getSurplusDay(duedate)}</span>
-            </div>
-            <div className={styles[`${PrefixCls}-status-time`]}>
-              <span><Icon type={getLocalIcon('/components/modify.svg')} size="xs" /><span>最后修改</span></span>
-              <span>{timemodified ? getCommonData(timemodified) : '-'}</span>
-            </div>
+            {
+              duedate > 0 ?
+                <div className={styles[`${PrefixCls}-status-time`]} >
+                  <span >
+                    <Icon type={getLocalIcon('/components/enddate.svg')} size="xs" />
+                    <span >截止时间</span >
+                  </span >
+                  <span >{getCommonDate(duedate)}</span >
+                </div >
+                :
+                null
+            }
+            {
+              duedate > 0 ?
+                <div className={styles[`${PrefixCls}-status-time`]} >
+                  <span ><Icon type={getLocalIcon('/components/surplus.svg')} size="xs" /><span >剩余时间</span ></span >
+                  <span
+                    style={getStyle(submitStatus, duedate, timemodified)}
+                  > {getSurplusDay(duedate, submitStatus, timemodified)}
+                  </span >
+                </div >
+                :
+                null
+            }
+            <div className={styles[`${PrefixCls}-status-time`]} >
+              <span ><Icon type={getLocalIcon('/components/modify.svg')} size="xs" /><span >最后修改</span ></span >
+              <span >{submitStatus !== 'new' ? getCommonDate(timemodified) : '-'}</span >
+            </div >
             <WhiteSpace size="lg" />
-            <WingBlank>
-              <Button type="primary">{getButton(submitStatus)}</Button>
-            </WingBlank>
-          </div>
+            <WingBlank >
+              {
+                cutoffdate > 0 ? (
+                    cutoffdate * 1000 - new Date() > 0 ?
+                      <Button
+                        type="primary"
+                        onClick={(e) => (handlerChangeRouteClick(
+                          'homeworkadd',
+                          { assignId: props.assignId },
+                          props.dispatch, e))}
+                      >
+                        {getButton(submitStatus)}
+                      </Button >
+                      :
+                      null
+                  ) :
+                  (
+                    <Button
+                      type="primary"
+                      onClick={(e) => (handlerChangeRouteClick(
+                        'homeworkadd',
+                        { assignId: props.assignId },
+                        props.dispatch, e))}
+                    >
+                      {getButton(submitStatus)}
+                    </Button >
+                  )
+              }
+            </WingBlank >
+          </div >
       }
-    </div>
+    </div >
   );
 };
 export default Status;

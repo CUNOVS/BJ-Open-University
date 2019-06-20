@@ -11,9 +11,7 @@ import Nav from 'components/nav';
 import { Icon } from 'components';
 import { getLocalIcon } from 'utils';
 import LessonItem from 'components/lessonitem';
-import pic from '../lessondetails/pic.jpg';
 import TitleBox from 'components/titlecontainer';
-import video from '../lessondetails/jquery.mp4';
 
 const PrefixCls = 'video';
 
@@ -82,8 +80,7 @@ class Video extends React.Component {
           style={{ objectFit: 'contain' }}
           width="100%"
           preload="none"
-          poster={pic}
-          src={video}
+          src={""}
           controlsList="nodownload"
           controls="controls"
         />

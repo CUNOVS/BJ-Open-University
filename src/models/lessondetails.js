@@ -6,7 +6,10 @@
 
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
+import { Toast } from 'components';
+import { handlerCourseClick } from 'utils/commonevents';
 import { queryLessonDetails } from 'services/lesson';
+import { url } from 'services/resource';
 
 
 /**
@@ -22,10 +25,8 @@ const getLessonList = (arr) => {
  * 修改返回值
  */
 const adapter = (data) => {
-  data.master = cnIsArray(data.master) && data.master[0] || { fullname: '未知', id: '' };
-  data.tutor = cnIsArray(data.tutor) && data.tutor[0] || { fullname: '未知', id: '' };
-  data.lessonImage = cnIsArray(data.overviewfiles) && data.overviewfiles.length > 0 ? data.overviewfiles[0].fileurl : '';
   data.guide = data.contents[0].modules;
+  data.section0Summary = data.contents[0].summary;
   data.resources = getLessonList(data.contents);
   return data;
 };
@@ -36,6 +37,8 @@ export default modelExtend(model, {
     data: {},
     refreshing: false,
     selectIndex: 0,
+    activityIndex: 0
+
   },
   subscriptions: {
     setup ({ history, dispatch }) {
@@ -51,14 +54,14 @@ export default modelExtend(model, {
                 refreshing: false,
               },
             });
+            dispatch({
+              type: 'queryDetails',
+              payload: {
+                userid,
+                courseid,
+              },
+            });
           }
-          dispatch({
-            type: 'queryDetails',
-            payload: {
-              userid,
-              courseid,
-            },
-          });
         }
       });
     },
@@ -78,11 +81,29 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             selectIndex: data.activityIndex > 0 ? 1 : 0,
+            activityIndex: data.activityIndex
           },
         });
+      } else {
+        Toast.fail(data.message || '获取失败');
+      }
+    },
+
+    * queryUrl ({ payload }, { call, put, select }) {
+      const { dispatch = '', cmid = '', courseid = '', name = '', ...param } = payload,
+        { success, message = '获取失败', data = [{}] } = yield call(url, {
+          cmid,
+          courseid,
+          name,
+          ...param
+        }),
+        targets = {};
+      if (success && dispatch) {
+        const { id: urlId = '', content = [], cmid: ccmId = '', ...otherDatas } = data[0];
+        handlerCourseClick({ content, ...otherDatas, id: ccmId }, courseid, dispatch);
+      } else {
+        Toast.fail(message);
       }
     },
   },
-
-
 });

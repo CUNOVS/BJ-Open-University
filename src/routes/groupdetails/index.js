@@ -1,3 +1,4 @@
+import React from 'react';
 import { connect } from 'dva';
 import { WhiteSpace, Icon, List, Layout } from 'components';
 import { getLocalIcon } from 'utils';
@@ -12,22 +13,24 @@ const PrefixCls = 'groupdetails';
 
 
 function GroupDetails ({ location, dispatch, groupdetails }) {
-  const { name = '小组详情' } = location.query,
-    { listData, paginations, scrollerTop } = groupdetails,
+  const { name = '小组详情', courseid } = location.query,
+    { listData, hasMore, scrollerTop } = groupdetails,
     onRefresh = (callback) => {
       dispatch({
-        type: `${PrefixCls}/queryListview`,
+        type: `${PrefixCls}/queryList`,
         payload: {
           callback,
           isRefresh: true,
+          courseid
         },
       });
     },
     onEndReached = (callback) => {
       dispatch({
-        type: `${PrefixCls}/queryListview`,
+        type: `${PrefixCls}/queryList`,
         payload: {
           callback,
+          courseid
         },
       });
     },
@@ -42,9 +45,8 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
       }
     },
     getContents = (lists) => {
-      const { current, total, size } = paginations,
-        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        result = [];
+
+      const result = [];
       result.push(
         <ListView
           layoutHeader={''}
@@ -57,17 +59,19 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
           hasMore={hasMore}
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
-        />,
+        />
       );
 
       return result;
     };
   return (
-    <div>
+    <div >
       <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
-      {listData.length > 0 ? getContents(listData) : ''}
-    </div>
+      <div className={styles.outer} >
+        {listData.length > 0 ? getContents(listData) : ''}
+      </div >
+    </div >
   );
 }
 

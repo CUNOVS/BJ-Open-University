@@ -25,12 +25,11 @@ export default modelExtend(model, {
 
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const { users: { userid }, courseid } = yield select(_ => _.app)
-        // response = yield call(queryList.queryGrade, { userid, courseid });
+      const { coureData } = yield select(_ => _.app)
       yield put({
         type: 'updateState',
         payload: {
-          listData: [],
+          listData: coureData,
         },
       });
     },

@@ -1,0 +1,52 @@
+@import "../../themes/default";
+
+@PrefixCls: lessonitem;
+
+.@{PrefixCls}-outer {
+  padding: 30px 20px;
+  border-bottom: @hd solid @border-color-base;
+  &-top {
+    display: flex;
+    align-items: flex-start;
+
+    &-icon {
+      width: 44px;
+      height: 44px;
+      margin-right: 15px;
+
+      & img {
+        width: 44px;
+        height: 44px;
+      }
+    }
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex: 1;
+      &-title {
+        flex: 1;
+        font-size: @mediumFontSize;
+        color: @color-text-base;
+      }
+      &-check {
+        display: flex;
+        justify-content: flex-end;
+        flex-basis: 10%;
+      }
+    }
+  }
+  &-describe {
+    font-size: @smallFontSize;
+    color: @color-text-paragraph;
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    p, h1, h2, h3, h4, h5, h6, ul {
+      margin: 0;
+    }
+  }
+}

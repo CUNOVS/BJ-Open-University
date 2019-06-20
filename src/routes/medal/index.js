@@ -24,7 +24,6 @@ class Medal extends React.Component {
     });
   }
 
-
   Click = () => {
     this.props.dispatch(routerRedux.push({
       pathname: '/jobDetails',

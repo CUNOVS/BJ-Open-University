@@ -3,7 +3,7 @@
 @PrefixCls: quizDetails;
 .@{PrefixCls}-outer {
   min-height: 100vh;
-  &-container{
+  &-container {
     padding: 20px;
   }
 }
@@ -34,4 +34,25 @@
   font-size: @titleFontSize;
   padding: 20px;
 
+}
+
+.@{PrefixCls}-my-drawer {
+  position: relative;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  & .am-drawer-sidebar {
+    background-color: #fff;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.list {
+  width: 600px;
+  background: #fff;
+
+}
+
+.active {
+  border-left: 8px solid @primary-color;
 }

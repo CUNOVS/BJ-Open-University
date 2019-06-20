@@ -1,6 +1,12 @@
 import React from 'react';
-import { choiceQuestion } from 'utils/analysis';
-import { Loader } from 'components';
+import { Card, WhiteSpace } from 'components';
+import Choose from 'components/quizType/choose';
+import Essay from 'components/quizType/essay';
+import Match from 'components/quizType/match';
+import Multianswer from 'components/quizType/multianswer';
+import ShortAnswer from 'components/quizType/shortanswer';
+import Gapselect from 'components/quizType/gapselect';
+import styles from './index.less';
 
 class Examination extends React.Component {
   constructor (props) {
@@ -16,15 +22,51 @@ class Examination extends React.Component {
 
   }
 
+  getQuestion = (item) => {
+    if (item.type === 'truefalse' || item.type === 'multichoice') {
+      return <Choose answer={item.choose} type="review" />;
+    } else if (item.type === 'essay') {
+      return <Essay answer={item.choose} type="review" />;
+    } else if (item.type === 'shortanswer') {
+      return <ShortAnswer answer={item.choose} type="review" />;
+    } else if (item.type === 'match') {
+      return <Match answer={item.choose} type="review" />;
+    } else if (item.type === 'multianswer') {
+      return <Multianswer answer={item.html} type="review" />;
+    } else if (item.type === 'gapselect') {
+      return <Gapselect answer={item.html} type="review" />;
+    }
+  };
+
   render () {
+    const { questions } = this.props;
     return (
-      <div>
-        {choiceQuestion('<div id="q1" class="que multichoice deferredfeedback notyetanswered"><div class="info"><h3 class="no">题目<span class="qno">1</span></h3><div class="state">还未回答</div><div class="grade">满分5.00</div><div class="questionflag editable" aria-atomic="true" aria-relevant="text" aria-live="assertive"><input type="hidden" name="q116:1_:flagged" value="0" /><input type="checkbox" id="q116:1_:flaggedcheckbox" name="q116:1_:flagged" value="1" /><input type="hidden" value="qaid=153&qubaid=116&qid=13&slot=1&checksum=3706f3e5adb06f3700dbb6f2d7462c3b&sesskey=OmK6i8ICtM&newstate=" class="questionflagpostdata" /><label id="q116:1_:flaggedlabel" for="q116:1_:flaggedcheckbox"><img src="http://192.168.0.203/moodle/theme/image.php/boost/core/1532507171/i/unflagged" alt="未标记" id="q116:1_:flaggedimg" /></label>\n' +
-          '</div></div><div class="content"><div class="formulation clearfix"><h4 class="accesshide">题干</h4><input type="hidden" name="q116:1_:sequencecheck" value="1" /><div class="qtext"><p>选择题<br></p></div><div class="ablock"><div class="prompt">选择一项：</div><div class="answer"><div class="r0"><input type="radio" name="q116:1_answer" value="0" id="q116:1_answer0" /><label for="q116:1_answer0" class="m-l-1"><span class="answernumber">a. </span>3</label> </div>\n' +
-          '<div class="r1"><input type="radio" name="q116:1_answer" value="1" id="q116:1_answer1" /><label for="q116:1_answer1" class="m-l-1"><span class="answernumber">b. </span>5</label> </div>\n' +
-          '<div class="r0"><input type="radio" name="q116:1_answer" value="2" id="q116:1_answer2" /><label for="q116:1_answer2" class="m-l-1"><span class="answernumber">c. </span>1</label> </div>\n' +
-          '</div></div></div></div></div>')}
-      </div>
+      <div >
+        {
+          questions.map((item, i) => {
+            const { title = '', state = '', grade = '', qtext = '', prompt = '' } = item.info;
+            return (
+              <Card key={i} className={styles.gard} >
+                <Card.Header
+                  title={title}
+                  extra={
+                    <div className={styles.state} >
+                      <span >{state}</span >
+                      <span >{grade}</span >
+                    </div >
+                  }
+                />
+                <Card.Body >
+                  {item.type !== 'gapselect' && <div className={styles.question} >{qtext}</div >}
+                  <div className={styles.prompt} >{prompt}</div >
+                  <WhiteSpace size="lg" />
+                  {this.getQuestion(item)}
+                </Card.Body >
+              </Card >
+            );
+          })
+        }
+      </div >
     );
   }
 }

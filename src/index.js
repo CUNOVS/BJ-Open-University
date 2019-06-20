@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import dva from 'dva';
+import { routerRedux } from 'dva/router';
 import createLoading from 'dva-loading';
 // import { browserHistory } from 'dva/router'
 import 'babel-polyfill';
@@ -11,7 +12,6 @@ const app = dva({
     effects: true,
   }),
   onError (error) {
-    console.log(error);
     Toast.offline(error.message);
   },
 });

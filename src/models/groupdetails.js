@@ -5,8 +5,7 @@ import { model } from 'models/common';
 
 const getDefaultPaginations = () => ({
     nowPage: 1,
-    total: 0,
-    rowCount: 20,
+    rowCount: 10,
   }),
   namespace = 'groupdetails';
 
@@ -16,19 +15,21 @@ export default modelExtend(model, {
     listData: [],
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
-    refreshId: '',
+    hasMore: true
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/groupdetails') {
           const { courseid } = query;
-          dispatch({
-            type: 'queryList',
-            payload: {
-              courseid,
-            },
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'queryList',
+              payload: {
+                courseid,
+              },
+            });
+          }
         }
       });
     },
@@ -38,24 +39,34 @@ export default modelExtend(model, {
     * queryList ({ payload }, { call, put, select }) {
       const { callback = '', isRefresh = false, courseid } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { nowPage, total, rowCount }, listData, id } = _this,
-        start = isRefresh ? 1 : nowPage,
-        result = yield call(queryMembers, { courseid, nowPage, rowCount });
-      if (result) {
-        let { data = [], totalCount = 0 } = result,
+        { users: { userid } } = yield select(_ => _.app),
+        { paginations: { nowPage, rowCount }, listData, } = _this,
+        start = isRefresh ? getDefaultPaginations().nowPage : nowPage,
+        result = yield call(queryMembers, { courseid, nowPage: start, rowCount, userid });
+      if (result.success) {
+        let { data = [] } = result,
           newLists = [];
-        newLists = start === 1 ? data : [...listData, ...data];
+        newLists = start === getDefaultPaginations().nowPage ? data : [...listData, ...data];
         yield put({
           type: 'updateState',
           payload: {
-            paginations: {
-              ..._this.paginations,
-              total: totalCount * 1,
-              current: start + 1,
-            },
-            listData: newLists,
-          },
+            hasMore: data.length === getDefaultPaginations().rowCount
+          }
         });
+        if (data.length !== 0) {
+          yield put({
+            type: 'updateState',
+            payload: {
+              paginations: {
+                ..._this.paginations,
+                nowPage: start + 1,
+              },
+              listData: newLists,
+            },
+          });
+        }
+      } else {
+        Toast.fail(result.message || '未知错误');
       }
       if (callback) {
         callback();

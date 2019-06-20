@@ -1,35 +1,40 @@
-@PrefixCls:forumDetails;
+@PrefixCls: forumDetails;
 
-
-
-.@{PrefixCls}-master{
-    padding: 0.4rem;
+.@{PrefixCls}-master {
+  padding: 0.4rem;
+  background: white;
+  &-man {
     background: white;
-    &-man{
-        background:white;
-        display:flex;
-        align-items:center;
-        font-size: 0.32rem;
-        font-weight: 600;
-        img{
-            width:90px;
-            height:90px;
-            margin-right: 0.2rem;
-        }
+    display: flex;
+    align-items: center;
+    font-size: @titleFontSize;
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-right: 0.2rem;
     }
-    div:nth-child(2){
-        color: #cdcdcd;
-        padding: 0.2rem 0;
+    > span {
+      display: flex;
+      flex-direction: column;
     }
-    div:nth-child(3){
-        font-size: 0.28rem;
-        line-height: 0.4rem;
-        padding-bottom: 0.2rem;
+    &-username {
+      font-size: @titleFontSize;
+      margin-bottom: 10px;
     }
-    div:nth-child(4){
-        display: flex;
-        align-items: center;
-        color: #1296db;
-        float: right;
+    &-time{
+      font-size: @smallFontSize;
+      color: @color-text-paragraph;
     }
+  }
+  div:nth-child(2) {
+    font-size: @mediumFontSize;
+    line-height: 0.4rem;
+  }
+  div:nth-child(3) {
+    display: flex;
+    align-items: center;
+    color: @primary-color;
+    float: right;
+  }
 }

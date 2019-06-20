@@ -5,33 +5,56 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './index.less';
-import { List, Accordion } from 'components';
+import { List, Accordion, Icon } from 'components';
 import LessonItem from 'components/lessonitem';
+import { getLocalIcon } from 'utils';
 import { chapterRow } from 'components/row';
+import styles from './index.less';
 
 const PrefixCls = 'courselist';
 
-const CourseList = (props) => (
-  <div className={styles[`${PrefixCls}-outer`]}>
-    <Accordion defaultActiveKey={(props.activityIndex - 1).toString()}
-               className={styles[`${PrefixCls}-accordion`]}
-               onChange={props.handlerChange}
-    >
-      {
-        cnIsArray(props.data) && props.data.map((d, i) => {
-          return (<Accordion.Panel header={d.name} key={i}>
-            {d.modules && d.modules.map((p, i) => {
-              return (
-                <LessonItem key={p.id} data={p} dispatch={props.dispatch} courseid={props.courseid} />
-              );
-            })}
-          </Accordion.Panel>);
-        })
-      }
-    </Accordion>
-  </div>
-);
+const CourseList = (props) => {
+  const GetPanel = (data) => (
+    cnIsArray(data) && data.map((d, i) => {
+      return (
+        <Accordion.Panel
+          header={
+            <div className={styles[`${PrefixCls}-header`]} >
+              {
+                props.activityIndex - 1 === i ?
+                  <span >
+                    <Icon type={getLocalIcon('/components/nike.svg')} color="#f0da24" />
+                  </span >
+                  : null
+              }
+              <span >{d.name}</span >
+            </div >
+
+          }
+          key={i}
+        >
+          {d.modules && d.modules.map((p) => {
+            return (
+              <LessonItem key={p.id} data={p} dispatch={props.dispatch} courseid={props.courseid} />
+            );
+          })}
+        </Accordion.Panel >
+      );
+    })
+  );
+
+  return (
+    <div className={styles[`${PrefixCls}-outer`]} >
+      <Accordion
+        defaultActiveKey={(props.activityIndex - 1).toString()}
+        className={styles[`${PrefixCls}-accordion`]}
+        onChange={props.handlerChange}
+      >
+        {GetPanel(props.data)}
+      </Accordion >
+    </div >
+  );
+};
 
 CourseList.propTypes = {
   data: PropTypes.array.isRequired,

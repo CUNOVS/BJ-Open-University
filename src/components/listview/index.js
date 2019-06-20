@@ -7,10 +7,6 @@ import RefreshLoading from 'components/refreshloading';
 import styles from './index.less';
 
 let PrefixCls = 'cn-listview',
-  globalIndex = 0,
-  getId = (name = '', last = false) => {
-    return `${name || PrefixCls}-${last ? globalIndex : ++globalIndex}`;
-  },
   { BaseLine } = Layout;
 
 class Comp extends React.Component {
@@ -48,7 +44,7 @@ class Comp extends React.Component {
     let hei = this.state.height,
       el;
     if (el = ReactDOM.findDOMNode(this.lv)) {
-      hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize;
+      hei = cnhtmlHeight - getOffsetTopByBody(el);
     }
     setTimeout(() => {
       let { dataSource } = this.state;
@@ -61,12 +57,12 @@ class Comp extends React.Component {
         refreshing: false,
         isLoading: false,
       });
-    }, 10);
+    }, 0);
     setTimeout(() => {
       if (this.lv && this.props.scrollerTop > 0) {
         this.lv.scrollTo(0, this.props.scrollerTop);
       }
-    }, 200);
+    }, 100);
   }
 
   componentWillUnmount () {
@@ -94,7 +90,7 @@ class Comp extends React.Component {
         });
       }, 600);
     }
-  }
+  };
 
   onEndReached = (event) => {
     if (this.state.isLoading || !this.props.hasMore) {
@@ -115,22 +111,21 @@ class Comp extends React.Component {
         });
       }, 600);
     }
-  }
+  };
 
   layoutSeparator (sectionID, rowID) {
     if (this.props.layoutSeparator) {
       return this.props.layoutSeparator(sectionID, rowID);
     }
-    return;
-      <div
+    return <div
       key={`${sectionID}-${rowID}`}
       style={{
-        backgroundColor: '#F5F5F9',
+        backgroundColor: '#f6f6f6',
         height: 8,
-        borderTop: '1px solid #ECECED',
-        borderBottom: '1px solid #ECECED',
+        // borderTop: '1px solid #ECECED',
+        // borderBottom: '1px solid #ECECED',
       }}
-    />
+    />;
   }
 
   layoutRow (rowData, sectionID, rowID) {
@@ -151,14 +146,14 @@ class Comp extends React.Component {
     if (this.props.layoutFooter) {
       return this.props.layoutFooter(this.state.isLoading);
     }
-    return (<div style={{ textAlign: 'center' }}>
+    return (<div style={{ textAlign: 'center' }} >
       {this.props.hasMore ? <RefreshLoading svg={'/others/refreshloading.svg'} /> : <BaseLine />}
-    </div>);
+    </div >);
   }
 
   render () {
     return (
-      <div className={styles[`${PrefixCls}-outer`]}>
+      <div className={styles[`${PrefixCls}-outer`]} >
         <ListView
           ref={el => this.lv = el}
           initialListSize={this.props.dataSource.length || 10}
@@ -170,7 +165,6 @@ class Comp extends React.Component {
           useBodyScroll={this.props.useBodyScroll}
           style={this.props.useBodyScroll ? {} : {
             height: this.state.height,
-            border: '1px solid #ddd',
             margin: '5px 0',
           }}
           pullToRefresh={<PullToRefresh
@@ -183,13 +177,13 @@ class Comp extends React.Component {
           onEndReachedThreshold={100}
           pageSize={this.props.pageSize}
         />
-      </div>
+      </div >
     );
   }
 
   static defaultProps = {
     dataSource: [],
-    useBodyScroll: true,
+    useBodyScroll: false,
     hasMore: false,
     pageSize: 10,
     onRefresh: '',
@@ -199,7 +193,7 @@ class Comp extends React.Component {
     layoutSeparator: '',
     scrollerTop: 0,
     onScrollerTop: '',
-  }
+  };
 }
 
 export default Comp;

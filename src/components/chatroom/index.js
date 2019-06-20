@@ -1,9 +1,10 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import styles from './index.less';
-import { ReceiveBubble, ReplyBubble } from './chatbubble/index';
 import InputBox from 'components/inputbox';
+import { getMessageTime } from 'utils';
+import { ReceiveBubble, ReplyBubble } from './chatbubble/index';
+import styles from './index.less';
 
 const PrefixCls = 'chatroom';
 let defaultTimer = '';
@@ -28,6 +29,10 @@ class ChatRoom extends Component {
     }, 10);
   }
 
+  componentDidUpdate () {
+    this.scrollToBottom(ReactDOM.findDOMNode(this.lv));
+  }
+
   scrollToBottom (el) {
     setTimeout(() => {
       if (el) {
@@ -36,58 +41,52 @@ class ChatRoom extends Component {
     }, 200);
   }
 
-  componentDidUpdate () {
-    this.scrollToBottom(ReactDOM.findDOMNode(this.lv));
-  }
-
-
   render () {
-    const isSuccess = this.props.isSuccess;
-    const useravatar = this.props.useravatar;
+    const { avatar = '', selfavatar = '' } = this.props;
     const props = {
         onSubmit: this.props.onSubmit,
         val: this.props.val,
         dispatch: this.props.dispatch,
-        isDisabled: this.props.isDisabled,
       },
       getShowTimer = (messageTimer = '') => {
-        if (messageTimer && defaultTimer != messageTimer) {
-          defaultTimer = messageTimer;
-          return <div className={styles[`${PrefixCls}-timer`]}><span>{messageTimer}</span></div>;
+        const current = new Date(messageTimer * 1000).getMinutes();
+        if (messageTimer && defaultTimer !== (current)) {
+          console.log(current, defaultTimer);
+          defaultTimer = current;
+          return <div className={styles[`${PrefixCls}-timer`]} ><span >{getMessageTime(messageTimer)}</span ></div >;
         }
         return '';
       };
     return (
-      <div>
-        <div className={styles[`${PrefixCls}-outer`]}
+      <div >
+        <div
+          className={styles[`${PrefixCls}-outer`]}
           ref={el => this.lv = el}
           style={{ height: this.state.height }}
         >
-          <div className={styles[`${PrefixCls}-outer-content`]} ref={el => this.contentEl = el}>
+          <div className={styles[`${PrefixCls}-outer-content`]} ref={el => this.contentEl = el} >
             {this.props.localArr && this.props.localArr.map((data, i) => {
-              const { isMySelf = false, msgcDate = '', ...others } = data,
+              const { isMySelf = false, timecreated = '', ...others } = data,
                 props = {
+                  timecreated,
                   ...others,
-                  isSuccess,
-                  useravatar,
+                  selfavatar,
+                  avatar
                 },
-                result = [getShowTimer(msgcDate)];
+                result = [getShowTimer(timecreated)];
               result.push(isMySelf ? <ReplyBubble {...props} /> : <ReceiveBubble {...props} />);
               return result;
             })}
-          </div>
+          </div >
           <div style={{ clear: 'both' }} />
           <InputBox {...props} handlerSubmit={this.props.handlerSubmit} />
-        </div>
-      </div>
+        </div >
+      </div >
     );
   }
 }
 
-ChatRoom.defaultProps = {
-
-
-};
+ChatRoom.defaultProps = {};
 ChatRoom.propTypes = {
   handlerSubmit: PropTypes.func.isRequired,
 };

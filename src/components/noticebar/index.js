@@ -45,7 +45,6 @@ class Notice extends React.Component {
             icon={<Icon style={{ marginRight: '5px' }} type={getLocalIcon('/components/notice.svg')} />}
             mode="closable"
             style={{ background: '#fdeeb9' }}
-            action={<span style={{ color: '#a1a1a1' }}>不再提示</span>}
           >
             新学期就用新的移动端app啦，要加油哦.新学期就用新的移动端app啦，要加油哦
           </NoticeBar>

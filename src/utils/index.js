@@ -1,18 +1,18 @@
-/* global window */
-
 import classnames from 'classnames';
-import config, { userTag } from './config';
-import request from './request';
-import cookie from './cookie';
 import defaultImg from 'themes/images/default/default.png';
 import defaultUserIcon from 'themes/images/default/userIcon.png';
 import defaultBg from 'themes/images/others/mineBg.png';
+import config, { userTag } from './config';
+import request from './request';
+import cookie from './cookie';
 import formsubmit from './formsubmit';
 
 
-const { userTag: { username, usertoken, userpower, userid, useravatar } } = config,
-  { _cs, _cr, _cg } = cookie,
-  token = _cg(usertoken);
+const { userTag: { username, usertoken, userpower, userid, useravatar, userloginname } } = config,
+  // eslint-disable-next-line import/no-named-as-default-member
+  { _cs, _cr, _cg } = cookie;
+
+const userToken = () => _cg(usertoken);
 // 日期格式化
 const DateChange = function () {
   let date = new Date();
@@ -25,16 +25,13 @@ const DateChange = function () {
  * @param date
  * @constructor
  */
-const getCommonData = (date) => {
+const getCommonDate = (date) => {
   if (date) {
-    let currentDate = new Date();
-    const currentYear = currentDate.getFullYear(),
-      preDate = new Date(date * 1000),
+    let preDate = new Date(date * 1000),
       week = '日一二三四五六'.charAt(preDate.getDay()),
       year = preDate.getFullYear(),
-      hour = preDate.getHours() < 10 ? '0' + preDate.getHours() : preDate.getHours(),
-      minutes = preDate.getMinutes() < 10 ? '0' + preDate.getMinutes() : preDate.getMinutes(),
-      seconds = preDate.getSeconds();
+      hour = preDate.getHours() < 10 ? `0${preDate.getHours()}` : preDate.getHours(),
+      minutes = preDate.getMinutes() < 10 ? `0${preDate.getMinutes()}` : preDate.getMinutes();
     return `${year}年${preDate.getMonth() + 1}月${preDate.getDate()}日 星期${week} ${hour}:${minutes}`;
   }
 };
@@ -43,7 +40,7 @@ const getCommonData = (date) => {
  * @param date
  * @constructor
  */
-const changeLessonData = (date) => {
+const changeLessonDate = (date) => {
   if (date) {
     let currentDate = new Date();
     const currentYear = currentDate.getFullYear(),
@@ -64,7 +61,7 @@ const isToday = (date) => {
   if (date) {
     let currentDate = new Date();
     const lessonDate = new Date(date * 1000);
-    if (currentDate.toDateString() === lessonDate.toDateString()) {
+    if (currentDate.toDateString() <= lessonDate.toDateString()) {
       return true;
     }
     return false;
@@ -78,72 +75,60 @@ const getMessageTime = (timeValue) => {
     let date = new Date(time);
     let y = date.getFullYear();
     let m = date.getMonth() + 1;
-    m = m < 10 ? ('0' + m) : m;
+    m = m < 10 ? (`0${m}`) : m;
     let d = date.getDate();
-    d = d < 10 ? ('0' + d) : d;
+    d = d < 10 ? (`0${d}`) : d;
     let h = date.getHours();
-    h = h < 10 ? ('0' + h) : h;
+    h = h < 10 ? (`0${h}`) : h;
     let minute = date.getMinutes();
     let second = date.getSeconds();
-    minute = minute < 10 ? ('0' + minute) : minute;
-    second = second < 10 ? ('0' + second) : second;
-    return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
-  };
+    minute = minute < 10 ? (`0${minute}`) : minute;
+    second = second < 10 ? (`0${second}`) : second;
+    return `${y}-${m}-${d} ${h}:${minute}:${second}`;
+  }
 
-  //判断传入日期是否为昨天
+  // 判断传入日期是否为昨天
   function isYestday (time) {
-    let date = (new Date()); //当前时间
-    let today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime(); //今天凌晨
+    let date = (new Date()); // 当前时间
+    let today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime(); // 今天凌晨
     let yestday = new Date(today - 24 * 3600 * 1000).getTime();
     return time < today && yestday <= time;
-  };
+  }
 
-  //判断传入日期是否属于今年
+  // 判断传入日期是否属于今年
   function isYear (time) {
     let takeNewYear = formatDateTime(new Date())
-      .substr(0, 4); //当前时间的年份
+      .substr(0, 4); // 当前时间的年份
     let takeTimeValue = formatDateTime(time)
-      .substr(0, 4); //传入时间的年份
+      .substr(0, 4); // 传入时间的年份
     return takeTimeValue === takeNewYear;
   }
 
-  //60000 1分钟
-  //3600000 1小时
-  //86400000 24小时
-  //对传入时间进行时间转换
+  // 60000 1分钟
+  // 3600000 1小时
+  // 86400000 24小时
+  // 对传入时间进行时间转换
   function timeChange (time) {
-    let timeNew = Date.parse(new Date()); //当前时间
-    let timeDiffer = timeNew - time; //与当前时间误差
+    let timeNew = Date.parse(new Date()); // 当前时间
+    let timeDiffer = timeNew - time; // 与当前时间误差
     let returnTime = '';
 
-    if (timeDiffer <= 60000) { //一分钟内
-
+    if (timeDiffer <= 60000) { // 一分钟内
       returnTime = '刚刚';
-
-    } else if (timeDiffer > 60000 && timeDiffer < 3600000) { //1小时内
-
-      returnTime = Math.floor(timeDiffer / 60000) + '分钟前';
-
-    } else if (timeDiffer >= 3600000 && timeDiffer < 86400000 && isYestday(time) === false) { //今日
-
+    } else if (timeDiffer > 60000 && timeDiffer < 3600000) { // 1小时内
+      returnTime = `${Math.floor(timeDiffer / 60000)}分钟前`;
+    } else if (timeDiffer >= 3600000 && timeDiffer < 86400000 && isYestday(time) === false) { // 今日
       returnTime = formatDateTime(time)
         .substr(11, 5);
-
-    } else if (timeDiffer > 3600000 && isYestday(time) === true) { //昨天
-
-      returnTime = '昨天' + formatDateTime(time)
-        .substr(11, 5);
-
-    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === true) {	//今年
-
+    } else if (timeDiffer > 3600000 && isYestday(time) === true) { // 昨天
+      returnTime = `昨天${formatDateTime(time)
+        .substr(11, 5)}`;
+    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === true) {	// 今年
       returnTime = formatDateTime(time)
         .substr(5, 11);
-
-    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === false) { //不属于今年
-
+    } else if (timeDiffer > 86400000 && isYestday(time) === false && isYear(time) === false) { // 不属于今年
       returnTime = formatDateTime(time)
         .substr(0, 10);
-
     }
 
     return returnTime;
@@ -152,10 +137,9 @@ const getMessageTime = (timeValue) => {
   return timeChange(time);
 };
 
-const getSurplusDay = (data) => {
+const getSurplusDay = (data, state, timemodified = 0) => {
   const now = new Date();
-  if (data * 1000 > now) {
-    const time = data * 1000 - now;
+  const getDays = (time) => {
     let days = time / 1000 / 60 / 60 / 24;
     let daysRound = Math.floor(days);
     let hours = time / 1000 / 60 / 60 - (24 * daysRound);
@@ -163,11 +147,50 @@ const getSurplusDay = (data) => {
     let minutes = time / 1000 / 60 - (24 * 60 * daysRound) - (60 * hoursRound);
     let minutesRound = Math.floor(minutes);
     let seconds = time / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
-    return `${daysRound}天${hoursRound}小时${minutesRound}分钟`;
+    return `${daysRound > 0 ? `${daysRound}天` : ''}${hoursRound > 0 ? `${hoursRound}小时` : ''}${minutesRound}分钟`;
+  };
+  if (state === 'submitted') {
+    const time = data * 1000 - now;
+    if (data * 1000 > now) {
+      return getDays(time);
+    } else {
+      if (data > timemodified) {
+        const time = (data - timemodified) * 1000;
+        return `提早了${getDays(time)}提交`;
+      } else {
+        const time = timemodified * 1000 - data * 1000;
+        return `推迟了${getDays(time)}提交`;
+      }
+    }
+
   } else {
+    if (data * 1000 > now) {
+      const time = data * 1000 - now;
+      return getDays(time);
+    }
     return '已截止';
   }
 };
+
+const getDurationDay = (num) => {
+  let days = num / 60 / 60 / 24;
+  let daysRound = Math.floor(days);
+  return daysRound >= 7 ? '一周' : `${daysRound}天`;
+};
+
+const getDurationTime = (start, end) => {
+  const time = (end - start) * 1000;
+  let days = time / 1000 / 60 / 60 / 24;
+  let daysRound = Math.floor(days);
+  let hours = time / 1000 / 60 / 60 - (24 * daysRound);
+  let hoursRound = Math.floor(hours);
+  let minutes = time / 1000 / 60 - (24 * 60 * daysRound) - (60 * hoursRound);
+  let minutesRound = Math.floor(minutes);
+  let seconds = time / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
+  return `${daysRound > 0 ? `${daysRound}天` : ''}${hoursRound > 0 ? `${hoursRound}小时` : ''}${minutesRound > 0 ? `${minutesRound}分钟` : ''}${seconds}秒`;
+
+};
+
 
 /**
  * @param   {String}
@@ -212,8 +235,14 @@ const getImages = (path = '', type = 'defaultImg') => {
   if (path === '' || !path) {
     return type === 'defaultImg' ? defaultImg : defaultUserIcon;
   }
-  return path.startsWith('http://') || path.startsWith('https://') ? `${path}?token=${token}`
-    : (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${token}`);
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path.match(/token=/) ? path : `${path}?token=${userToken()}`;
+  } else {
+    return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
+      `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+      :
+      (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
+  }
 };
 /** *
  * 用户信息默认背景图片
@@ -227,8 +256,14 @@ const getDefaultBg = (path = '') => {
   if (path === '' || !path) {
     return defaultBg;
   }
-  return path.startsWith('http://') || path.startsWith('https://') ? `${path}?token=${token}`
-    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path);
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path.match(/token=/) ? path : `${path}?token=${userToken()}`;
+  } else {
+    return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
+      `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+      :
+      (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
+  }
 };
 const getErrorImg = (el) => {
   if (el && el.target) {
@@ -237,12 +272,13 @@ const getErrorImg = (el) => {
   }
 };
 
-const setLoginIn = ({ user_token, user_name, user_pwd, user_id, user_avatar }) => {
+const setLoginIn = ({ user_token, user_name, user_pwd, user_id, user_avatar, user_login_name }) => {
   _cs(username, user_name);
   _cs(userpower, user_pwd);
   _cs(usertoken, user_token);
   _cs(userid, user_id);
   _cs(useravatar, user_avatar);
+  _cs(userloginname, user_login_name);
   cnSetAlias(user_name, user_token);
 };
 const setLoginOut = () => {
@@ -251,6 +287,7 @@ const setLoginOut = () => {
   _cr(usertoken);
   _cr(userid);
   _cr(useravatar);
+  _cr(userloginname);
   // cnDeleteAlias(_cg(username), _cg(usertoken));
 };
 const getLocalIcon = (icon) => {
@@ -315,11 +352,54 @@ const getTaskIcon = (type) => {
   return '';
 };
 
+const pattern = (type) => {
+  const obj = {};
+  obj.href = /[a-zA-z]+:\/\/[^\\">]*/g;
+  return obj[type];
+};
+
+const renderSize = (fileSize) => {
+  if (fileSize < 1024) {
+    return `${fileSize}B`;
+  } else if (fileSize < (1024 * 1024)) {
+    let temp = fileSize / 1024;
+    temp = temp.toFixed(2);
+    return `${temp}KB`;
+  } else if (fileSize < (1024 * 1024 * 1024)) {
+    let temp = fileSize / (1024 * 1024);
+    temp = temp.toFixed(2);
+    return `${temp}MB`;
+  }
+  let temp = fileSize / (1024 * 1024 * 1024);
+  temp = temp.toFixed(2);
+  return `${temp}GB`;
+};
+
+const textToElement = (text) => {
+  let element = document.createElement('div');
+  element.innerHTML = text;
+  return element;
+};
+
+const needRefreshRouters = {},
+  isRouterNeedRefresh = (router) => {
+    if (router && needRefreshRouters.hasOwnProperty(router)) {
+      delete needRefreshRouters[router];
+      return true;
+    }
+    return false;
+  },
+  setRouterNeedRefresh = (router) => {
+    if (router) {
+      needRefreshRouters[router] = true;
+    }
+  };
 
 module.exports = {
   config,
   request,
   cookie,
+  userToken,
   classnames,
   getErrorImg,
   getDefaultBg,
@@ -337,10 +417,17 @@ module.exports = {
   hasSystemEmoji,
   DateChange,
   getTitle,
-  changeLessonData,
+  changeLessonDate,
   getTaskIcon,
   isToday,
   getMessageTime,
-  getCommonData,
+  getCommonDate,
   getSurplusDay,
+  getDurationDay,
+  pattern,
+  renderSize,
+  textToElement,
+  isRouterNeedRefresh,
+  setRouterNeedRefresh,
+  getDurationTime
 };
