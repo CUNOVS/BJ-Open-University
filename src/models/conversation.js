@@ -13,7 +13,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(location => {
         let { pathname, query, action } = location;
-        const { fromuserid, name } = query;
+        const { fromuserid, name, unread } = query;
         if (pathname.startsWith('/conversation')) {
           dispatch({
             type: 'updateState',
@@ -28,12 +28,14 @@ export default modelExtend(model, {
               name,
             },
           });
-          dispatch({
-            type: 'readMessage',
-            payload: {
-              fromuserid,
-            }
-          });
+          if (unread) {
+            dispatch({
+              type: 'readMessage',
+              payload: {
+                fromuserid,
+              }
+            });
+          }
         }
       });
     },
@@ -90,9 +92,11 @@ export default modelExtend(model, {
     * readMessage ({ payload }, { call, put, select }) {
       const { users: { userid } } = yield select(_ => _.app),
         response = yield call(Service.readMessage, { useridto: userid, useridfrom: payload.fromuserid });
-      if (response.success) {
-
-      }
+      // if (response.success) {
+      //   yield put({
+      //     type: 'messageCenter/queryCount'
+      //   });
+      // }
     },
   },
   reducers: {

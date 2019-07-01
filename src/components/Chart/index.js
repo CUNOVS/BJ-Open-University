@@ -13,7 +13,6 @@ const formatLabel = (text, index, total) => {
   const textCfg = {};
   if (index === 0) {
     textCfg.textAlign = 'left';
-
   } else if (index === total - 1) {
     textCfg.textAlign = 'right';
   }
@@ -30,14 +29,14 @@ const label = {
 const getData = (data) => {
   const res = [];
   data.length > 0 && data.map(items => {
-      const datas = cnDecode(items);
-      if (datas.answertext) {
-        res.push({
-          answertext: datas.answertext,
-          answercount: parseInt(datas.answercount)
-        });
-      }
+    const datas = cnDecode(items);
+    if (datas.answertext) {
+      res.push({
+        answertext: datas.answertext,
+        answercount: parseInt(datas.answercount)
+      });
     }
+  }
   );
   return res;
 };

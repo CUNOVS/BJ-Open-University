@@ -10,6 +10,7 @@ import LessonItem from 'components/lessonitem';
 import { getLocalIcon } from 'utils';
 import { chapterRow } from 'components/row';
 import styles from './index.less';
+import InnerHtml from '../innerhtml';
 
 const PrefixCls = 'courselist';
 
@@ -21,7 +22,7 @@ const CourseList = (props) => {
           header={
             <div className={styles[`${PrefixCls}-header`]} >
               {
-                props.activityIndex - 1 === i ?
+                props.activityIndex > 0 && props.activityIndex - 1 === i ?
                   <span >
                     <Icon type={getLocalIcon('/components/nike.svg')} color="#f0da24" />
                   </span >
@@ -33,11 +34,15 @@ const CourseList = (props) => {
           }
           key={i}
         >
-          {d.modules && d.modules.map((p) => {
-            return (
-              <LessonItem key={p.id} data={p} dispatch={props.dispatch} courseid={props.courseid} />
-            );
-          })}
+          {d.summary !== '' ?
+            <div className={styles[`${PrefixCls}-html`]} dangerouslySetInnerHTML={{ __html: d.summary }} /> : null}
+          {
+            d.modules && d.modules.map((p) => {
+              return (
+                <LessonItem key={p.id} data={p} dispatch={props.dispatch} courseid={props.courseid} />
+              );
+            })
+          }
         </Accordion.Panel >
       );
     })
@@ -46,7 +51,7 @@ const CourseList = (props) => {
   return (
     <div className={styles[`${PrefixCls}-outer`]} >
       <Accordion
-        defaultActiveKey={(props.activityIndex - 1).toString()}
+        defaultActiveKey={props.accordionIndex}
         className={styles[`${PrefixCls}-accordion`]}
         onChange={props.handlerChange}
       >

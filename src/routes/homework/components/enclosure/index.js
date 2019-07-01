@@ -3,6 +3,7 @@
  * @date 2019/04/03 15:45:07
  * @Description:
  */
+import React from 'react';
 import { Icon } from 'components';
 import { getLocalIcon, getCommonDate } from 'utils';
 import config, { userTag } from 'utils/config';
@@ -23,9 +24,8 @@ const getIcon = (type) => {
   } else if (RegExp(/xlsb/)
     .exec(type)) {
     return '/components/EXCEL.svg';
-  } else {
-    return '/components/file.svg';
   }
+  return '/components/file.svg';
 };
 
 const Enclosure = (props) => {
@@ -33,7 +33,7 @@ const Enclosure = (props) => {
 
     fileClick = (item) => {
       const { fileurl, filename } = item;
-      cnDownloadAndOpen(fileurl + '?token=' + userToken(), filename);
+      cnDownloadAndOpen(`${fileurl}?token=${userToken()}`, filename);
     };
 
   return (

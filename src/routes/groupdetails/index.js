@@ -45,7 +45,6 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
       }
     },
     getContents = (lists) => {
-
       const result = [];
       result.push(
         <ListView

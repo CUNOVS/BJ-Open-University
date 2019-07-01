@@ -68,7 +68,7 @@ function FeedBackResult ({ location, dispatch, feedbackresult }) {
           null
       }
       <div >
-        <TitleBox title={anonymous === '1' ? '匿名条目' : '非匿名条目'} sup='' />
+        <TitleBox title={anonymous === '1' ? '匿名条目' : '非匿名条目'} sup="" />
         <Refresh
           refreshing={refreshing}
           onRefresh={onRefresh}

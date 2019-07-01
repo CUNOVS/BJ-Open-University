@@ -39,7 +39,7 @@ function Teachers ({ location, dispatch, teachers, loading }) {
   return (
     <div >
       <Nav title="我的老师" hasShadow dispatch={dispatch} />
-      <WhiteSpace />
+      <WhiteSpace size="lg" />
       <div className={styles[`${PrefixCls}-outer`]} >
         {
           loading ?

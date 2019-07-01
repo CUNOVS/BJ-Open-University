@@ -2,8 +2,8 @@ import { routerRedux } from 'dva/router';
 import { login } from 'services/login';
 import { Toast } from 'antd-mobile';
 import modelExtend from 'dva-model-extend';
-import { pageModel } from './common';
 import { setLoginIn } from 'utils';
+import { pageModel } from './common';
 
 export default modelExtend(pageModel, {
   namespace: 'login',

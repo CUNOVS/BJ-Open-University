@@ -26,20 +26,20 @@ class Url extends React.PureComponent {
       }
     });
   }
-
-  componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
-    this.props.dispatch({
-      type: 'app/accessTime',
-      payload: {
-        startedat: this.state.startTime.getTime(),
-        endedat: new Date().getTime(),
-        courseid,
-        cmid,
-
-      }
-    });
-  }
+  //
+  // componentWillUnmount () {
+  //   const { courseid = '', cmid = '' } = this.props.location.query;
+  //   this.props.dispatch({
+  //     type: 'app/accessTime',
+  //     payload: {
+  //       startedat: this.state.startTime.getTime(),
+  //       endedat: new Date().getTime(),
+  //       courseid,
+  //       cmid,
+  //
+  //     }
+  //   });
+  // }
 
   getContents = () => {
     const { htmlBody } = this.props.location.query;

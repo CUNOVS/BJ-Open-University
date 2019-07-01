@@ -175,7 +175,7 @@ const compressFile = (img, file, orientation, callback) => {
 };
 
 const submit = (url, param, isCNDefined) => {
-  axios.defaults.withCredentials = false;  //设置不带cookie 不然存在跨域问题
+  axios.defaults.withCredentials = false; // 设置不带cookie 不然存在跨域问题
   return axios.post(checkUrl(url), param, {
     headers: {
       'Content-Type': 'multipart/form-data',

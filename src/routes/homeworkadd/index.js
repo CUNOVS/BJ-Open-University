@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Nav from 'components/nav';
-import { ActivityIndicator } from 'antd-mobile';
+import { ActivityIndicator, Modal } from 'components';
+import { routerRedux } from 'dva/router';
 import AddHomework from 'components/addHomework';
 import { connect } from 'dva';
-import styles from './index.less';
 
+const alert = Modal.alert;
 
 class HomeWorkAdd extends React.Component {
   constructor (props) {
@@ -13,10 +13,21 @@ class HomeWorkAdd extends React.Component {
   }
 
   componentWillMount () {
+
   }
 
   componentDidMount () {
   }
+
+  componentWillUnmount () {
+    this.props.dispatch({
+      type: 'app/updateBackModal',
+      payload: {
+        showBackModal: false
+      }
+    });
+  }
+
 
   onSubmit = (data) => {
     const { fileList, value } = data;
@@ -45,6 +56,16 @@ class HomeWorkAdd extends React.Component {
     }
   };
 
+  onBackSubmit = () => {
+    this.props.dispatch({
+      type: 'app/updateBackModal',
+      payload: {
+        showBackModal: false
+      }
+    });
+    this.props.dispatch(routerRedux.goBack());
+  };
+
   getInfo = (configs) => {
     const fileConfigs = {},
       textConfigs = {};
@@ -58,11 +79,27 @@ class HomeWorkAdd extends React.Component {
     return { fileConfigs, textConfigs };
   };
 
+  showBackMoadl = () => {
+    alert('退出？', '退出后不会保存当前操作！', [
+      {
+        text: '取消',
+        onPress: () => this.props.dispatch({
+          type: 'app/updateBackModal',
+          payload: {
+            showBackModal: false
+          }
+        })
+      },
+      { text: '确定', onPress: () => this.onBackSubmit() },
+    ]);
+  };
+
   render () {
     const { assignId } = this.props.location.query,
       { itemid, animating } = this.props.homeworkadd,
-      { data, } = this.props.homework,
+      { data = {} } = this.props.homework,
       { configs = [], submitDataType } = data;
+    const { showBackModal = false } = this.props.app;
     const props = {
       configs: this.getInfo(configs),
       assignId,
@@ -71,14 +108,15 @@ class HomeWorkAdd extends React.Component {
       submitDataType,
     };
     return (
-      <div>
-        <Nav title="发起话题" dispatch={this.props.dispatch} />
+      <div >
+        <Nav title="提交" dispatch={this.props.dispatch} isAlert />
         <AddHomework {...props} />
         <ActivityIndicator
           toast
           text="正在上传..."
           animating={animating}
         />
+        {showBackModal && this.showBackMoadl()}
       </div >
     );
   }
@@ -87,7 +125,8 @@ class HomeWorkAdd extends React.Component {
 HomeWorkAdd.defaultProps = {};
 HomeWorkAdd.propTypes = {};
 
-export default connect(({ homeworkadd, homework }) => ({
+export default connect(({ homeworkadd, homework, app }) => ({
   homeworkadd,
   homework,
+  app
 }))(HomeWorkAdd);

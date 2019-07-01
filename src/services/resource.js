@@ -1,6 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: { GetPage, GetQuiz, GetHomeworkInfo, GetHomeWorkComments, GetExamination, GetLastTimeExamination, GetQuizReview, ADDHomeWork, UrlApi, GetFeedBack, GetFeedBackInfos, GetFeedBackQuestions, SendFeedBack, GetSuperClass, CompleteFeedBack, SendQuiz, GetQuizSummary } } = config;
+const { api: { GetPage, GetQuiz, GetHomeworkInfo, GetHomeWorkComments, GetExamination, GetLastTimeExamination, GetQuizReview, ADDHomeWork, UrlApi, GetResource, GetFeedBack, GetFeedBackInfos, GetFeedBackQuestions, SendFeedBack, GetSuperClass, CompleteFeedBack, SendQuiz, GetQuizSummary, SendAssing } } = config;
 
 export async function queryPage (payload) {
   return request({
@@ -83,6 +83,14 @@ export async function url (payload) {
   });
 }
 
+export async function queryResource (payload) {
+  return request({
+    url: GetResource,
+    method: 'get',
+    data: payload,
+  });
+}
+
 export async function querySuperClass (payload) {
   return request({
     url: GetSuperClass,
@@ -134,6 +142,15 @@ export async function completeFeedBack (payload) {
 export async function sendQuiz (payload) {
   return request({
     url: SendQuiz,
+    method: 'post',
+    data: payload,
+  });
+}
+
+
+export async function sendAssing (payload) {
+  return request({
+    url: SendAssing,
     method: 'post',
     data: payload,
   });

@@ -2,13 +2,29 @@
 
 @PrefixCls: innerhtml;
 
+.clearFloat() {
+  clear: both;
+  margin: 0 auto;
+  width: 0;
+}
+
 .@{PrefixCls}-outer {
   padding: 20px;
   overflow: hidden;
   font-size: 30px;
   line-height: 1.5em;
+
   & p, h1, h2, h3, h4, h5, h6, ul, ol {
     margin: 0.1em 0;
+    padding: 0;
+  }
+
+  & div {
+    width: 100% !important;
+  }
+
+  ul, li, ol {
+    list-style: none;
   }
 
   table {
@@ -17,7 +33,42 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        text-align: center;
+      }
+    }
+  }
+
+  & .clear {
+    .clearFloat
+  }
+
+  :global {
+    & .content-table-div {
+      width: 100%;
+      padding-bottom: 10px;
+
+      & .table-div-tr {
+        padding: 10px 0;
+
+        & .table-div-tr-td {
+          padding: 10px 0;
+        }
+      }
+
+      & .clear {
+        .clearFloat
+      }
+    }
+
+    & .content-table-first-bar {
+      width: 100%;
+      height: auto;
+      overflow-y: hidden;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      & .second-bar {
+        position: relative;
+        display: inline-block;
       }
     }
   }

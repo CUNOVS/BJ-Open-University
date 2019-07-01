@@ -12,7 +12,6 @@ import { getImages, getLocalIcon, getOffsetTopByBody, getCommonDate, pattern } f
 import NoContent from 'components/nocontent';
 import styles from './index.less';
 
-
 const PrefixCls = 'messageCenter',
   Item = List.Item;
 
@@ -217,9 +216,9 @@ class MessageCenter extends React.Component {
           tabBarInactiveTextColor="#b7b7b7"
           tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
           tabs={[
-            { title: <Badge text={`${noticeCount > 0 ? noticeCount : ''}`} >课程活动</Badge > },
-            { title: <Badge text={`${newsCount > 0 ? newsCount : ''}`} >消息</Badge > },
-            { title: <Badge >系统通知</Badge > },
+            { title: <Badge text={`${noticeCount > 0 ? noticeCount : ''}`} >课程活动</Badge >},
+            { title: <Badge text={`${newsCount > 0 ? newsCount : ''}`} >消息</Badge >},
+            { title: <Badge >系统通知</Badge >},
           ]}
         >
           {loadingMessage && !isReload ?

@@ -53,7 +53,7 @@ class Login extends React.Component {
                   placeholder="用户名"
                   onFocus={this.moveInput.bind(this)}
                   {...getFieldProps(userKey, {
-                    initialValue: _cg(userKey),
+                    initialValue: _cg('userloginname'),
                     rules: [{ required: true, message: '用户名必须输入' }, {
                       min: 1,
                       message:

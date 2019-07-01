@@ -10,7 +10,6 @@ import styles from './index.less';
 const PrefixCls = 'conversation';
 let Index = 0;
 const Conversation = ({ location, dispatch, conversation, app }) => {
-
   const { name, fromuserid, avatar } = location.query;
   const { chartArr = [] } = conversation,
     { users: { userid, useravatar } } = app;

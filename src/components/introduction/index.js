@@ -70,9 +70,9 @@ class Introduction extends React.Component {
         </div>
         {this.state.isShow ?
           <div className={classNames(styles[`${PrefixCls}-mask`], { [styles.vague]: !this.state.isOpen })}
-               onClick={this.handleClick}
+            onClick={this.handleClick}
           >
-            <Icon type={this.state.isOpen ? 'up' : 'down'} size="lg" color="#22609c"/>
+            <Icon type={this.state.isOpen ? 'up' : 'down'} size="lg" color="#22609c" />
           </div>
           :
           ''

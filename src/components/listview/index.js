@@ -1,3 +1,4 @@
+import React from 'react';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import ReactDOM from 'react-dom';
 import { getOffsetTopByBody } from 'utils';
@@ -10,6 +11,20 @@ let PrefixCls = 'cn-listview',
   { BaseLine } = Layout;
 
 class Comp extends React.Component {
+  static defaultProps = {
+    dataSource: [],
+    useBodyScroll: false,
+    hasMore: false,
+    pageSize: 10,
+    onRefresh: '',
+    layoutHeader: '',
+    layoutFooter: '',
+    layoutRow: '',
+    layoutSeparator: '',
+    scrollerTop: 0,
+    onScrollerTop: '',
+  };
+
   constructor (props) {
     super(props);
     const dataSource = new ListView.DataSource({
@@ -24,28 +39,9 @@ class Comp extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.dataSource !== this.props.dataSource) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
-      });
-    }
-  }
-
-  componentDidUpdate () {
-    if (this.props.useBodyScroll) {
-      document.body.style.overflow = 'auto';
-    } else {
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
   componentDidMount () {
-    let hei = this.state.height,
-      el;
-    if (el = ReactDOM.findDOMNode(this.lv)) {
+    let el = ReactDOM.findDOMNode(this.lv),
       hei = cnhtmlHeight - getOffsetTopByBody(el);
-    }
     setTimeout(() => {
       let { dataSource } = this.state;
       if (this.props.dataSource.length) {
@@ -63,6 +59,22 @@ class Comp extends React.Component {
         this.lv.scrollTo(0, this.props.scrollerTop);
       }
     }, 100);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.dataSource !== this.props.dataSource) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
+      });
+    }
+  }
+
+  componentDidUpdate () {
+    if (this.props.useBodyScroll) {
+      document.body.style.overflow = 'auto';
+    } else {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   componentWillUnmount () {
@@ -117,7 +129,7 @@ class Comp extends React.Component {
     if (this.props.layoutSeparator) {
       return this.props.layoutSeparator(sectionID, rowID);
     }
-    return <div
+    return (<div
       key={`${sectionID}-${rowID}`}
       style={{
         backgroundColor: '#f6f6f6',
@@ -125,7 +137,7 @@ class Comp extends React.Component {
         // borderTop: '1px solid #ECECED',
         // borderBottom: '1px solid #ECECED',
       }}
-    />;
+    />);
   }
 
   layoutRow (rowData, sectionID, rowID) {
@@ -155,7 +167,7 @@ class Comp extends React.Component {
     return (
       <div className={styles[`${PrefixCls}-outer`]} >
         <ListView
-          ref={el => this.lv = el}
+          ref={ele => this.lv = ele}
           initialListSize={this.props.dataSource.length || 10}
           dataSource={this.state.dataSource}
           renderHeader={this.layoutHeader.bind(this)}
@@ -167,12 +179,14 @@ class Comp extends React.Component {
             height: this.state.height,
             margin: '5px 0',
           }}
-          pullToRefresh={<PullToRefresh
-            distanceToRefresh={60}
-            damping={200}
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />}
+          pullToRefresh={
+            <PullToRefresh
+              distanceToRefresh={60}
+              damping={200}
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
           onEndReached={this.onEndReached.bind(this)}
           onEndReachedThreshold={100}
           pageSize={this.props.pageSize}
@@ -180,20 +194,6 @@ class Comp extends React.Component {
       </div >
     );
   }
-
-  static defaultProps = {
-    dataSource: [],
-    useBodyScroll: false,
-    hasMore: false,
-    pageSize: 10,
-    onRefresh: '',
-    layoutHeader: '',
-    layoutFooter: '',
-    layoutRow: '',
-    layoutSeparator: '',
-    scrollerTop: 0,
-    onScrollerTop: '',
-  };
 }
 
 export default Comp;

@@ -3,6 +3,7 @@ import modelExtend from 'dva-model-extend';
 import { getLocalIcon } from 'utils';
 import { queryQuiz } from 'services/resource';
 import { model } from 'models/common';
+import { Toast } from 'components';
 
 const getInfo = (arr) => {
   const res = {};
@@ -34,7 +35,7 @@ export default modelExtend(model, {
     * queryQuiz ({ payload }, { call, put, select }) {
       const { users: { userid } } = yield select(_ => _.app);
       const data = yield call(queryQuiz, { ...payload, userid });
-      if (data) {
+      if (data.success) {
         yield put({
           type: 'updateState',
           payload: {
@@ -42,6 +43,9 @@ export default modelExtend(model, {
             info: getInfo(data.attempts),
           },
         });
+      } else {
+        yield put({ type: 'goBack' });
+        Toast.fail(data.message || '加载失败');
       }
     },
   },

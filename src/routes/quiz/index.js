@@ -23,7 +23,6 @@ const alert = Modal.alert;
   loading: loading.effects[`${PrefixCls}/queryQuiz`],
 }))
 class Quiz extends PureComponent {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -55,37 +54,32 @@ class Quiz extends PureComponent {
         modname
       }
     });
-
   }
 
-  componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
-    this.props.dispatch({
-      type: 'app/accessTime',
-      payload: {
-        startedat: this.state.startTime.getTime(),
-        endedat: new Date().getTime(),
-        courseid,
-        cmid,
-
-      }
-    });
-  }
+  // componentWillUnmount () {
+  //   const { courseid = '', cmid = '' } = this.props.location.query;
+  //   this.props.dispatch({
+  //     type: 'app/accessTime',
+  //     payload: {
+  //       startedat: this.state.startTime.getTime(),
+  //       endedat: new Date().getTime(),
+  //       courseid,
+  //       cmid,
+  //
+  //     }
+  //   });
+  // }
 
   getMethod = (type) => {
     switch (type) {
       case 1:
         return '最高分';
-        break;
       case 2:
         return '平均分';
-        break;
       case 3:
         return '第一次答题';
-        break;
       case 4:
         return '最后一次答题';
-        break;
       default:
         return '-';
     }
@@ -93,27 +87,29 @@ class Quiz extends PureComponent {
 
   showModal = () => {
     const { name } = this.props.location.query,
-      { data: { id, navmethod = '', options = {} }, info = {} } = this.props.quiz;
+      { data: { id, navmethod = '', options = {}, timelimit = 0 }, info = {} } = this.props.quiz;
     const { dispatch } = this.props;
     const { accessrules = [] } = options;
-    alert('限时测验', `${accessrules[2] || ''}。时间将从你开始做测验时倒数计时，而你必须在时限到之前提交答案。你确定你现在就要开始作答？`, [
+    alert('限时测验', `时间将从你开始做测验时倒数计时，而你必须在时限到之前提交答案。你确定你现在就要开始作答？`, [
       { text: '取消', onPress: () => console.log('cancel') },
       {
-        text: '开始', onPress: () => handlerChangeRouteClick('quizDetails',
+        text: '开始',
+        onPress: (e) => handlerChangeRouteClick('quizDetails',
           {
             quizid: id,
             name,
             ...info,
+            timelimit,
             navmethod
           },
-          dispatch)
+          dispatch, e)
       },
     ]);
   };
 
   render () {
     const { name } = this.props.location.query,
-      { data: { id, intro, options = {}, buttontext, hasquestions, visiblebutton, attempts = [], feedbacktext, hasfeedback, finalgrade, grademethod, maxgrade, isfinished, preventnewattemptreasons = [], courseid, name: quizName = '', navmethod = '', timelimit }, info = {} } = this.props.quiz,
+      { data: { id, intro, options = {}, buttontext, hasquestions, visiblebutton, attempts = [], feedbacktext, hasfeedback, finalgrade, grademethod, maxgrade, isfinished, preventnewattemptreasons = [], courseid, name: quizName = '', navmethod = '', timelimit = 0, sumgrades, decimalpoints }, info = {} } = this.props.quiz,
       { preventaccessreasons = [] } = options,
       { loading, dispatch } = this.props;
     const method = this.getMethod(grademethod);
@@ -124,13 +120,21 @@ class Quiz extends PureComponent {
       method,
       hasfeedback,
       feedbacktext,
+      decimalpoints,
       dispatch: this.props.dispatch
     };
     return (
       <div className={styles[`${PrefixCls}-outer`]} >
         <Nav title={name || quizName} dispatch={dispatch} />
         {loading ? <ContentSkeleton /> : <div >
-          {hasquestions === 0 ? <NoticeBar mode="closable" icon={null} >尚未添加试题</NoticeBar > : ''}
+          {hasquestions === 0 ?
+            <NoticeBar
+              marqueeProps={{ loop: true }}
+              mode="closable"
+              icon={null}
+            >
+              尚未添加试题
+            </NoticeBar > : ''}
           <div className={styles[`${PrefixCls}-describe`]} >
             {intro !== '' ? <Introduction data={intro} courseid={courseid} dispatch={this.props.dispatch} /> : ''}
           </div >
@@ -146,13 +150,21 @@ class Quiz extends PureComponent {
           {
             cnIsArray(attempts) && attempts.length > 0
               ?
-              <Status data={attempts} maxgrade={maxgrade} dispatch={dispatch} />
+              <Status
+                data={attempts}
+                decimalpoints={decimalpoints}
+                maxgrade={maxgrade}
+                sumgrades={sumgrades}
+                dispatch={dispatch}
+              />
               :
               ''
           }
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
-          <GradeBox {...gradePros} />
+          <WingBlank >
+            <GradeBox {...gradePros} />
+          </WingBlank >
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
           <WingBlank >
@@ -165,15 +177,34 @@ class Quiz extends PureComponent {
                       quizid: id,
                       name,
                       ...info,
-                      navmethod
+                      navmethod,
+                      timelimit,
                     },
                     dispatch)}
               >{buttontext}</Button > : ''}
           </WingBlank >
-          {preventnewattemptreasons.length && !visiblebutton > 0 ?
-            <NoticeBar mode="closable" icon={null} >{preventnewattemptreasons[0]}</NoticeBar > : ''}
-          {preventaccessreasons.length > 0 && !visiblebutton ?
-            <NoticeBar mode="closable" icon={null} >{preventaccessreasons[0]}</NoticeBar > : ''}
+          {
+            preventnewattemptreasons.length > 0 ?
+              <NoticeBar
+                marqueeProps={{ loop: true }}
+                mode="closable"
+                icon={null}
+              >
+                {preventnewattemptreasons[0]}
+              </NoticeBar >
+              :
+              ''
+          }
+          {preventaccessreasons.length > 0 ?
+            <NoticeBar
+              marqueeProps={{ loop: true }}
+              mode="closable"
+              icon={null}
+            >
+              {preventaccessreasons[0]}
+            </NoticeBar >
+            :
+            ''}
         </div >}
       </div >
     );

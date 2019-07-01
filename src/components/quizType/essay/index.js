@@ -40,7 +40,7 @@ class Essay extends React.Component {
         onChange={(val) => this.textChange(val)}
         placeholder="请回答"
         disabled={type !== 'quiz'}
-        rows={answer.rows || 3}
+        rows={answer.rows || 8}
       />
     );
   }

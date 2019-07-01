@@ -68,6 +68,12 @@ class FeedBackDetails extends Component {
 
   onBackSubmit = () => {
     const { dispatch } = this.props;
+    dispatch({
+      type: 'app/updateBackModal',
+      payload: {
+        showBackModal: false
+      }
+    });
     dispatch(routerRedux.goBack());
   };
 
@@ -85,7 +91,6 @@ class FeedBackDetails extends Component {
     const responses = {};
 
     items.forEach((itemData) => {
-
       if (itemData.hasvalue) {
         let name,
           value;
@@ -264,7 +269,7 @@ class FeedBackDetails extends Component {
       const { typ = '', name = '', otherdata = '', required = false, presentation = '', responsevalue = '', choices = [], template = '', id, value = '', rangefrom = '', rangeto = '' } = item;
       if (typ === 'info') {
         result.push(
-          <List className={styles.info} >
+          <List key={id} className={styles.info} >
             <Item multipleLine >
               {name} <Brief >{otherdata}</Brief >
             </Item >
@@ -386,7 +391,8 @@ class FeedBackDetails extends Component {
                         checked={item.checked}
                         onChange={(val) => this.checkboxChange(item.value, id)}
                         value={item.value + 1}
-                        key={item.value} >
+                        key={item.value}
+                      >
                         {item.label}
                       </CheckboxItem >
                     ))}
@@ -524,6 +530,7 @@ class FeedBackDetails extends Component {
     const { name = '答题', anonymous = 1, id = '' } = this.props.location.query,
       { questions, hasprevpage, hasnextpage, page } = this.props.feedbackdetails;
     const { showBackModal = false } = this.props.app;
+    console.log(showBackModal);
     return (
       <div >
         <Nav title={name} dispatch={this.props.dispatch} hasShadow isAlert />

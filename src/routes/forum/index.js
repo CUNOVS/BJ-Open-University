@@ -40,22 +40,12 @@ class Forum extends React.Component {
   }
 
   componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
-    this.props.dispatch({
-      type: 'app/accessTime',
-      payload: {
-        startedat: this.state.startTime.getTime(),
-        endedat: new Date().getTime(),
-        courseid,
-        cmid,
 
-      }
-    });
   }
 
   render () {
     const { name = '' } = this.props.location.query,
-      { data: { id, course, intro, discussions = [], cancreatediscussions, numdiscussions = 0, maxattachments, maxbytes, blockafter, blockperiod, warnafter, name: forumName = '', groupid }, scrollerTop, hasMore } = this.props.forum,
+      { data: { id, course, intro, discussions = [], cancreatediscussions, numdiscussions = 0, maxattachments, maxbytes, blockafter, blockperiod, warnafter, name: forumName = '', groupid, type = '' }, scrollerTop, hasMore } = this.props.forum,
       { courseid, forumid, cmid } = this.props.location.query;
     const { groups } = this.props.app,
       onRefresh = (callback) => {
@@ -114,8 +104,15 @@ class Forum extends React.Component {
     return (
       <div >
         <Nav title={forumName || name} dispatch={this.props.dispatch} />
+        {type === 'qanda' ?
+          <NoticeBar
+            marqueeProps={{ loop: true }}
+            mode="closable"
+            icon={null}
+          >这是一个问题和解答讨论区。为了能看到其他人的回应，您首先需要发表您的解答</NoticeBar > : ''}
         {blockperiod > 0 ?
           <NoticeBar
+            marqueeProps={{ loop: true }}
             mode="closable"
             icon={null}
           >{`${getDurationDay(blockperiod)}内最多发 ${blockafter}个帖子`}</NoticeBar > : ''}
@@ -140,13 +137,13 @@ class Forum extends React.Component {
               groupid,
             }, this.props.dispatch)}
           >
-            发起话题
+            开启一个新话题
           </Button > : null}
         </div >
         <div className={styles.reset} style={{ height: this.state.height, background: 'white' }} >
           <div className={styles[`${PrefixCls}-title`]} >
             <div ><Icon type="down" />{`话题(${numdiscussions})`}</div >
-            <div style={{ color: '#1296db' }} ></div >
+            <div style={{ color: '#1296db' }} />
           </div >
           {discussions.length > 0 ? getContents(discussions) : <NoContent />}
         </div >

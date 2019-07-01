@@ -2,7 +2,11 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryUserInfo } from 'services/app';
+import cookie from 'utils/cookie';
+import config, { userTag } from 'utils/config';
 
+const { userTag: { username, useravatar } } = config,
+  { _cs } = cookie;
 export default modelExtend(model, {
   namespace: 'homepage',
   state: {
@@ -13,17 +17,15 @@ export default modelExtend(model, {
       history.listen(location => {
         let { pathname, action } = location;
         if (pathname.startsWith('/homepage')) {
-          if (action === 'PUSH') {
-            dispatch({
-              type: 'updateState',
-              payload: {
-                data: {},
-              }
-            });
-            dispatch({
-              type: 'query',
-            });
-          }
+          dispatch({
+            type: 'updateState',
+            payload: {
+              data: {},
+            }
+          });
+          dispatch({
+            type: 'query',
+          });
         }
       });
     },
@@ -32,13 +34,17 @@ export default modelExtend(model, {
     * query ({ payload }, { call, put, select }) {
       const { users: { userid } } = yield select(_ => _.app),
         data = yield call(queryUserInfo, { userid });
-      if (data) {
+      if (data.success) {
         yield put({
           type: 'updateState',
           payload: {
             data
           }
         });
+        _cs(username, data.fullname);
+        _cs(useravatar, data.avatar);
+      } else {
+        Toast.fail(data.message || '获取失败');
       }
     },
   },

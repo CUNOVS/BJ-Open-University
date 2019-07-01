@@ -8,8 +8,6 @@ import ResultIcon from '../icon';
 const PrefixCls = 'banner';
 
 class Gapselect extends React.Component {
-
-
   componentDidMount () {
 
   }
@@ -19,7 +17,7 @@ class Gapselect extends React.Component {
     const { getFieldDecorator } = this.props.form;
     const { answer } = this.props;
     const getSelect = ({ id, value = '', items = [], currect = '' }) =>
-      <div >{getFieldDecorator(id, {
+      (<div >{getFieldDecorator(id, {
         initialValue: value // 初始值
       })(
         <Picker data={items} cols={1} disabled >
@@ -33,7 +31,7 @@ class Gapselect extends React.Component {
           </List.Item >
         </Picker >
       )}
-      </div >;
+      </div >);
     const getContents = (html) => {
       const selectEls = cheerio('select', html),
         selectDatas = [];

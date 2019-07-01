@@ -79,6 +79,7 @@ export default modelExtend(model, {
           },
         });
       } else {
+        yield put({ type: 'goBack' });
         Toast.fail(result.message || '未知错误');
       }
       if (callback) {

@@ -30,7 +30,7 @@ tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
 
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { users, showModal } = app;
+  const { updates: { upgraded = false, urls = '', appVerSion, updateInfo }, showModal } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -51,37 +51,37 @@ const App = ({ children, dispatch, app, loading, location }) => {
     progessStart = false;
     NProgress.done();
   }
-  // const update = (url, upgraded) => {
-  //   if (upgraded) {
-  //     return (<Modal
-  //       visible
-  //       transparent
-  //       maskClosable={false}
-  //       title="当前版本过低"
-  //       footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
-  //     >
-  //       <div>
-  //         为保证正常使用，请先升级应用
-  //       </div>
-  //     </Modal>);
-  //   }
-  //   if (isFirst) {
-  //     Modal.alert('版本更新', '点击升级我的阿拉善', [
-  //       {
-  //         text: '暂不升级',
-  //         onPress: () => dispatch({
-  //           type: 'app/updateState',
-  //           payload: {
-  //             showModal: false,
-  //           },
-  //         }),
-  //         style: 'default',
-  //       },
-  //       { text: '立刻升级', onPress: () => cnUpdate(url) },
-  //     ]);
-  //     isFirst = false;
-  //   }
-  // };
+  const update = (url) => {
+    if (upgraded && url !== '') {
+      return (<Modal
+        visible
+        transparent
+        maskClosable={false}
+        title={appVerSion || cnVersionInfo.title}
+        footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
+      >
+        <div >
+          {updateInfo || cnVersionInfo.content}
+        </div >
+      </Modal >);
+    }
+    if (isFirst && url !== '') {
+      Modal.alert(appVerSion || cnVersionInfo.title, updateInfo || cnVersionInfo.content, [
+        {
+          text: '暂不升级',
+          onPress: () => dispatch({
+            type: 'app/updateState',
+            payload: {
+              showModal: false,
+            },
+          }),
+          style: 'default',
+        },
+        { text: '立刻升级', onPress: () => cnUpdate(url) },
+      ]);
+      isFirst = false;
+    }
+  };
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
     return (<div >
       <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
@@ -133,6 +133,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
           );
         })}
       </TabBar >
+      {showModal && update(urls)}
     </div >
   );
 };

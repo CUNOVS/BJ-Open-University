@@ -4,8 +4,8 @@ import { getLocalIcon } from 'utils';
 import Refresh from 'components/pulltorefresh';
 import Nav from 'components/nav';
 import { attendanceRow } from 'components/row';
-import { handlerChangeRouteClick } from 'utils/commonevents';
 import NoContent from 'components/nocontent';
+import { handlerChangeRouteClick } from 'utils/commonevents';
 import styles from './index.less';
 
 
@@ -38,17 +38,22 @@ function Attendance ({ location, dispatch, attendance }) {
         onScrollerTop={onScrollerTop.bind(null)}
         scrollerTop={scrollerTop}
       >
-        {cnIsArray(listData) && listData.map((item) => {
-          return attendanceRow(item, handlerChangeRouteClick.bind(null, 'attendancedetails',
-            {
-              name: '考勤详情',
-              courseid: item.id,
-              enddate: item.enddate,
-              startdate: item.startdate,
-              fullname: item.fullname
-            }
-            , dispatch));
-        })}
+        {
+          cnIsArray(listData) && listData.length > 0 ?
+            listData.map((item) => {
+              return attendanceRow(item, handlerChangeRouteClick.bind(null, 'attendancedetails',
+                {
+                  name: '考勤详情',
+                  courseid: item.id,
+                  enddate: item.enddate,
+                  startdate: item.startdate,
+                  fullname: item.fullname
+                }
+                , dispatch));
+            })
+            :
+            <NoContent />
+        }
       </Refresh >
     </div >
   );

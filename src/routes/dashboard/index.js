@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import { Layout, WhiteSpace, Icon, List, Tabs } from 'components';
@@ -58,7 +57,8 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
     <div className={styles[`${PrefixCls}-outer`]} >
       <Header
         count={count}
-        handlerClick={handlerChangeRouteClick.bind(null, 'messageCenter', { name: '消息中心' }, dispatch)} />
+        handlerClick={handlerChangeRouteClick.bind(null, 'messageCenter', { name: '消息中心' }, dispatch)}
+      />
       <Notice banner={bannerNotice} messageL={moreMessage} />
       <WhiteSpace />
       <Tabs
@@ -72,11 +72,12 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
       >
         <div >
           <TimeLine />
+          <WhiteSpace />
           <div className={styles[`${PrefixCls}-tasklist`]} >
             {loadingTask && !refreshing ?
               <ListSkeleton />
               :
-              taskList.length > 0 ?
+              cnIsArray(taskList) && taskList.length > 0 ?
                 <Refresh refreshing={refreshing} onRefresh={onRefresh.bind(null, 'query')} >
                   {taskList.map((item, i) => {
                     return taskRow(item, handlerCourseClick.bind(null, item, item.courseid, dispatch));
@@ -90,14 +91,15 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
         </div >
         <div className={styles[`${PrefixCls}-tasklist`]} >
           <WhiteSpace />
-          {loadingAllTask && !refreshing?
+          {loadingAllTask && !refreshing ?
             <ListSkeleton />
             :
-            taskAllList.length > 0 ?
+            cnIsArray(taskAllList) && taskAllList.length > 0 ?
               <Refresh refreshing={refreshing} onRefresh={onRefresh.bind(null, 'queryAllTask')} >
                 {taskAllList.map((item, i) => {
                   return taskLessonRow(item, handlerLessonListClick, dispatch);
                 })}
+                <BaseLine />
               </Refresh >
               :
               <NoContent />

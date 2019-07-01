@@ -4,9 +4,8 @@
  * @Description:
  */
 import React from 'react';
-import { Icon, WhiteSpace, Tabs, Button, WingBlank, List } from 'components';
+import { Icon, WhiteSpace, Tabs, Button, WingBlank, List, Modal } from 'components';
 import CnBadge from 'components/cnBadge';
-import InnerHtml from 'components/innerhtml';
 import TitleBox from 'components/titlecontainer';
 import { handlerChangeRouteClick } from 'utils/commonevents';
 import { getCommonDate, getLocalIcon, getSurplusDay, getImages } from 'utils';
@@ -14,6 +13,7 @@ import FeedBack from '../feedkack';
 import SelfFiles from '../selfFiles';
 import styles from './index.less';
 
+const alert = Modal.alert;
 const PrefixCls = 'status',
   tabs = [
     { title: '提交的作业' },
@@ -23,19 +23,14 @@ const PrefixCls = 'status',
     switch (status) {
       case 'new' :
         return <CnBadge text="没有提交作业" background="#f34e14" />;
-        break;
       case 'draft' :
-        return <CnBadge text="草稿(未提交)" background="#f34e14" />;
-        break;
+        return <CnBadge text="草稿(未提交)" background="#ec9c00" />;
       case 'submitted' :
         return <CnBadge text="已提交" background="#1eb259" />;
-        break;
       case 'marked' :
         return <CnBadge text="已评分" background="#1eb259" />;
-        break;
       case 'reonpened' :
         return <CnBadge text="已开启重交" background="#ff9a1b" />;
-        break;
       default :
         return <CnBadge text="未知" background="#ff9a1b" />;
     }
@@ -57,37 +52,40 @@ const PrefixCls = 'status',
     switch (status) {
       case 'inmarking' :
         return <CnBadge text="评分中" background="#ff9a1b" />;
-        break;
       case 'draft' :
-        return <CnBadge text="草稿(未提交)" background="#f34e14" />;
-        break;
+        return <CnBadge text="草稿(未提交)" background="#ec9c00" />;
       case 'readyforreview' :
         return <CnBadge text="已评分" background="#1eb259" />;
-        break;
       case 'inreview' :
         return <CnBadge text="正在检查评分结果" background="#ff9a1b" />;
-        break;
       case 'readyforrelease' :
         return <CnBadge text="准备公布评分" background="#ff9a1b" />;
-        break;
       case 'released' :
         return <CnBadge text="已公布评分" background="#1eb259" />;
-        break;
       case 'graded' :
         return <CnBadge text="已评分" background="#1eb259" />;
-        break;
       case 'notgraded' :
         return <CnBadge text="未评分" background="#f34e14" />;
-        break;
       default :
         return <CnBadge text="未评分" background="#f34e14" />;
     }
-  },
-  getButton = (type) => (
-    type === 'new' ? '添加提交' : '编辑提交的作业'
-  );
+  };
 const Status = (props) => {
-  const { submitStatus, gradingstatus, duedate = 0, cutoffdate = 0, allowsubmissionsfromdate, timemodified = 0, submitDataType, grade = {}, fileIdPrefix } = props;
+  const { submitStatus, gradingstatus, duedate = 0, cutoffdate = 0, allowsubmissionsfromdate = 0, timemodified = 0, submitDataType, grade = {}, fileIdPrefix, canedit, cansubmit, } = props,
+    handlerSubmit = (id) => {
+      props.dispatch({
+        type: 'homework/sendAssing',
+        payload: {
+          assignmentid: id
+        }
+      });
+    },
+    showModal = (id) => {
+      alert('提交', '本作业一旦提交，您将不能再作任何修改', [
+        { text: '取消', onPress: () => console.log() },
+        { text: '提交', onPress: () => handlerSubmit(id) },
+      ]);
+    };
   return (
     <div className={styles[`${PrefixCls}-status`]} >
       <div className={styles[`${PrefixCls}-status-head`]} >
@@ -130,7 +128,10 @@ const Status = (props) => {
               {
                 duedate > 0 ?
                   <div className={styles[`${PrefixCls}-status-time`]} >
-                    <span ><Icon type={getLocalIcon('/components/surplus.svg')} size="xs" /><span >剩余时间</span ></span >
+                    <span >
+                      <Icon type={getLocalIcon('/components/surplus.svg')} size="xs" />
+                      <span >剩余时间</span >
+                    </span >
                     {getSurplusDay(duedate, submitStatus, timemodified)}
                   </div >
                   :
@@ -142,23 +143,40 @@ const Status = (props) => {
               </div >
               <WhiteSpace size="lg" />
               <WingBlank >
-                {/* <Button type="primary" >{getButton(submitStatus)}</Button > */}
-                <Button
-                  type="primary"
-                  onClick={(e) => (handlerChangeRouteClick(
-                    'homeworkadd',
-                    { assignId: props.assignId },
-                    props.dispatch, e))}
-                >
-                  {getButton(submitStatus)}
-                </Button >
+                {
+                  canedit ?
+                    <Button
+                      type="primary"
+                      onClick={(e) => (handlerChangeRouteClick(
+                        'homeworkadd',
+                        { assignId: props.assignId },
+                        props.dispatch, e))}
+                    >
+                      {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                    </Button >
+                    :
+                    null
+                }
+                <WhiteSpace size="lg" />
+                {
+                  cansubmit ?
+                    <Button
+                      type="warning"
+                      onClick={(e) => showModal(props.assignId)}
+                    >
+                      {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                    </Button >
+                    :
+                    null
+
+                }
               </WingBlank >
             </div >
 
-            <div >
+            <div className={styles.feedback} >
               <div >
                 <TitleBox title="最终成绩" sup="" />
-                <InnerHtml data={grade.gradefordisplay} />
+                <div className={styles.grade} >{grade.gradefordisplay}</div >
               </div >
               <FeedBack data={grade.feedbackplugins} fileIdPrefix={fileIdPrefix} />
               <TitleBox title="评分人" sup="" />
@@ -173,7 +191,7 @@ const Status = (props) => {
                     }
                   }}
                 >
-                  {grade.gradeUser.userName}
+                  {grade.gradeUser.fullname}
                   <List.Item.Brief >{getCommonDate(grade.timemodified)}</List.Item.Brief >
                 </List.Item >
               </List >
@@ -219,31 +237,31 @@ const Status = (props) => {
             <WhiteSpace size="lg" />
             <WingBlank >
               {
-                cutoffdate > 0 ? (
-                    cutoffdate * 1000 - new Date() > 0 ?
-                      <Button
-                        type="primary"
-                        onClick={(e) => (handlerChangeRouteClick(
-                          'homeworkadd',
-                          { assignId: props.assignId },
-                          props.dispatch, e))}
-                      >
-                        {getButton(submitStatus)}
-                      </Button >
-                      :
-                      null
-                  ) :
-                  (
-                    <Button
-                      type="primary"
-                      onClick={(e) => (handlerChangeRouteClick(
-                        'homeworkadd',
-                        { assignId: props.assignId },
-                        props.dispatch, e))}
-                    >
-                      {getButton(submitStatus)}
-                    </Button >
-                  )
+                canedit ?
+                  <Button
+                    type="primary"
+                    onClick={(e) => (handlerChangeRouteClick(
+                      'homeworkadd',
+                      { assignId: props.assignId },
+                      props.dispatch, e))}
+                  >
+                    {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                  </Button >
+                  :
+                  null
+              }
+              <WhiteSpace size="lg" />
+              {
+                cansubmit ?
+                  <Button
+                    type="warning"
+                    onClick={(e) => showModal(props.assignId)}
+                  >
+                    {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                  </Button >
+                  :
+                  null
+
               }
             </WingBlank >
           </div >

@@ -19,15 +19,13 @@ export default modelExtend(model, {
     setup ({ history, dispatch }) {
       history.listen(({ pathname, action, query }) => {
         if (pathname === '/forumDetails') {
-          if (action === 'PUSH') {
-            const { discussionid } = query;
-            dispatch({
-              type: 'query',
-              payload: {
-                discussionid
-              }
-            });
-          }
+          const { discussionid } = query;
+          dispatch({
+            type: 'query',
+            payload: {
+              discussionid
+            }
+          });
         }
       });
     },

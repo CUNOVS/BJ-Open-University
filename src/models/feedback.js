@@ -14,7 +14,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         const { id = '', courseid = '' } = query;
-        if (pathname === '/feedback' && action === 'PUSH') {
+        if (pathname === '/feedback') {
           dispatch({
             type: 'queryFeedback',
             payload: {
@@ -39,7 +39,6 @@ export default modelExtend(model, {
       } else {
         Toast.fail(data.message || '请稍后再试');
       }
-
     },
     * sendPatryOpinion ({ payload }, { call, put, select }) {
 

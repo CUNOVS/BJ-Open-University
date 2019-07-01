@@ -19,7 +19,9 @@ const getStatus = (type) => {
 };
 const Status = (props) => {
   const attempts = props.data,
-    maxgrade = props.maxgrade;
+    maxgrade = props.maxgrade,
+    sumgrades = props.sumgrades,
+    decimalpoints = props.decimalpoints;
   return (
     <div className={styles.status} >
       <div className={styles.title} >
@@ -33,6 +35,16 @@ const Status = (props) => {
           <div >{`成绩/${maxgrade}`}</div >
         </div >
         {cnIsArray(attempts) && attempts.map((item, i) => {
+          const getGrade = () => {
+            let num = item.sumgrades * maxgrade / sumgrades;
+            if (num >= 0.00005) {
+              const multiplier = Math.pow(10, decimalpoints);
+              num = Math.round(num * multiplier) / multiplier;
+            } else {
+              num = 0;
+            }
+            return num;
+          };
           return (
             <div
               key={i}
@@ -51,8 +63,7 @@ const Status = (props) => {
               </div >
               {item.state === 'finished' ?
                 <div >
-                  {item.sumgrades ? `${item.sumgrades}/${maxgrade}` : '未评分'}
-
+                  {item.sumgrades ? `${getGrade()}/${maxgrade}` : '未评分'}
                 </div >
                 :
                 '未评分'}

@@ -31,16 +31,15 @@ export default modelExtend(model, {
               type: 'queryList',
             });
           }
-
         }
       });
     },
   },
 
   effects: {
-    * queryList ({}, { call, put, select }) {
-      const { coureData } = yield select(_ => _.app),
-        response = yield call(queryList.queryTeachers, { coureData: JSON.stringify(coureData) });
+    * queryList (_, { call, put, select }) {
+      const { users: { userid } } = yield select(_ => _.app),
+        response = yield call(queryList.queryTeachers, { userid });
       if (response.success) {
         yield put({
           type: 'updateState',

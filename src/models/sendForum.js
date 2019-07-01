@@ -25,7 +25,8 @@ export default modelExtend(model, {
           dispatch({
             type: 'updateState',
             payload: {
-              type
+              type,
+              itemid: 0,
             }
           });
         }

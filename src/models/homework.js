@@ -3,7 +3,7 @@ import modelExtend from 'dva-model-extend';
 import { getLocalIcon } from 'utils';
 import { model } from 'models/common';
 import { Toast } from 'components';
-import { queryHomework, queryHomeWorkComments } from 'services/resource';
+import { queryHomework, queryHomeWorkComments, sendAssing } from 'services/resource';
 
 export default modelExtend(model, {
   namespace: 'homework',
@@ -16,23 +16,21 @@ export default modelExtend(model, {
       history.listen(({ pathname, query, action }) => {
         const { cmid, assignId, courseid } = query;
         if (pathname === '/homework') {
-          if (action === 'PUSH') {
-            dispatch({
-              type: 'updateState',
-              payload: {
-                data: [],
-                comments: [],
-              }
-            });
-            dispatch({
-              type: 'queryHomework',
-              payload: {
-                cmid,
-                ssignId: assignId,
-                courseid,
-              },
-            });
-          }
+          dispatch({
+            type: 'updateState',
+            payload: {
+              data: [],
+              comments: [],
+            }
+          });
+          dispatch({
+            type: 'queryHomework',
+            payload: {
+              cmid,
+              ssignId: assignId,
+              courseid,
+            },
+          });
         }
       });
     },
@@ -62,6 +60,7 @@ export default modelExtend(model, {
           });
         }
       } else {
+        yield put({ type: 'goBack' });
         Toast.fail('获取信息失败');
       }
     },
@@ -74,6 +73,14 @@ export default modelExtend(model, {
             comments,
           },
         });
+      } else {
+        Toast.fail(message);
+      }
+    },
+    * sendAssing ({ payload }, { call }) {
+      const { success, message = '请稍后再试' } = yield call(sendAssing, payload);
+      if (success) {
+        Toast.success('提交成功');
       } else {
         Toast.fail(message);
       }

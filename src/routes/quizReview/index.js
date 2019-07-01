@@ -6,18 +6,18 @@
 import React from 'react';
 import Nav from 'components/nav';
 import { connect } from 'dva';
-import { Icon, List, Button, NoticeBar, WingBlank, WhiteSpace } from 'components';
+import { Icon, List, Button, NoticeBar, WingBlank, WhiteSpace, Card } from 'components';
 import { getImages, getErrorImg, getLocalIcon, getCommonDate, getDurationTime } from 'utils';
+import InnerHtml from 'components/innerhtml';
 import Examination from './components/examination';
 import styles from './index.less';
 
 
-const PrefixCls = 'quizReview',
-  Item = List.Item,
-  Brief = Item.Brief;
+const PrefixCls = 'quizReview';
 
-@connect(({ quizReview, loading }) => ({ // babel装饰器语法糖
+@connect(({ quizReview, loading, quiz }) => ({ // babel装饰器语法糖
   quizReview,
+  quiz,
   loading: loading.effects[`${PrefixCls}/queryQuiz`],
 }))
 class QuizReview extends React.Component {
@@ -34,35 +34,53 @@ class QuizReview extends React.Component {
   getState = (state) => {
     if (state === 'finished') {
       return '完成';
-    } else {
-      return '-';
     }
+    return '-';
+  };
+
+  getGrade = (num) => {
+    const { data = {}, } = this.props.quiz, { decimalpoints = 1 } = data;
+    const multiplier = Math.pow(10, decimalpoints);
+    return Math.round(num * multiplier) / multiplier;
   };
 
   render () {
     const { name = '回顾' } = this.props.location.query,
-      { data: { additionaldata, attempt = [] }, questions } = this.props.quizReview,
-      { timestart = 0, state = '', timefinish = 0, sumgrades = null } = attempt,
+      { data: { grade, attempt = [], additionaldata = [] }, questions } = this.props.quizReview,
+      { timestart = 0, state = '', timefinish = 0 } = attempt,
       { loading } = this.props;
     const props = {
       questions
     };
     return (
       <div >
-        <Nav title={name} dispatch={this.props.dispatch} backNum={-2} />
+        <Nav title={name} dispatch={this.props.dispatch} />
         <div className={styles.feedBack} >
           <List className="my-list" >
-            <Item extra={timestart ? getCommonDate(timestart) : '-'} >开始时间</Item >
-            <Item extra={this.getState(state)} >状态</Item >
-            <Item extra={getCommonDate(timefinish)} >完成于</Item >
-            <Item extra={getDurationTime(timestart, timefinish)} >耗时</Item >
-            <Item extra={sumgrades || '还未评分'} >成绩</Item >
-            {/*<Item extra={'extra content'} >反馈</Item >*/}
+            <List.Item extra={timestart ? getCommonDate(timestart) : '-'} >开始时间</List.Item >
+            <List.Item extra={this.getState(state)} >状态</List.Item >
+            <List.Item extra={getCommonDate(timefinish)} >完成于</List.Item >
+            <List.Item extra={getDurationTime(timestart, timefinish)} >耗时</List.Item >
+            <List.Item extra={this.getGrade(grade) || '还未评分'} >成绩</List.Item >
           </List >
+          <WhiteSpace size="xs"/>
+          {
+            additionaldata.length > 0 ?
+              <Card >
+                <Card.Header
+                  title={additionaldata[0].title || '反馈'}
+                />
+                <Card.Body >
+                  <InnerHtml data={additionaldata[0].content} />
+                </Card.Body >
+              </Card >
+              :
+              null
+          }
         </div >
         <WhiteSpace />
         <div className={styles.outer} >
-          <Examination {...props}/>
+          <Examination {...props} />
         </div >
       </div >
     );

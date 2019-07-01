@@ -150,26 +150,22 @@ const getSurplusDay = (data, state, timemodified = 0) => {
     return `${daysRound > 0 ? `${daysRound}天` : ''}${hoursRound > 0 ? `${hoursRound}小时` : ''}${minutesRound}分钟`;
   };
   if (state === 'submitted') {
-    const time = data * 1000 - now;
+    const nowTime = data * 1000 - now;
     if (data * 1000 > now) {
-      return getDays(time);
-    } else {
-      if (data > timemodified) {
-        const time = (data - timemodified) * 1000;
-        return `提早了${getDays(time)}提交`;
-      } else {
-        const time = timemodified * 1000 - data * 1000;
-        return `推迟了${getDays(time)}提交`;
-      }
+      return getDays(nowTime);
     }
-
-  } else {
-    if (data * 1000 > now) {
-      const time = data * 1000 - now;
-      return getDays(time);
+    if (data > timemodified) {
+      const time = (data - timemodified) * 1000;
+      return `提早了${getDays(time)}提交`;
     }
-    return '已截止';
+    const time = timemodified * 1000 - data * 1000;
+    return `推迟了${getDays(time)}提交`;
   }
+  if (data * 1000 > now) {
+    const time = data * 1000 - now;
+    return getDays(time);
+  }
+  return <span style={{ color: '#f34e14' }} >作业已截止</span >;
 };
 
 const getDurationDay = (num) => {
@@ -188,7 +184,6 @@ const getDurationTime = (start, end) => {
   let minutesRound = Math.floor(minutes);
   let seconds = time / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
   return `${daysRound > 0 ? `${daysRound}天` : ''}${hoursRound > 0 ? `${hoursRound}小时` : ''}${minutesRound > 0 ? `${minutesRound}分钟` : ''}${seconds}秒`;
-
 };
 
 
@@ -237,12 +232,11 @@ const getImages = (path = '', type = 'defaultImg') => {
   }
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path.match(/token=/) ? path : `${path}?token=${userToken()}`;
-  } else {
-    return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
-      `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
-      :
-      (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
   }
+  return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
+    `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+    :
+    (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
 };
 /** *
  * 用户信息默认背景图片
@@ -258,17 +252,21 @@ const getDefaultBg = (path = '') => {
   }
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path.match(/token=/) ? path : `${path}?token=${userToken()}`;
-  } else {
-    return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
-      `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
-      :
-      (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
   }
+  return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
+    `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+    :
+    (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
 };
-const getErrorImg = (el) => {
+const getErrorImg = (el, type = 'default') => {
   if (el && el.target) {
-    el.target.src = defaultImg;
-    el.target.onerror = null;
+    if (type !== 'user') {
+      el.target.src = defaultImg;
+      el.target.onerror = null;
+    } else {
+      el.target.src = defaultUserIcon;
+      el.target.onerror = null;
+    }
   }
 };
 
@@ -279,7 +277,7 @@ const setLoginIn = ({ user_token, user_name, user_pwd, user_id, user_avatar, use
   _cs(userid, user_id);
   _cs(useravatar, user_avatar);
   _cs(userloginname, user_login_name);
-  cnSetAlias(user_name, user_token);
+  cnSetAlias(user_login_name, user_token);
 };
 const setLoginOut = () => {
   _cr(username);
@@ -288,7 +286,7 @@ const setLoginOut = () => {
   _cr(userid);
   _cr(useravatar);
   _cr(userloginname);
-  // cnDeleteAlias(_cg(username), _cg(usertoken));
+  cnDeleteAlias(_cg(userloginname), _cg(usertoken));
 };
 const getLocalIcon = (icon) => {
   const regex = /\/([^\/]+?)\./g;
@@ -355,6 +353,7 @@ const getTaskIcon = (type) => {
 const pattern = (type) => {
   const obj = {};
   obj.href = /[a-zA-z]+:\/\/[^\\">]*/g;
+  obj.svg = /mymobile/ig;
   return obj[type];
 };
 

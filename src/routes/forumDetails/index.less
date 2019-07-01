@@ -1,7 +1,7 @@
 @PrefixCls: forumDetails;
 
 .@{PrefixCls}-master {
-  padding: 0.4rem;
+  padding: 30px 30px 40px;
   background: white;
   &-man {
     background: white;
@@ -22,19 +22,23 @@
       font-size: @titleFontSize;
       margin-bottom: 10px;
     }
-    &-time{
+    &-time {
       font-size: @smallFontSize;
       color: @color-text-paragraph;
     }
   }
-  div:nth-child(2) {
+  > div:nth-child(2) {
     font-size: @mediumFontSize;
     line-height: 0.4rem;
   }
-  div:nth-child(3) {
+  > div:nth-child(3) {
     display: flex;
     align-items: center;
     color: @primary-color;
-    float: right;
+    justify-content: flex-end;
   }
+}
+
+.@{PrefixCls}-replyList {
+  padding: 20px;
 }

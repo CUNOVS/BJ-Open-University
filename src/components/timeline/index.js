@@ -5,8 +5,8 @@
  */
 import React from 'react';
 import { DateChange, getLocalIcon } from 'utils';
-import styles from './index.less';
 import { Icon } from 'antd-mobile';
+import styles from './index.less';
 
 const PrefixCls = 'timeline';
 

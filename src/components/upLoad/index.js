@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Upload } from 'antd';
 import { createForm } from 'rc-form';
 import {
@@ -53,7 +52,7 @@ class UpLoad extends React.Component {
   }
 
   onAddSubmit = () => {
-    const { course = '', id, type } = this.props;
+    const { course = '', id, type, groups } = this.props;
     this.props.form.validateFields({
       force: true,
     }, (error) => {
@@ -66,7 +65,8 @@ class UpLoad extends React.Component {
             value: {
               ...this.props.form.getFieldsValue(),
               courseid: course,
-              forumid: id
+              forumid: id,
+              groupid: groups[0].value
             }
           };
         } else {
@@ -142,7 +142,7 @@ class UpLoad extends React.Component {
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       { fileList } = this.state,
-      { maxattachments, maxbytes, groups, loading = false, type, subject, groupid } = this.props,
+      { maxattachments, maxbytes, groups, loading = false, type, subject } = this.props,
       props = {
         beforeUpload: (file) => {
           if (file.size < maxbytes && fileList.length < maxattachments) {
@@ -167,7 +167,7 @@ class UpLoad extends React.Component {
           <List.Item >
             <InputItem
               {...getFieldProps('subject', {
-                initialValue: type === 'add' ? '' : subject,
+                initialValue: type === 'add' ? '' : `回复：${subject}`,
                 rules: [{ required: true, message: '主题必须输入' },
                 ],
               })}
@@ -188,15 +188,12 @@ class UpLoad extends React.Component {
           </List.Item >
           {
             type === 'add' ?
-              <div className={styles.picker} >
-                <Picker
-                  data={groups}
-                  cols={1}
-                  {...getFieldProps('groupid', { initialValue: [groupid] })}
-                  disabled
-                >
-                  <List.Item arrow="horizontal" >小组：</List.Item >
-                </Picker >
+              <div className={styles.group} >
+                <List className="my-list" >
+                  <List.Item wrap >
+                    {cnIsArray(groups) && groups[0].label}
+                  </List.Item >
+                </List >
               </div >
               :
               null
@@ -204,16 +201,17 @@ class UpLoad extends React.Component {
           <WhiteSpace size="lg" />
           <WingBlank >
             <List className={styles.rule} >
-              <Item >
+              <List.Item >
                 {maxbytes && maxattachments ? `新文件的最大尺寸:${renderSize(maxbytes)},最多附件${maxattachments}` : null}
-              </Item >
+              </List.Item >
             </List >
             {this.renderFileList(fileList)}
+            <WhiteSpace size="lg" />
             <div className={styles.upload} >
               <Upload
                 {...props}
               >
-                <Button type="ghost" >
+                <Button type="primary" >
                   <Icon type="add" />
                   添加文件
                 </Button >
@@ -225,6 +223,7 @@ class UpLoad extends React.Component {
             <Button loading={loading} type="primary" onClick={this.onAddSubmit.bind(this)} >提交</Button >
           </WingBlank >
         </form >
+        <WhiteSpace size="lg" />
       </div >
     );
   }

@@ -9,7 +9,6 @@ import doUserAvatarUpload from 'utils/formsubmit';
 import styles from './index.less';
 
 const PrefixCls = 'setup',
-  Item = List.Item,
   prompt = Modal.prompt,
   { api: { UploadFiles }, userTag } = config,
   { _cg } = cookie;
@@ -38,32 +37,38 @@ class Setup extends React.Component {
       },
     ], 'default', `${user}`);
   };
-  handlePassWordClick = () => {
-    prompt(
-      '修改密码',
-      '',
-      (newpassword, password) => (
-        this.props.dispatch({
-          type: 'setup/resetPassword',
-          payload: {
-            rawpassword: newpassword,
-            passwd: password,
-          },
-        })
-      ),
-      'login-password',
-      null,
-      ['原密码', '新密码'],
-    );
+  handleEmailClick = () => {
+    prompt('修改邮箱', '', [
+      { text: '取消' },
+      {
+        text: '确定',
+        onPress: (value) => {
+          this.props.dispatch({
+            type: 'setup/updateInfo',
+            payload: {
+              email: value
+            },
+          });
+        },
+      },
+    ], 'default', '');
   };
 
-  handleAboutUsClick = ({ name = '关于我们' }) => {
-    this.props.dispatch(routerRedux.push({
-      pathname: '/aboutus',
-      query: {
-        name,
+  handlePhoneClick = () => {
+    prompt('修改手机号', '', [
+      { text: '取消' },
+      {
+        text: '确定',
+        onPress: (value) => {
+          this.props.dispatch({
+            type: 'setup/updateInfo',
+            payload: {
+              phone: value
+            },
+          });
+        },
       },
-    }));
+    ], 'default', '');
   };
 
   render () {
@@ -105,30 +110,24 @@ class Setup extends React.Component {
         <WhiteSpace size="xs" />
         <div >
           <List className={`${PrefixCls}-list`} >
-            <Item toExponential={0}>
+            <List.Item >
               <div className={`${PrefixCls}-user-icon-upload`} >
                 <FileUpload options={options} >
                   <p className={'icon-title-avatar'} ref="chooseBtn" >
                     <span >更换头像</span >
                   </p >
                   <div className={'icon-img-box'} >
-                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg} />
+                    <img src={getImages(useravatar, 'user')} alt="icon" onError={(el => getErrorImg(el, 'user'))} />
                   </div >
                 </FileUpload >
               </div >
-            </Item >
-            <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)} >
-              更换昵称
-            </Item >
-            <Item onClick={this.handlePassWordClick.bind(null, username)} >
-              修改密码
-            </Item >
-            <Item onClick={this.handleAboutUsClick} >
+            </List.Item >
+            <List.Item onClick={this.handleEmailClick} >
               Email地址
-            </Item >
-            <Item >
-              自述
-            </Item >
+            </List.Item >
+            <List.Item onClick={this.handlePhoneClick} >
+              手机号
+            </List.Item >
           </List >
           <ActivityIndicator animating={this.props.loading} toast text="上传中..." />
         </div >

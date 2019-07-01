@@ -2,12 +2,15 @@
 
 var cunovs = {
   cnVersion: '0.0.1',
+  cnVersionInfo: {
+    title: '当前版本过低',
+    content: '为保证正常使用，请先升级应用'
+  },
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
-  cnApiServiceUrl: 'http://192.168.0.202',
-  cnMoodleServeUrl: 'http://192.168.0.122',
-  cnSysUrl: 'http://192.168.0.203:8082',
+  cnApiServiceUrl: 'http://moodle.cunovs.com:8080',
+  cnMoodleServeUrl: 'http://moodle.cunovs.com',
   cnDownloadFileTag: 'tag_cunovs_download_files',
   cnMiniType: {
     '.doc': 'application/msword',
@@ -259,37 +262,52 @@ var cunovs = {
       }
     }, time || 2000);
   },
-  cnSetAlias: function (alias, accessToken) {
-    if (cnIsiOS() && typeof (window.JPush) !== 'undefined') {
+  cnSetAlias: function (alias, accessToken, onSuccess, onError) {
+    if (cnHasPlugin() && typeof (window.JPush) !== 'undefined') {
+      onError = onError || cnPrints;
+      onSuccess = onSuccess || cnPrints;
       window.JPush.setAlias({
         sequence: 1,
         alias: alias,
-      }, function (result) {//console.log(" -JPush-setAlias-success: ", result);
-      }, function (error) {//console.log(" -JPush-setAlias-error: ", error);
-      });
-    } else if (typeof (window.CunovsAliasPlugin) === 'object') {
-      window.CunovsAliasPlugin.setAlias({
-        accessToken: accessToken,
-        alias: alias,
-      });
+      }, onSuccess, onError);
     }
+    /*    if (cnIsiOS() && typeof (window.JPush) !== 'undefined') {
+          window.JPush.setAlias({
+            sequence: 1,
+            alias: alias,
+          }, function (result) {//console.log(" -JPush-setAlias-success: ", result);
+          }, function (error) {//console.log(" -JPush-setAlias-error: ", error);
+          });
+        } else if (typeof (window.CunovsAliasPlugin) === 'object') {
+          window.CunovsAliasPlugin.setAlias({
+            accessToken: accessToken,
+            alias: alias,
+          });
+        }*/
   },
-
-
-  cnDeleteAlias: function (alias, accessToken) {
-    if (cnIsiOS() && typeof (window.JPush) !== 'undefined') {
+  cnDeleteAlias: function (alias, accessToken, onSuccess, onError) {
+    if (cnHasPlugin() && typeof (window.JPush) !== 'undefined') {
+      onError = onError || cnPrints;
+      onSuccess = onSuccess || cnPrints;
       window.JPush.deleteAlias({
         sequence: 3,
-      }, function (result) {//console.log(" -JPush-deleteAlias-success: ", result);
-      }, function (error) {//console.log(" -JPush-deleteAlias-error: ", error);
-      });
-    } else if (typeof (window.CunovsAliasPlugin) === 'object') {
-      window.CunovsAliasPlugin.deleteAlias({
-        accessToken: accessToken,
         alias: alias,
-      });
+      }, onSuccess, onError);
     }
-  },
+    /*    if (cnIsiOS() && typeof (window.JPush) !== 'undefined') {
+          window.JPush.deleteAlias({
+            sequence: 3,
+          }, function (result) {//console.log(" -JPush-deleteAlias-success: ", result);
+          }, function (error) {//console.log(" -JPush-deleteAlias-error: ", error);
+          });
+        } else if (typeof (window.CunovsAliasPlugin) === 'object') {
+          window.CunovsAliasPlugin.deleteAlias({
+            accessToken: accessToken,
+            alias: alias,
+          });
+        }*/
+  }
+  ,
   cnClearBadge: function () {
     if (!cnIsDevice() || typeof (cordova) == 'undefined') {
       return;
@@ -303,7 +321,8 @@ var cunovs = {
       }
     } catch (exception) {
     }
-  },
+  }
+  ,
   cnScreenChange: function (isFull) {
     console.log(' ------------- isFull : ' + isFull);
     if (cnIsDevice()) {
@@ -315,11 +334,13 @@ var cunovs = {
         StatusBar.show();
       }
     }
-  },
+  }
+  ,
   cnOpen: function (url, target, params, callback) {
     target = target || '_blank';
     window.open(url, target);
-  },
+  }
+  ,
   checkConnection: function () {
     var networkState = navigator.connection.type;
     var states = {};
@@ -332,23 +353,27 @@ var cunovs = {
     states[Connection.CELL] = 'Cell generic connection';
     states[Connection.NONE] = '无网络连接';
     return (states[networkState]);
-  },
+  }
+  ,
   cnHasPlugin: function (key) {
     if (cnIsDevice() && cnIsDefined(cordova) && cordova.plugins) {
       return !cnIsDefined(key) || cordova.plugins[key];
     }
     return false;
-  },
+  }
+  ,
   cnPrints: function (obj) {
     console.log(obj);
-  },
+  }
+  ,
   cnGetFileMiniType: function (name) {
     var index = -1;
     if (name && (index = name.lastIndexOf('.')) != -1) {
       return cnMiniType[name.substring(index)] || '';
     }
     return '';
-  },
+  }
+  ,
   cnOpener2File: function (filePath, miniType, onSuccess, onError) {
     onError = onError || cnPrints;
     var tag = 'fileOpener2';
@@ -372,7 +397,8 @@ var cunovs = {
     } else {
       onError({ 'message': '没有找到插件[' + tag + ']' });
     }
-  },
+  }
+  ,
   cnGetLocalFile: function (fileName, options, onSuccess, onError) {
     onError = onError || cnPrints;
     if (!!fileName && cnHasPlugin() && requestFileSystem) {
@@ -388,7 +414,8 @@ var cunovs = {
     } else {
       onError({ 'message': !fileName ? '需要获取的文件名必须提供。' : '无法使用文件读取插件。' });
     }
-  },
+  }
+  ,
   cnDownloadFile: function (fileUrl, fileName, options, onSuccess, onError, onProgress) {
     onError = onError || cnPrints;
     onProgress = onProgress || function (e) {
@@ -438,7 +465,8 @@ var cunovs = {
     } else {
       onError({ 'message': '无法使用文件下载插件。' });
     }
-  },
+  }
+  ,
   cnGetOrDownAndOpenFile: function (file, onSuccess, onError, onProgress) {
     file = file || {};
     onError = onError || cnPrints;
@@ -447,6 +475,10 @@ var cunovs = {
       mimeType = file.mimeType || '';
     if (!fileName) {
       onError({ 'message': '获取本地文件，文件名不能为空。' });
+      return;
+    }
+    if (!cnHasPlugin()) {
+      cnOpen(fileUrl);
       return;
     }
     var fileExistAndOpen = function (entry) {
@@ -464,7 +496,8 @@ var cunovs = {
       cnDownloadFile(fileUrl, fileName, null, fileExistAndOpen, onError, onProgress);
     });
 
-  },
+  }
+  ,
   cnDoScan: function (onSuccess, onError) {
     onError = onError || cnPrints;
     var tag = 'barcodeScanner';

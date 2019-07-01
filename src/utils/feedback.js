@@ -40,7 +40,7 @@ module.exports = {
     const range = item.presentation.split(questionTpye.LINE_SEP) || [];
     item.rangefrom = range.length > 0 ? parseInt(range[0], 10) || '' : '';
     item.rangeto = range.length > 1 ? parseInt(range[1], 10) || '' : '';
-    item.value = typeof item.responsevalue != 'undefined' ? parseFloat(item.responsevalue) : '';
+    item.value = typeof item.responsevalue !== 'undefined' ? parseFloat(item.responsevalue) : '';
 
     return item;
   },
@@ -48,14 +48,14 @@ module.exports = {
   getItemFormTextfield: (item) => {
     item.template = 'textfield';
     item.length = item.presentation.split(questionTpye.LINE_SEP)[1] || 255;
-    item.value = typeof item.responsevalue != 'undefined' ? item.responsevalue : '';
+    item.value = typeof item.responsevalue !== 'undefined' ? item.responsevalue : '';
 
     return item;
   },
 
   getItemFormTextarea: (item) => {
     item.template = 'textarea';
-    item.value = typeof item.responsevalue != 'undefined' ? item.responsevalue : '';
+    item.value = typeof item.responsevalue !== 'undefined' ? item.responsevalue : '';
 
     return item;
   },
@@ -63,7 +63,7 @@ module.exports = {
   getItemFormMultichoice: (item) => {
     let parts = item.presentation.split(questionTpye.MULTICHOICE_TYPE_SEP) || [];
     item.subtype = parts.length > 0 && parts[0] ? parts[0] : 'r';
-    item.template = 'multichoice-' + item.subtype;
+    item.template = `multichoice-${item.subtype}`;
     item.presentation = parts.length > 1 ? parts[1] : '';
     if (item.subtype != 'd') {
       parts = item.presentation.split(questionTpye.MULTICHOICE_ADJUST_SEP) || [];
@@ -74,22 +74,22 @@ module.exports = {
     item.choices = item.presentation.split(questionTpye.LINE_SEP) || [];
     item.choices = item.choices.map((choice, index) => {
       const weightValue = choice.split(questionTpye.MULTICHOICERATED_VALUE_SEP) || [''];
-      choice = weightValue.length == 1 ? weightValue[0] : '(' + weightValue[0] + ') ' + weightValue[1];
+      choice = weightValue.length == 1 ? weightValue[0] : `(${weightValue[0]}) ${weightValue[1]}`;
 
       return { value: index + 1, label: choice };
     });
 
     if (item.subtype == 'r' && item.options.search(questionTpye.MULTICHOICE_HIDENOSELECT) === -1) {
       item.choices.unshift({ value: 0, label: '未选择' });
-      item.value = typeof item.responsevalue != 'undefined' ? parseInt(item.responsevalue, 10) : 0;
+      item.value = typeof item.responsevalue !== 'undefined' ? parseInt(item.responsevalue, 10) : 0;
     } else if (item.subtype == 'd') {
       item.choices.unshift({ value: 0, label: '' });
-      item.value = typeof item.responsevalue != 'undefined' ? parseInt(item.responsevalue, 10) : 0;
+      item.value = typeof item.responsevalue !== 'undefined' ? parseInt(item.responsevalue, 10) : 0;
     } else if (item.subtype == 'c') {
-      if (typeof item.responsevalue == 'undefined') {
+      if (typeof item.responsevalue === 'undefined') {
         item.value = '';
       } else {
-        item.responsevalue = '' + item.responsevalue;
+        item.responsevalue = `${item.responsevalue}`;
         const values = item.responsevalue.split(questionTpye.LINE_SEP);
         item.choices.forEach((choice) => {
           for (const x in values) {
@@ -102,7 +102,7 @@ module.exports = {
         });
       }
     } else {
-      item.value = typeof item.responsevalue != 'undefined' ? parseInt(item.responsevalue, 10) : '';
+      item.value = typeof item.responsevalue !== 'undefined' ? parseInt(item.responsevalue, 10) : '';
     }
 
     return item;

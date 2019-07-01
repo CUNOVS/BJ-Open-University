@@ -47,17 +47,7 @@ class Homework extends React.Component {
   }
 
   componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
-    this.props.dispatch({
-      type: 'app/accessTime',
-      payload: {
-        startedat: this.state.startTime.getTime(),
-        endedat: new Date().getTime(),
-        courseid,
-        cmid,
-
-      }
-    });
+   
   }
 
   render () {
@@ -66,7 +56,7 @@ class Homework extends React.Component {
       { loading } = this.props,
       { assignmentsName, coursesName, intro = '', introattachments, coursesId: courseid = '' } = data;
     return (
-      <div >
+      <div style={{ height: '100vh', background: '#fff' }} >
         <Nav
           title={name || assignmentsName}
           dispatch={this.props.dispatch}

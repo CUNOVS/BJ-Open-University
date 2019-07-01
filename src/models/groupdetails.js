@@ -22,6 +22,15 @@ export default modelExtend(model, {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/groupdetails') {
           const { courseid } = query;
+          dispatch({
+            type: 'updateState',
+            payload: {
+              paginations: getDefaultPaginations(),
+              hasMore: true,
+              listData: [],
+              scrollerTop: 0,
+            }
+          });
           if (action === 'PUSH') {
             dispatch({
               type: 'queryList',

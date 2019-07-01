@@ -9,7 +9,7 @@ import { model } from 'models/common';
 import { Toast } from 'components';
 import { handlerCourseClick } from 'utils/commonevents';
 import { queryLessonDetails } from 'services/lesson';
-import { url } from 'services/resource';
+import { url, queryResource } from 'services/resource';
 
 
 /**
@@ -36,9 +36,9 @@ export default modelExtend(model, {
   state: {
     data: {},
     refreshing: false,
-    selectIndex: 0,
-    activityIndex: 0
-
+    selected: 0,
+    activityIndex: 0,
+    accordionIndex: ['0']
   },
   subscriptions: {
     setup ({ history, dispatch }) {
@@ -52,10 +52,20 @@ export default modelExtend(model, {
                 data: [],
                 selectIndex: 0,
                 refreshing: false,
+                activityIndex: 0,
+                accordionIndex: ['0']
               },
             });
             dispatch({
               type: 'queryDetails',
+              payload: {
+                userid,
+                courseid,
+              },
+            });
+          } else {
+            dispatch({
+              type: 'updateDetails',
               payload: {
                 userid,
                 courseid,
@@ -80,8 +90,24 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            selectIndex: data.activityIndex > 0 ? 1 : 0,
-            activityIndex: data.activityIndex
+            activityIndex: data.activityIndex,
+            selected: data.activityIndex > 0 ? 1 : 0,
+            accordionIndex: [(data.activityIndex - 1).toString()]
+          },
+        });
+      } else {
+        Toast.fail(data.message || '获取失败');
+      }
+    },
+
+    * updateDetails ({ payload }, { call, put }) {
+      const data = yield call(queryLessonDetails, payload);
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            data: adapter(data),
+            refreshing: false,
           },
         });
       } else {
@@ -101,6 +127,19 @@ export default modelExtend(model, {
       if (success && dispatch) {
         const { id: urlId = '', content = [], cmid: ccmId = '', ...otherDatas } = data[0];
         handlerCourseClick({ content, ...otherDatas, id: ccmId }, courseid, dispatch);
+      } else {
+        Toast.fail(message);
+      }
+    },
+    * queryResource ({ payload }, { call, put, select }) {
+      const { dispatch = '', cmid = '', courseid = '', instance = '', ...otherDatas } = payload,
+        { success, message = '获取失败', data = [{}] } = yield call(queryResource, {
+          cmid,
+          courseid,
+          resourceid: instance
+        });
+      if (success && dispatch) {
+        yield handlerCourseClick({ ...otherDatas, contents: data, id: cmid }, courseid, dispatch);
       } else {
         Toast.fail(message);
       }

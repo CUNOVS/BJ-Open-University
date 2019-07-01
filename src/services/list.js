@@ -1,6 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: { GetGroupList, GetGradeList, getTeachersList, GetMember, GetContacts } } = config;
+const { api: { GetGroupList, GetGradeList, getTeachersList, GetMember, GetContacts, GetGradeCourseList } } = config;
 
 export async function queryGroup (payload) {
   return request({
@@ -37,6 +37,14 @@ export async function queryMembers (payload) {
 export async function queryContacts (payload) {
   return request({
     url: GetContacts,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function queryGradeCourseList (payload) {
+  return request({
+    url: GetGradeCourseList,
     method: 'get',
     data: payload,
   });

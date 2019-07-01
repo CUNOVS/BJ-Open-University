@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './index.less';
 import { getImages, getErrorImg } from 'utils';
 import { Css3Loading, LoadingFail } from 'components/loading';
+import styles from './index.less';
 
 const PrefixCls = 'bubble',
   showStatus = (status = 0) => {
@@ -13,7 +13,7 @@ module.exports = {
     return (
       <div className={styles[`${PrefixCls}-left`]} >
         <span className={styles[`${PrefixCls}-left-iconbox`]} >
-          <img src={getImages(avatar, 'user')} />
+          <img src={getImages(avatar, 'user')} onError={(el => getErrorImg(el, 'user'))} />
         </span >
         <div className={styles[`${PrefixCls}-left-contentbox`]} >
           {details}
@@ -28,7 +28,7 @@ module.exports = {
     return (
       <div className={styles[`${PrefixCls}-right`]} >
         <span className={styles[`${PrefixCls}-right-iconbox`]} >
-          <img src={getImages(selfavatar, 'user')} />
+          <img src={getImages(selfavatar, 'user')} onError={(el => getErrorImg(el, 'user'))}  />
         </span >
         <div className={styles[`${PrefixCls}-right-contentbox`]} >
           {details}

@@ -28,7 +28,7 @@ class Page extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
+    const { courseid = '', cmid = '', modname = '' } = this.props.location.query;
     this.props.dispatch({
       type: 'app/accessTime',
       payload: {
@@ -36,6 +36,7 @@ class Page extends React.PureComponent {
         endedat: new Date().getTime(),
         courseid,
         cmid,
+        modname
 
       }
     });

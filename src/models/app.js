@@ -50,13 +50,14 @@ export default {
     users: getInfoUser(),
     courseid: '',
     coureData: [],
+    updates: {},
     groups: [],
     contacts: [],
     showBackModal: false
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
-      history.listen(({ pathname, query, action }) => {
+      history.listen(({ pathname }) => {
         if (pathname === '/') {
           const others = {};
           others[userid] = _cg(userid);
@@ -64,6 +65,8 @@ export default {
           dispatch({
             type: 'query',
             payload: {
+              currentVersion: cnVersion,
+              systemType: cnDeviceType(),
               ...others,
             },
           });
@@ -82,6 +85,8 @@ export default {
         }));
       } else {
         const data = yield call(queryBaseInfo, payload);
+        const { updates = {} } = data,
+          { urls } = updates;
         if (data.success) {
           yield put({
             type: 'updateState',
@@ -89,7 +94,8 @@ export default {
               courseid: getCourse(data.courses),
               coureData: data.courses,
               groups: getGroups(data.groups, data.courses),
-              contacts: getContats(data.contacts)
+              contacts: getContats(data.contacts),
+              updates,
             },
           });
           yield put({
@@ -98,6 +104,14 @@ export default {
               contacts: getContats(data.contacts)
             },
           });
+          if (urls !== '' && cnIsAndroid()) {
+            yield put({
+              type: 'updateState',
+              payload: {
+                showModal: true,
+              },
+            });
+          }
         } else {
           Toast.fail(data.message);
           yield put(routerRedux.push({

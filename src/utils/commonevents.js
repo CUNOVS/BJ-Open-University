@@ -6,7 +6,6 @@ const { userTag: { userid, usertoken } } = config,
   { _cg } = cookie;
 
 const handlerLessonListClick = ({ id = '' }, dispatch) => {
-
   dispatch(routerRedux.push({
     pathname: '/lessondetails',
     query: {
@@ -25,30 +24,28 @@ const handleGridClick = ({ route = '', text = '' }, dispatch) => {
 };
 // id : 模块内id(cmid) , instance : 主键id  , name : 名称 , contents : 文件时才用到。
 const handlerCourseClick = (params, courseid, dispatch) => {
-  const { modname = '', modulename = '', name = '', id = '', instance = '', httpurl = '', contents = [] } = params,
+  const { modname = '', modulename = '', name = '', id = '', instance = '', httpurl = '', contents = [{}] } = params,
     targets = {};
   if ((modname || modulename) === 'resource') {
-    const fileUrl = contents[0].fileurl,
-      mimeType = contents[0].mimetype || '',
-      fileName = contents[0].filename,
-      fileIdPrefix = contents[0].fileIdPrefix || '';
-
-    cnGetOrDownAndOpenFile({
-      fileName: `${fileIdPrefix !== '' ? fileIdPrefix : courseid}_${fileName}`,
-      fileUrl: `${fileUrl}${fileUrl.indexOf('?') === -1 ? '?' : '&'}token=${userToken()}`,
-      mimeType
-    }, (e) => {
-      Toast.info('文件已打开。');
-    }, (error) => {
-      let msg = '';
-      if (error.message) {
-        msg = error.message;
-      } else if (error.body) {
-        msg = JSON.parse(error.body).error;
-      }
-      Toast.offline(msg || '发生未知错误。');
-    });
-    return;
+    const { fileurl: fileUrl = '', mimetype: mimeType = '', filename: fileName = '', fileIdPrefix = '' } = contents[0];
+    if (fileUrl !== '') {
+      cnGetOrDownAndOpenFile({
+        fileName: `${fileIdPrefix !== '' ? fileIdPrefix : courseid}_${fileName}`,
+        fileUrl: `${fileUrl}${fileUrl.indexOf('?') === -1 ? '?' : '&'}token=${userToken()}`,
+        mimeType
+      }, (e) => {
+        Toast.info('文件已打开。');
+      }, (error) => {
+        let msg = '';
+        if (error.message) {
+          msg = error.message;
+        } else if (error.body) {
+          msg = JSON.parse(error.body).error;
+        }
+        Toast.offline(msg || '发生未知错误。');
+      });
+      return;
+    }
   }
   switch ((modname || modulename)) {
     case 'page':
@@ -79,28 +76,37 @@ const handlerCourseClick = (params, courseid, dispatch) => {
         modname: modname || modulename
       };
       break;
+    case 'resource':
+      if (Object.keys(contents[0]).length > 0) {
+        break;
+      }
+      targets.pathname = 'lessondetails/queryResource';
     case 'url':
-      targets.pathname = 'lessondetails/queryUrl';
+      let { pathname: targetPathname = 'lessondetails/queryUrl' } = targets;
+      targets.pathname = targetPathname;
       targets.notRoute = true;
       targets.param = {
         dispatch,
         modname: modname || modulename
       };
       break;
+    case'svp':
     case 'superclass':
-      let regExps = [], { url: scUrl = '', name: scName = '', chapterid = '' } = params;
+      let regExps = [],
+        { url: scUrl = '', name: scName = '', chapter_id: chapterid = '' } = params;
       targets.pathname = '/superclass';
-      if (scUrl && (regExps = /\\?ch=([^&]+)(?:.*)layout=([^&]+)/.exec(scUrl)).length > 1) {
+      if (chapterid !== '') {
+        targets.param = {
+          chapterid,
+          name: scName,
+          modname: modname || modulename
+        };
+      } else if (scUrl && (regExps = /\\?ch=([^&]+)(?:.*)layout=([^&]+)/.exec(scUrl)) && regExps.length > 1) {
         targets.param = {
           ch: regExps[1],
           layout: regExps[2],
           name: scName,
           modname: modname || modulename
-        };
-      } else if (chapterid !== '') {
-        targets.param = {
-          chapterid,
-          name: scName
         };
       } else {
         delete targets.pathname;
@@ -126,6 +132,7 @@ const handlerCourseClick = (params, courseid, dispatch) => {
       name,
       cmid: id,
       courseid,
+      instance,
       ...param
     };
     if (notRoute === true) {
@@ -151,13 +158,15 @@ const handlerTagAHrefParseParam = (params, courseid, dispatch) => {
   if (modname !== '') {
     let targetParams = '';
     if (modname === 'resource') {
-      const { fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', ...otherParams } = params;
-      targetParams = {
-        contents: [{
-          fileurl: fileurl || href, mimetype, filename, fileIdPrefix
-        }],
-        ...otherParams
-      };
+      const { fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', id = '', ...otherParams } = params;
+      if (id === '' && (fileurl !== '' || filename !== '')) {
+        targetParams = {
+          contents: [{
+            fileurl: fileurl || href, mimetype, filename, fileIdPrefix
+          }],
+          ...otherParams
+        };
+      }
     }
     handlerCourseClick(targetParams !== '' ? targetParams : params, courseid, dispatch);
   } else {
@@ -202,6 +211,7 @@ const handlerDivInnerHTMLClick = (e, courseId, dispatch) => {
 };
 
 const handlerChangeRouteClick = (path = '', data = {}, dispatch, e) => {
+  e && e.stopPropagation();
   dispatch(routerRedux.push({
     pathname: `/${path}`,
     query: data,
@@ -230,7 +240,7 @@ const handlerMessageClick = ({ type = 1, state, id }, data = {}, dispatch, e) =>
 };
 const repalceLoaclFileName = (srcName, targetName) => {
   if (cnIsDefined(srcName) && cnIsDefined(targetName)) {
-    return srcName.replace(/.+?\.([^\.]+?)$/, targetName + '.$1');
+    return srcName.replace(/.+?\.([^\.]+?)$/, `${targetName}.$1`);
   }
   return srcName;
 };

@@ -3,7 +3,7 @@
 @PrefixCls: lessonitem;
 
 .@{PrefixCls}-outer {
-  padding: 30px 20px;
+  padding: 30px 20px 30px 40px;
   border-bottom: @hd solid @border-color-base;
   &-top {
     display: flex;
@@ -28,6 +28,7 @@
         flex: 1;
         font-size: @mediumFontSize;
         color: @color-text-base;
+        align-self: center;
       }
       &-check {
         display: flex;
@@ -49,7 +50,7 @@
       margin: 0;
     }
   }
-  &-available{
+  &-available {
     font-size: @smallFontSize;
     color: #c83737;
     margin-top: 20px;
@@ -57,8 +58,17 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    p, h1, h2, h3, h4, h5, h6, ul {
+    p, h1, h2, h3, h4, h5, h6, ul, strong, span {
       margin: 0;
+      font-size: @smallFontSize !important;
+      opacity: 0.7;
     }
   }
+}
+
+.@{PrefixCls}-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 20px 20px 20px 0;
 }

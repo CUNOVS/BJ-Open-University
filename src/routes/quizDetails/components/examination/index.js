@@ -77,6 +77,12 @@ class Examination extends React.Component {
           data = this.getSubmitVal(this.getPageItemsResponses(answer));
         }
         this.props.hanlerSubmit(data);
+        this.props.dispatch({
+          type: 'app/updateBackModal',
+          payload: {
+            showBackModal: false
+          }
+        });
         this.props.dispatch(routerRedux.goBack());
       } else {
         Toast.fail('请检查表单');
@@ -142,6 +148,7 @@ class Examination extends React.Component {
   };
 
   getButton = (answer, nextPage, navmethod) => {
+    console.log(nextPage)
     if (navmethod === 'sequential') {
       if (nextPage > 0) {
         return (
@@ -158,21 +165,41 @@ class Examination extends React.Component {
           </Button >
         </WingBlank >
       );
+    } else {
+      if (nextPage === 1) {
+        return (
+          <Button type="primary" onClick={this.handlerNextClick} >下一题</Button >
+        );
+      } else if (nextPage > 0) {
+        return (
+          <div className={styles.button} >
+            <Button type="primary" inline onClick={this.handlerPrevClick} >上一题</Button >
+            {
+              nextPage > 0 ?
+                <Button type="primary" inline onClick={this.handlerNextClick} >下一题</Button >
+                :
+                <Button type="primary" inline onClick={this.onSubmit.bind(null, 'finish')} >提交</Button >
+            }
+          </div >
+        );
+      } else {
+        return <Button type="primary" onClick={this.onSubmit.bind(null, 'finish')} >提交</Button >;
+      }
     }
-    return (
-      nextPage === 1 ?
-        <Button type="primary" onClick={this.handlerNextClick} >下一题</Button >
-        :
-        <div className={styles.button} >
-          <Button type="primary" inline onClick={this.handlerPrevClick} >上一题</Button >
-          {
-            nextPage > 0 ?
-              <Button type="primary" inline onClick={this.handlerNextClick} >下一题</Button >
-              :
-              <Button type="primary" inline onClick={this.onSubmit.bind(null, 'finish')} >提交</Button >
-          }
-        </div >
-    );
+    // return (
+    //   nextPage === 1 ?
+    //     <Button type="primary" onClick={this.handlerNextClick} >下一题</Button >
+    //     :
+    //     <div className={styles.button} >
+    //       <Button type="primary" inline onClick={this.handlerPrevClick} >上一题</Button >
+    //       {
+    //         nextPage > 0 ?
+    //           <Button type="primary" inline onClick={this.handlerNextClick} >下一题</Button >
+    //           :
+    //           <Button type="primary" inline onClick={this.onSubmit.bind(null, 'finish')} >提交</Button >
+    //       }
+    //     </div >
+    // );
   };
 
 
@@ -253,13 +280,13 @@ class Examination extends React.Component {
 
 
   render () {
-    const { data: { nextpage = 1, options = {} }, info: { title, state, grade, qtext, prompt }, answer = {} } = this.props.quizDetails;
-    const { navmethod = '' } = this.props;
+    const { data: { nextpage = -1, options = {} }, info: { title, state, grade, qtext, prompt }, answer = {} } = this.props.quizDetails;
+    const { navmethod = '', timelimit = 0 } = this.props;
     const { endtime } = options;
     const { showBackModal = false } = this.props.app;
     return (
       <div >
-        {endtime > 0 ? <CountDown endTime={endtime} handler={this.onSubmit} /> : null}
+        {endtime > 0 && timelimit > 0 ? <CountDown endTime={endtime} handler={this.onSubmit} /> : null}
         <Card >
           <Card.Header
             title={title}
@@ -271,7 +298,8 @@ class Examination extends React.Component {
             }
           />
           <Card.Body >
-            {answer.type !== 'gapselect' ? <div className={styles.question} >{qtext}</div > : null}
+            {answer.type !== 'gapselect' ?
+              <div className={styles.question} dangerouslySetInnerHTML={{ __html: qtext }} /> : null}
             <div className={styles.prompt} >{prompt}</div >
             <WhiteSpace size="lg" />
             {this.getQuestion(answer)}

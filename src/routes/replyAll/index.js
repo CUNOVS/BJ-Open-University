@@ -12,17 +12,17 @@ import styles from './index.less';
 const { BaseLine } = Layout;
 
 class ReplyAll extends React.Component {
-
   getChildren = (arr, child) => {
     return arr.filter(item => child.includes(item.id.toString()));
   };
 
   render () {
-    const { data = {} } = this.props.forumDetails, { name, items } = this.props.location.query;
+    const { data = {} } = this.props.forumDetails,
+      { name, items } = this.props.location.query;
     const children = items.split(',');
 
     return (
-      <div style={{ height: '100vh', background: 'white' }} >
+      <div style={{ minHeight: '100vh' }} >
         <Nav title={`回复${name}`} dispatch={this.props.dispatch} />
         <div >
           <TitleBox title="回复" sup="" />

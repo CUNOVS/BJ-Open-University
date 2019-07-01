@@ -80,7 +80,7 @@ class Video extends React.Component {
           style={{ objectFit: 'contain' }}
           width="100%"
           preload="none"
-          src={""}
+          src={''}
           controlsList="nodownload"
           controls="controls"
         />

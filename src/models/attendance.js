@@ -18,6 +18,14 @@ export default modelExtend(model, {
         if (pathname === '/attendance') {
           if (action === 'PUSH') {
             dispatch({
+              type: 'updateState',
+              payload: {
+                listData: [],
+                refreshing: false,
+                scrollerTop: 0
+              }
+            });
+            dispatch({
               type: 'query',
             });
           }
@@ -28,7 +36,7 @@ export default modelExtend(model, {
 
   effects: {
     * query (_, { call, put, select }) {
-      const { users: { userid } } = yield select(_ => _.app);
+      const { users: { userid } } = yield select(k => k.app);
       const { data, success, message = '请稍后再试' } = yield call(getAttendanceList, { userid });
       if (success) {
         yield put({

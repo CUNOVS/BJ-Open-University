@@ -16,6 +16,7 @@ export async function queryBaseInfo (data) {
     url: `${GetBaseInfo}/${usertoken}/${userid}`,
     method: 'get',
     hasToken: false,
+    data
   });
 }
 
@@ -65,22 +66,23 @@ export async function getAttendanceList (data) {
     url: GetAttendanceList,
     method: 'get',
     data,
-    hasToken: false,
   });
 }
 
 export async function accessTime (data) {
   return request({
     url: AccessTime,
-    method: 'get',
+    method: 'post',
     data,
+    hasToken: false
   });
 }
 
 export async function logApi (data) {
   return request({
     url: Log,
-    method: 'get',
+    method: 'post',
     data,
+    hasToken: false
   });
 }

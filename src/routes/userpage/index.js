@@ -13,18 +13,18 @@ const PrefixCls = 'userpage',
   Item = List.Item,
   alert = Modal.alert;
 
-const getStatus = (arr, id) => arr.find(item => item.id === id);
+const getStatus = (arr, id) => arr.find(item => parseInt(item.id, 10) === parseInt(id, 10));
 const addText = '添加联系人';
 const deleteText = '删除联系人';
 
 function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) {
-  const { data: { avatar = '', email = '', selfDescription = '', userName = '', userId = '' }, contacts } = userpage,
+  const { data: { avatar = '', email = '', selfDescription = '', fullname = '', id = '' }, contacts } = userpage,
 
     handlerAddContacts = () => {
       dispatch({
         type: 'userpage/addContact',
         payload: {
-          touserid: userId
+          touserid: id
         }
       });
     },
@@ -32,7 +32,7 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
       dispatch({
         type: 'userpage/deleteContact',
         payload: {
-          touserid: userId
+          touserid: id
         }
       });
     },
@@ -45,7 +45,7 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
         },
         {
           text: '确定',
-          onPress: () => text === addText ? handlerAddContacts() : handlerDeleteContacts(),
+          onPress: () => (text === addText ? handlerAddContacts() : handlerDeleteContacts()),
         },
       ]);
       setTimeout(() => {
@@ -53,7 +53,6 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
         alertInstance.close();
       }, 10000);
     };
-
   return (
     <div style={{ height: '100vh', background: 'white' }} >
       <div className={styles[`${PrefixCls}-top`]} >
@@ -61,22 +60,23 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
         <div style={{ overflow: 'hidden' }} >
           <div
             className={styles[`${PrefixCls}-top-bg`]}
-            style={{ backgroundImage: `url(${getDefaultBg(avatar)})` }} />
+            style={{ backgroundImage: `url(${getDefaultBg(avatar)})` }}
+          />
         </div >
         <div className={styles[`${PrefixCls}-top-avatar`]} >
-          <img src={getImages(avatar, 'user')} alt="" />
+          <img src={getImages(avatar, 'user')} alt="" onError={(el => getErrorImg(el, 'user'))} />
         </div >
         <div className={styles[`${PrefixCls}-info`]} >
-          <div className={styles[`${PrefixCls}-info-username`]} >{userName}</div >
+          <div className={styles[`${PrefixCls}-info-username`]} >{fullname}</div >
           <div className={styles[`${PrefixCls}-info-signature`]} ><InnerHtml data={selfDescription} /></div >
           <div className={styles[`${PrefixCls}-info-button`]} >
             <Button
-              type="ghost"
+              type="primary"
               inline
               size="small"
               onClick={handlerChangeRouteClick.bind(null, 'conversation', {
-                fromuserid: userId,
-                name: userName,
+                fromuserid: id,
+                name: fullname,
                 avatar
               }, dispatch)}
             >发消息</Button >
@@ -89,10 +89,10 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
         </List >
       </div >
       <div style={{ padding: '1rem 0', background: 'white' }} >
-        {getStatus(contacts, userId) ?
+        {getStatus(contacts, id) ?
           <Button
             size="small"
-            type="ghost"
+            type="primary"
             loading={addLoading}
             style={{ margin: '0 1rem' }}
             // icon={<Icon color="#22609c" size="xs" type={getLocalIcon('/buttons/man.svg')} />}
@@ -101,7 +101,7 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
           </Button > :
           <Button
             size="small"
-            type="ghost"
+            type="primary"
             loading={deleteLoading}
             style={{ margin: '0 1rem' }}
             // icon={<Icon color="#22609c" size="xs" type={getLocalIcon('/buttons/man.svg')} />}

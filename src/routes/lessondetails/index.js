@@ -76,7 +76,7 @@ class LessonDetails extends React.Component {
 
   render () {
     const { courseid = '' } = this.props.location.query,
-      { data: { name = '', summary = '', section0Summary = '', summaryformat = 1, master, tutor, courseImage, guide, resources, id = '', attendanceRule = '', attendance = {}, enddate, startdate, fullname }, refreshing, selectIndex = 0, scrollerTop, activityIndex } = this.props.lessondetails,
+      { data: { name = '', summary = '', section0Summary = '', summaryformat = 0, master, tutor, courseImage, guide, resources, id = '', attendanceRule = '', attendance = {}, enddate, startdate, fullname }, refreshing, scrollerTop, selected, activityIndex, accordionIndex } = this.props.lessondetails,
       { weekStat = 0 } = attendance,
       { users: { userid } } = this.props.app,
       dispatch = this.props.dispatch,
@@ -85,12 +85,12 @@ class LessonDetails extends React.Component {
         dispatch
       };
     const handlerChange = (key) => {
-        // this.props.dispatch({
-        //   type: `${PrefixCls}/updateState`,
-        //   payload: {
-        //     activityIndex: (args[args.length - 1]) * 1
-        //   },
-        // });
+        this.props.dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            accordionIndex: key
+          },
+        });
       },
       onRefresh = () => {
         this.props.dispatch({
@@ -145,14 +145,13 @@ class LessonDetails extends React.Component {
             tabBarActiveTextColor="#22609c"
             tabBarInactiveTextColor="#b7b7b7"
             tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
-            // initialPage={activityIndex > 0 ? 1 : 0}
+            page={selected}
             swipeable={false}
-            page={selectIndex}
             onChange={(tab, index) => {
               this.props.dispatch({
                 type: `${PrefixCls}/updateState`,
                 payload: {
-                  selectIndex: index,
+                  selected: index,
                 },
               });
             }}
@@ -169,7 +168,7 @@ class LessonDetails extends React.Component {
                   :
                   <div className={styles[`${PrefixCls}-lessonInfo`]} >
                     <WhiteSpace size="xs" />
-                    <div className={styles[`${PrefixCls}-lessonInfo-title`]} >{name}</div >
+                    <div className={styles[`${PrefixCls}-lessonInfo-title`]} >{fullname}</div >
                     {
                       summaryformat && summary !== '' ?
                         <div >
@@ -177,9 +176,11 @@ class LessonDetails extends React.Component {
                           <Introduction data={summary} dispatch={this.props.dispatch} courseid={courseid} />
                         </div >
                         :
-                        ''
+                        null
                     }
                     <WhiteSpace size="xs" />
+                    {summaryformat && section0Summary !== '' ?
+                      <InnerHtml data={section0Summary} handleClick={handDivClick} /> : null}
                     {
                       attendanceRule !== '' ?
                         <div >
@@ -189,8 +190,6 @@ class LessonDetails extends React.Component {
                         :
                         null
                     }
-                    <InnerHtml data={section0Summary} handleClick={handDivClick} />
-                    <WhiteSpace size="lg" />
                     <div >
                       {cnIsArray(guide) && guide.map((data, i) => {
                         return <LessonItem key={data.id} data={data} {...props} />;
@@ -211,6 +210,7 @@ class LessonDetails extends React.Component {
                   <CourseList
                     data={resources}
                     activityIndex={activityIndex}
+                    accordionIndex={accordionIndex}
                     {...props}
                     handlerChange={handlerChange}
                   />

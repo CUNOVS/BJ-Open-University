@@ -3,7 +3,6 @@ import { connect } from 'dva';
 import CoursePage from 'components/coursepage';
 
 class SuperClass extends React.PureComponent {
-
   constructor (props) {
     super(props);
     this.state = {
@@ -29,7 +28,7 @@ class SuperClass extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    const { courseid = '', cmid = '' } = this.props.location.query;
+    const { courseid = '', cmid = '', modname = '' } = this.props.location.query;
     this.props.dispatch({
       type: 'app/accessTime',
       payload: {
@@ -37,6 +36,7 @@ class SuperClass extends React.PureComponent {
         endedat: new Date().getTime(),
         courseid,
         cmid,
+        modname
 
       }
     });

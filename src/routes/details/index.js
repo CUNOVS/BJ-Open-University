@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Nav from 'components/nav';
 import InnerHtml from 'components/innerhtml';
 import { List, WhiteSpace } from 'components';
@@ -32,6 +31,7 @@ const Details = ({ location, dispatch, details, homework }) => {
   return (
     <div >
       <Nav title={name} dispatch={dispatch} />
+      <WhiteSpace />
       <div className={styles.outer} >
         {getContent()}
       </div >

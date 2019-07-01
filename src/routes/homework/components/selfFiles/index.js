@@ -12,8 +12,8 @@ import styles from './index.less';
 
 
 const SelfFiles = (props) => {
-  const { data , fileIdPrefix } = props;
-  const Result = data.filter(item => item.type !== 'comments');
+  const { data, fileIdPrefix } = props;
+  const Result = data && data.filter(item => item.type !== 'comments');
   return (
     <div className={styles.outer} >
       {Result && Result.map((item, i) => {

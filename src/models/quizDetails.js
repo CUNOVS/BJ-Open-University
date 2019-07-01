@@ -17,7 +17,6 @@ import { model } from 'models/common';
 const getAnswer = (data = {}) => {
   if (data.type === 'multichoice' || data.type === 'truefalse') {
     data.choose = choiceQuestion(data.html);
-
   } else if (data.type === 'essay') {
     data.choose = essayQusetion(data.html);
   } else if (data.type === 'match') {
@@ -37,17 +36,19 @@ export default modelExtend(model, {
     answer: {},
     page: 0,
     navmethod: '',
-    attemptid: ''
+    attemptid: '',
+    timelimit: 0
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/quizDetails' && action === 'PUSH') {
-          const { quizid, state, attemptid, page, navmethod = '' } = query;
+          const { quizid, state, attemptid, page, navmethod = '', timelimit = 0 } = query;
           dispatch({
             type: 'updateState',
             payload: {
-              navmethod
+              navmethod,
+              timelimit
             }
           });
           if (state !== 'inprogress') {
@@ -85,7 +86,7 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * queryExamination ({ payload }, { call, put, select }) {
+    * queryExamination ({ payload }, { call, put }) {
       const data = yield call(queryExamination, payload);
       if (data.success) {
         yield put({
@@ -104,6 +105,7 @@ export default modelExtend(model, {
           }
         });
       } else {
+        yield put({ type: 'goBack' });
         Toast.fail(data.message || '获取失败');
       }
     },
@@ -142,7 +144,7 @@ export default modelExtend(model, {
     },
 
     * sendQuiz ({ payload }, { call, put, select }) {
-      const { navmethod } = yield select(_ => _.quizDetails);
+      const { navmethod, timelimit } = yield select(_ => _.quizDetails);
       const { name = '', type, data: params, attemptid, timeup, quizid, finishattempt = 0 } = payload;
       const data = yield call(sendQuiz, { ...params, attemptid, timeup, finishattempt });
       if (data.success) {
@@ -153,13 +155,14 @@ export default modelExtend(model, {
               attemptid,
               name,
               quizid,
-              navmethod
+              navmethod,
+              timelimit
             },
           }));
         }
 
         if (data.state === 'finished') { // 重置page
-          yield put(routerRedux.push({
+          yield put(routerRedux.replace({
             pathname: '/quizReview',
             query: {
               attemptid

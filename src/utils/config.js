@@ -1,6 +1,6 @@
 module.exports = {
   name: 'BJOU-APP',
-  baseURL: `${cnMoodleServeUrl}:8082`,
+  baseURL: `${cnApiServiceUrl}`,
   userTag: {
     username: 'username',
     usertoken: 'usertoken',
@@ -53,13 +53,17 @@ module.exports = {
     GetFeedBack: '/questionnaire',
     GetFeedBackQuestions: '/questionnaire/getquestion',
     GetSuperClass: '/svp',
+    GetResource: '/resource',
     GetFeedBackInfos: '/questionnaire/response',
     SendFeedBack: '/questionnaire/submit',
     CompleteFeedBack: '/questionnaire/unfinished',
     SetAvatar: '/personal/update',
     GetAttendance: '/attendance/course',
     GetAttendanceList: '/attendance/courseList',
+    GetGradeCourseList: '/grade/courseList',
     AccessTime: '/log/accesstime',
-    Log: '/log'
+    Log: '/log',
+    UpdateInfo: '/personal/updateInfo',
+    SendAssing: '/assignment/commit'
   },
 };

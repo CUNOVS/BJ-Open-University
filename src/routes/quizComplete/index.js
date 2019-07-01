@@ -59,7 +59,7 @@ class QuizComplete extends React.Component {
   };
 
   render () {
-    const { name = '完成', attemptid = '', quizid = '' } = this.props.location.query,
+    const { name = '完成', attemptid = '', quizid = '', timelimit } = this.props.location.query,
       { questions } = this.props.quizComplete;
     const { page = 0, navmethod = '', data: { options = {} } } = this.props.quizDetails;
     const { endtime } = options;
@@ -67,11 +67,11 @@ class QuizComplete extends React.Component {
       <div >
         <Nav title={name} dispatch={this.props.dispatch} />
         <div >
-          <TitleBox title="答题情况报告" sup='' />
+          <TitleBox title="答题情况报告" sup="" />
           <List >
             {
               cnIsArray(questions) && questions.map(item =>
-                <List.Item
+                (<List.Item
                   key={item.page}
                   extra={item.status}
                   arrow="horizontal"
@@ -89,7 +89,7 @@ class QuizComplete extends React.Component {
                   }
                 >
                   {item.slot}
-                </List.Item >
+                </List.Item >)
               )
             }
           </List >
@@ -103,9 +103,10 @@ class QuizComplete extends React.Component {
             state: 'inprogress',
             name,
             navmethod
-          }, this.props.dispatch)} >返回试题</Button >
+          }, this.props.dispatch)}
+          >返回试题</Button >
           <WhiteSpace />
-          {endtime > 0 ? <CountDown endTime={endtime && endtime} handler={this.onSubmit} /> : null}
+          {endtime > 0 && timelimit > 0 ? <CountDown endTime={endtime && endtime} handler={this.onSubmit} /> : null}
           <Button loading={this.props.sending} type="primary" onClick={this.showModal} >提交所有答案并结束</Button >
         </WingBlank >
       </div >

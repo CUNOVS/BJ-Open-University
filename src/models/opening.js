@@ -54,7 +54,6 @@ export default modelExtend(model, {
       } else {
         Toast.fail(message);
       }
-
     },
   },
 });

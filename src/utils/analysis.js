@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 
 module.exports = {
 
-  getQuizInfo: (html) => {  // 获取测验信息
+  getQuizInfo: (html) => { // 获取测验信息
     const $ = cheerio.load(html);
     const obj = {};
     obj.title = `${$('.no')
@@ -13,10 +13,23 @@ module.exports = {
     obj.grade = `${$('.grade')
       .text()}`;
     obj.qtext = `${$('.qtext')
-      .text()}`;
+      .html()}`;
     obj.prompt = `${$('.prompt')
       .text()}`;
+    return obj;
+  },
 
+  getFeedback: (html) => {
+    const $ = cheerio.load(html);
+    const obj = {};
+    if ($('.feedback')) {
+      obj.feedback = $('.feedback .specificfeedback')
+        .text();
+    }
+    if ($('.rightanswer')) {
+      obj.rightanswer = $('.rightanswer')
+        .text();
+    }
     return obj;
   },
 
@@ -24,7 +37,6 @@ module.exports = {
     const $ = cheerio.load(html);
     const obj = {};
     if ($('.formulation input[type="hidden"]')) {
-
       return $('.formulation input[type="hidden"]')
         .attr('name');
     }

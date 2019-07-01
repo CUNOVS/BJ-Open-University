@@ -8,7 +8,6 @@ const PrefixCls = 'multianswer';
 
 
 class Multianswer extends React.Component {
-
   componentDidMount () {
     this.props.onRef(this);
   }
@@ -34,18 +33,17 @@ class Multianswer extends React.Component {
   }
 
   render () {
-
     const { getFieldDecorator } = this.props.form;
     const { answer } = this.props;
     const getSelect = ({ id, value = '', items = [] }) =>
-      <div >{getFieldDecorator(id, {
+      (<div >{getFieldDecorator(id, {
         initialValue: value // 初始值
       })(
         <Picker data={items} cols={1} >
           <List.Item arrow="horizontal" wrap >{'请选择答案'}</List.Item >
         </Picker >
       )}
-      </div >;
+      </div >);
     const packContents = (text) => {
         const trs = cheerio('tr', 'table', text),
           tdLength = trs[0].children.length;
@@ -91,10 +89,10 @@ class Multianswer extends React.Component {
       },
       getContents = (text) => {
         const dataItems = packContents(text);
-        return dataItems.map((dataItem,i) => {
+        return dataItems.map((dataItem, i) => {
           const { title = '', items } = dataItem;
           if (items.length > 0) {
-            return <div key={i}>
+            return (<div key={i}>
               <List renderHeader={() => <h3 className={styles.title} >{title}</h3 >} >{
                 items.map(item => {
                   const { id = '', value = '', size = '', type = 'input' } = item;
@@ -113,7 +111,7 @@ class Multianswer extends React.Component {
                 })
               }
               </List >
-            </div >;
+            </div >);
           }
           return '';
         });

@@ -29,6 +29,14 @@
   border-radius: @radius-xs;
 }
 
+.background {
+  flex-basis: 36%;
+  height: 180px;
+  margin-right: 20px;
+  background-size: cover;
+  background-position: center center;
+}
+
 .@{PrefixCls}-imgList {
   :global {
     .am-list-line {
@@ -40,6 +48,10 @@
     height: 160px;
     padding: 20px 0;
   }
+}
+
+.@{PrefixCls}-courseImage {
+  .background;
 }
 
 .@{PrefixCls}-common {
@@ -133,13 +145,15 @@
     display: flex;
     .listContent;
     overflow: hidden;
+    line-height: 1.2em;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 
     & span:nth-child(1) {
-      vertical-align: middle;
+      vertical-align: sub;
+      margin-right: 10px;
     }
   }
 }
@@ -158,24 +172,24 @@
   margin-bottom: @list-bottom;
   display: flex;
   &-img {
-    margin-right: 20px;
-    & img {
-      .img;
-    }
+    .background;
   }
   &-content {
     display: flex;
+    flex: 1;
     width: 100%;
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
     &-title {
       .listTitle;
-      .textOverflow;
     }
     &-teacher, &-time {
       .listContent;
       .textOverflow;
+    }
+    &-time {
+      font-size: @smallFontSize;
     }
   }
 }
@@ -194,21 +208,16 @@
   display: flex;
   margin-bottom: 20px;
   &-img {
-    flex-basis: 30%;
-    margin-right: 20px;
-    & img {
-      .img;
-    }
+    .background;
   }
   &-content {
     display: flex;
-    flex-basis: 70%;
+    flex: 1;
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
     &-title {
       .listTitle;
-      .textOverflow;
     }
     &-teacher {
       .listContent;
@@ -267,39 +276,34 @@
 
   display: flex;
   &-img {
-    flex-basis: 30%;
-    margin-right: 20px;
-    & img {
-      .img;
-    }
+    .background;
   }
   &-content {
     display: flex;
     width: 100%;
-    flex-basis: 70%;
+    flex: 1;
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
     &-title {
       .listTitle;
-      .textOverflow;
     }
     &-teacher, &-time {
       .listContent;
       .textOverflow;
+    }
+    &-time {
+      font-size: @smallFontSize;
     }
     &-type {
       display: flex;
       align-items: center;
       &-ending, &-attendance {
         padding: 6px 8px;
-        display: table-cell;
-        text-align: center;
-        vertical-align: middle;
+        .textVertical;
         margin-right: 20px;
         background: #ff9a1b;
         color: #fff;
-        font-weight: bold;
         font-size: 24px;
         border-radius: @radius-xs;
 
@@ -316,17 +320,58 @@
 //achivement Start
 
 .@{PrefixCls}-achievement {
-  padding: 0 20px;
-  :global {
-    .am-list-item:not(:last-child) .am-list-line {
-      border: 0;
+  padding: 20px 30px;
+  display: flex;
+  margin-bottom: 20px;
+  background: #fff;
+  &-content {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-around;
+    .textOverflow;
+    &-title {
+      .listTitle;
     }
+
+    &-status {
+      display: flex;
+      align-items: center;
+      font-size: @mediumFontSize;
+      span {
+        margin-right: 20px;
+      }
+    }
+    &-time {
+      font-size: @smallFontSize;
+      color: @color-text-paragraph;
+    }
+  }
+  &-grade {
+    font-size: @smallFontSize;
+    margin-top: 10px;
+    color: @color-text-paragraph;
+    display: flex;
+    justify-content: space-between;
   }
 }
 
 //achivement End
 
 // teachers Start
+
+.@{PrefixCls}-teachers-outer {
+  :global {
+    .am-card-header {
+      background: #edf6ff;
+      font-size: @mediumFontSize;
+    }
+    .am-card-header-content {
+      color:@primary-color;
+    }
+  }
+}
 
 .@{PrefixCls}-teachers {
   padding: 10px;
@@ -353,7 +398,6 @@
       &-title {
         font-size: @titleFontSize;
         color: @color-text-base;
-        font-weight: bold;
         flex-basis: 76%;
         .textOverflow;
       }
@@ -397,10 +441,10 @@
     .textOverflow;
     &-title {
       .listTitle;
-      .textOverflow;
     }
     &-time {
       .listContent;
+      font-size: @smallFontSize;
     }
     &-info {
       display: flex;
@@ -439,7 +483,7 @@
   &-content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     flex: 1;
     &-top {
       display: flex;
@@ -448,10 +492,10 @@
       &-title {
         font-size: @titleFontSize;
         color: @color-text-base;
-        font-weight: bold;
       }
-      &-type {
-
+      &-role {
+        font: @mediumFontSize;
+        color: @color-text-paragraph;
       }
     }
 
@@ -547,46 +591,32 @@
 
 .@{PrefixCls}-forumDetails {
   background: white;
-  div {
-    white-space: pre-wrap;
-  }
-  div:nth-child(4) {
-    display: inline-block;
-    font-size: @mediumFontSize;
-    color: @primary-color;
-  }
   &-info {
     display: flex;
     align-items: center;
     font-size: @titleFontSize;
-    font-weight: 600;
+    padding-top: 20px;
     img {
       width: 70px;
       height: 70px;
       border-radius: 50%;
     }
   }
-  &-content {
-    font-size: @mediumFontSize;
-  }
-  &-title {
+  &-describe {
+    font-size: @smallFontSize;
     display: flex;
+    padding-bottom: 20px;
     justify-content: space-between;
-    padding-bottom: 0.15rem;
-    color: @color-text-base;
-    font-size: 0.28rem;
-    div:nth-child(1) {
-      color: @color-text-paragraph;
-    }
-    div:nth-child(2) {
-      display: flex;
-      align-items: center;
-      color: @primary-color;
-      img {
-        width: 60px;
-        height: 60px
-      }
-    }
+    color: @color-text-paragraph;
+  }
+  &-reply {
+    display: flex;
+    font-size: @smallFontSize;
+    color: @primary-color;
+  }
+  &-more{
+    font-size: @smallFontSize;
+    color: @primary-color;
   }
 }
 
@@ -646,12 +676,33 @@
 }
 
 .@{PrefixCls}-attendanceRow {
-  &-status {
+  display: flex;
+  background: #fff;
+  margin-bottom: 20px;
+  padding: 20px 30px;
+
+  &-content {
     display: flex;
-    align-items: baseline;
-    font-size: @mediumFontSize;
-    span {
-      margin-right: 20px;
+    width: 100%;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-around;
+    .textOverflow;
+    &-title {
+      .listTitle;
+    }
+
+    &-status {
+      display: flex;
+      align-items: center;
+      font-size: @mediumFontSize;
+      span {
+        margin-right: 20px;
+      }
+    }
+    &-time {
+      font-size: @smallFontSize;
+      color: @color-text-paragraph;
     }
   }
 }

@@ -9,7 +9,7 @@ import * as query from 'services/message';
 const { userTag: { userid, usertoken } } = config,
   { _cg } = cookie,
   adapter = (list) => {
-    cnIsArray(list) && list.map((item, i) => {
+    cnIsArray(list) && list.map((item) => {
       item.master = cnIsArray(item.master) && item.master[0] || { fullname: '未知', id: '' };
       item.lessonImage = cnIsArray(item.overviewfiles) && item.overviewfiles.length > 0 ? item.overviewfiles[0].fileurl : '';
     });
@@ -42,28 +42,32 @@ export default modelExtend(model, {
   effects: {
     * query ({ payload }, { call, put }) {
       if (_cg(usertoken) !== '') {
-        const data = yield call(queryCurrentTask, { userid: _cg(userid) });
-        if (data) {
+        const { success, data, message = '请稍后再试' } = yield call(queryCurrentTask, { userid: _cg(userid) });
+        if (success) {
           yield put({
             type: 'updateState',
             payload: {
-              taskList: data.data,
+              taskList: data,
               refreshing: false,
             },
           });
+        } else {
+          Toast.fail(message);
         }
       }
     },
     * queryAllTask ({ payload }, { call, put }) {
-      const data = yield call(queryAllTask, { userid: _cg(userid) });
-      if (data) {
+      const { success, data, message = '请稍后再试' } = yield call(queryAllTask, { userid: _cg(userid) });
+      if (success) {
         yield put({
           type: 'updateState',
           payload: {
-            taskAllList: adapter(data.data),
+            taskAllList: adapter(data),
             refreshing: false,
           },
         });
+      } else {
+        Toast.fail(message);
       }
     },
     * queryCount ({ payload }, { call, put, select }) {

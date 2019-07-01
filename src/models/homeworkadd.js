@@ -34,6 +34,13 @@ export default modelExtend(model, {
               itemid: response[0].itemid
             }
           });
+        } else {
+          yield put({
+            type: 'updateState',
+            payload: {
+              animating: false
+            }
+          });
         }
         if (i === fileList.length - 1) {
           yield put({
@@ -64,6 +71,7 @@ export default modelExtend(model, {
             animating: false
           }
         });
+
         Toast.error(message);
       }
     }

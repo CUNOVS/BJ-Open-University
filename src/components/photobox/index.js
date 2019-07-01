@@ -23,11 +23,11 @@ const PhotoBox = (props) => (
               className={styles[`${PrefixCls}-tutorteacher`]}
               onClick={props.handlerChartClick.bind(null, 'conversation', {
                 fromuserid: item.id,
-                name: item.fullname,
+                name: item.userData.fullname,
               }, props.dispatch)}
             >
-      辅导教师：{item.fullname || ''}
-        </span >
+      辅导教师：{item.userData.fullname || ''}
+            </span >
           )) : null}
       {props.master.length > 0 ?
         <span

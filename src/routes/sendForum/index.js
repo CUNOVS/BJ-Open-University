@@ -6,8 +6,8 @@ import { connect } from 'dva';
 
 const getGroups = (groups, id) => {
   const arr = [];
-  cnIsArray(groups) && groups.filter(item => item.courseid !== id)
-    .map((data, i) => {
+  cnIsArray(groups) && groups.filter(item => item.courseid === id)
+    .map((data) => {
       arr.push({
         label: data.name,
         value: parseInt(data.id, 10)
@@ -22,6 +22,7 @@ class SendForum extends React.Component {
   }
 
   componentDidMount () {
+
   }
 
   componentWillMount () {
@@ -45,7 +46,7 @@ class SendForum extends React.Component {
   render () {
     const { maxattachments = 0, maxbytes = 0, id, course, type = 'add', subject = '' } = this.props.location.query,
       { itemid } = this.props.sendForum,
-      { loading } = this.props,
+      { sending } = this.props,
       { groups } = this.props.app;
     const props = {
       maxattachments,
@@ -55,13 +56,13 @@ class SendForum extends React.Component {
       groups: getGroups(groups, course),
       onSubmit: this.onSubmit,
       itemid,
-      loading,
+      loading: sending,
       type,
       subject
     };
     return (
       <div >
-        <Nav title={type === 'add' ? '发起话题' : '回复'} dispatch={this.props.dispatch} />
+        <Nav title={type === 'add' ? '开启一个新话题' : '回复'} dispatch={this.props.dispatch} />
         <UpLoad {...props} />
       </div >
     );
@@ -72,8 +73,9 @@ SendForum.defaultProps = {};
 SendForum.propTypes = {};
 
 export default connect(({ loading, sendForum, forum, app }) => ({
-  loading: loading.effects['sendForum/AddNewForum'],
+  sending: loading.effects['sendForum/uploadFile'],
   sendForum,
   forum,
+  loading,
   app
 }))(SendForum);

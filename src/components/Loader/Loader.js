@@ -13,7 +13,7 @@ const Loader = ({ spinning = false }) => {
 
     <div className={classNames(styles.ldsCss, styles.ngScope, { [styles.hidden]: !spinning })} >
       <div style={{ width: ' 100 % ', height: '100 % ' }} className={styles.ldsRolling} >
-        <div ></div >
+        <div />
       </div >
     </div >
 

@@ -10,7 +10,7 @@ const icon = {
 
 const StatusBox = (props) => (
   <div className={styles.outer} >
-    <Icon type={getLocalIcon(icon[props.status])} size='lg' color="#1eb259" />
+    <Icon type={getLocalIcon(icon[props.status])} size="lg" color="#1eb259" />
     <span >{props.content}</span >
   </div >
 );

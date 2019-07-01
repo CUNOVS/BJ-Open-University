@@ -9,40 +9,37 @@ import { Icon } from 'antd-mobile';
 import { getLocalIcon } from 'utils';
 import PropTypes from 'prop-types';
 import styles from './index.less';
-import Card from '../card';
+
+const getIcon = (state) => {
+  const newState = parseInt(state, 10);
+  if (newState === 1) {
+    return <Icon type={getLocalIcon('/checkbox/completion-auto-pass.svg')} />;
+  } else if (newState === 2) {
+    return <Icon type={getLocalIcon('/checkbox/completion-auto-pass.svg')} />;
+  } else if (newState === 3) {
+    return <Icon type={getLocalIcon('/checkbox/completion-auto-fail.svg')} />;
+  } else {
+    return <Icon type={getLocalIcon('/checkbox/completion-manual-n.svg')} />;
+  }
+};
 
 const Checkbox = (props) => {
-  const { state, tracking } = props;
-  if (tracking === 2) {
+  const { state, tracking = '1' } = props;
+  if (tracking === '2') {
     return (
-      <div className={styles.outer} onClick={props.handlerClick}>
-        <label className={styles.label}>
-          <input type="checkbox" name="name" checked={props.checked} />
-          <span className={styles.icon}>
-          <Icon type={getLocalIcon('/checkbox/completion-auto-n.svg')} color="#22609c" />
-        </span>
-          <span className={styles.iconchecked}>
-          <Icon type={getLocalIcon('/checkbox/completion-auto-y.svg')} color="#22609c" />
-        </span>
-        </label>
-      </div>
+      <div className={styles.outer} onClick={props.handlerClick} >
+        {getIcon(state)}
+      </div >
     );
-  } else if (tracking === 1) {
+  } else if (tracking === '1') {
     return (
-      <div className={styles.outer} onClick={props.handlerClick}>
-        <label className={styles.label}>
-          <span className={styles.icon}>
-          <Icon type={getLocalIcon('/checkbox/completion-manual-n.svg')} color="#22609c" />
-        </span>
-        </label>
-      </div>
+      <div className={styles.outer} onClick={props.handlerClick} >
+        {getIcon(state)}
+      </div >
     );
   }
 };
-Checkbox.defaultProps = {
-  checked: false,
-
-};
+Checkbox.defaultProps = {};
 Checkbox.propTypes = {
   handlerClick: PropTypes.func.isRequired,
 };

@@ -27,7 +27,7 @@ class Match extends React.Component {
       <div >
         {
           answer.map((item, i) =>
-            <Picker
+            (<Picker
               key={i}
               data={item.answer}
               cols={1}
@@ -36,7 +36,8 @@ class Match extends React.Component {
                 {
                   initialValue: [item.answer.find(child => child.selected === true).value]
                 }
-              )}>
+              )}
+            >
               <List.Item arrow="horizontal" >
                 <div className={styles.answer} >
                   {item.question}
@@ -45,7 +46,7 @@ class Match extends React.Component {
                   }
                 </div >
               </List.Item >
-            </Picker >)
+            </Picker >))
         }
       </div >
     );

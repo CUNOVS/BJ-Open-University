@@ -4,6 +4,7 @@ import { getLocalIcon } from 'utils';
 import { Toast } from 'components';
 import {
   getQuizInfo,
+  getFeedback,
   choiceQuestion,
   matchQuestion,
   getTimes,
@@ -25,6 +26,7 @@ const getAnswer = (data = []) => {
       item.choose = shortanswerQusetion(item.html);
     }
     item.info = getQuizInfo(item.html);
+    item.feedback = getFeedback(item.html);
   });
   // data.formulation = getTimes(data.html);
   return data;
@@ -40,6 +42,13 @@ export default modelExtend(model, {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query }) => {
         if (pathname === '/quizReview') {
+          dispatch({
+            type: 'updateState',
+            payload: {
+              data: {},
+              questions: []
+            }
+          });
           const { attemptid } = query;
           dispatch({
             type: 'queryReview',

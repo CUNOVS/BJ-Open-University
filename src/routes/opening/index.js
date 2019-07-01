@@ -39,13 +39,13 @@ function Opening ({ location, dispatch, opening, loading }) {
       }
     };
   return (
-    <div>
-      <Nav title={name} isGoBack={false} hasShadow/>
-      <WhiteSpace/>
-      <div className={styles[`${PrefixCls}-outer`]}>
+    <div >
+      <Nav title={name} isGoBack={false} hasShadow />
+      <WhiteSpace />
+      <div className={styles[`${PrefixCls}-outer`]} >
         {
           loading && !refreshing ?
-            <ListSkeleton/>
+            <ListSkeleton />
             :
             list.length > 0 ?
               <Refresh
@@ -61,19 +61,19 @@ function Opening ({ location, dispatch, opening, loading }) {
                       name: item.name,
                       courseid: item.id,
                       grade: item.graderaw,
-                    }, dispatch);
+                    }, dispatch, e);
                   }, dispatch);
                 })}
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-              </Refresh>
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+              </Refresh >
               :
-              <NoContent/>
+              <NoContent />
         }
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
 

@@ -55,10 +55,6 @@ class QuizDetails extends React.Component {
     });
   };
 
-  warningClick = () => {
-    Toast.fail('固定导航，只能按顺序答题');
-  };
-
   sidebar = (questions) => {
     const { quizDetails: { page = '', navmethod = '' } } = this.props;
     return (
@@ -71,9 +67,10 @@ class QuizDetails extends React.Component {
           >
             <span
               style={{ paddingLeft: '10px' }}
-              className={classNames({ [styles.active]: item.page == page })} >
+              className={classNames({ [styles.active]: item.page == page })}
+            >
               {`题目${item.slot}`}
-              </span >
+            </span >
           </List.Item >);
         })}
         <List.Item
@@ -90,13 +87,18 @@ class QuizDetails extends React.Component {
     this.child = ref;
   };
 
+  warningClick = () => {
+    Toast.fail('固定导航，只能按顺序答题');
+  };
+
   render () {
-    const { name, quizid = '', } = this.props.location.query,
-      { questions, navmethod = '' } = this.props.quizDetails,
+    const { name, quizid = '', timelimit = 0 } = this.props.location.query,
+      { questions, navmethod = '', } = this.props.quizDetails,
       { loading } = this.props;
     const props = {
       quizid,
-      navmethod
+      navmethod,
+      timelimit
     };
     return (
       <div className={styles[`${PrefixCls}-outer`]} >

@@ -64,19 +64,19 @@ class CoursePage extends React.Component {
     return (
 
       <div>
-        <Nav title={getTitle(queryName || pageName)} dispatch={dispatch}/>
+        <Nav title={getTitle(queryName || pageName)} dispatch={dispatch} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-title`]}>
             {queryName || pageName}
           </div>
-          <WhiteSpace size="sm"/>
+          <WhiteSpace size="sm" />
           <div className={styles[`${PrefixCls}-outer-content`]}>
-            <div dangerouslySetInnerHTML={getContents()} onClick={handleDivClick}/>
+            <div dangerouslySetInnerHTML={getContents()} onClick={handleDivClick} />
           </div>
         </div>
         {
           isOpen && viewImageIndex !== -1 ?
-            <WxImageViewer onClose={onClose} urls={viewImages} index={viewImageIndex}/> : ''
+            <WxImageViewer onClose={onClose} urls={viewImages} index={viewImageIndex} /> : ''
         }
       </div>
     );

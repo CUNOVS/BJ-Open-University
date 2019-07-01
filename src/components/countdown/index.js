@@ -70,18 +70,18 @@ class CountDown extends React.Component {
       number: '00',
       label: '小时',
     },
-      {
-        id: 1,
-        type: 'minutes',
-        number: '00',
-        label: '分钟',
-      },
-      {
-        id: 2,
-        type: 'seconds',
-        number: '00',
-        label: '秒',
-      }];
+    {
+      id: 1,
+      type: 'minutes',
+      number: '00',
+      label: '分钟',
+    },
+    {
+      id: 2,
+      type: 'seconds',
+      number: '00',
+      label: '秒',
+    }];
     let totalSeconds = Math.round(this.state.timeRemaining / 1000);
     timer.forEach(time => {
       switch (time.type) {

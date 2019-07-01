@@ -92,7 +92,7 @@ class Opinion extends Component {
               />
             </List.Item >
             <div className={styles[`${PrefixCls}-outer-button`]} >
-              <Button type="ghost" onClick={this.onSubmit.bind(this, isPatry)} >提交</Button >
+              <Button type="primary" onClick={this.onSubmit.bind(this, isPatry)} >提交</Button >
             </div >
           </form >
           <div className={styles[`${PrefixCls}-outer-footer`]} >

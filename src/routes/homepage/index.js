@@ -5,21 +5,19 @@
  */
 import React from 'react';
 import { connect } from 'dva';
-import { Icon, Button, WingBlank, Modal } from 'components';
+import { Icon, Button, WingBlank, Modal, List } from 'components';
 import { getImages, getErrorImg, getLocalIcon, getDefaultBg } from 'utils';
 import Photoheader from 'components/photoheader';
 import { routerRedux } from 'dva/router';
 import { handlerChangeRouteClick } from 'utils/commonevents';
-import { List } from 'components';
 import styles from './index.less';
 
 const PrefixCls = 'homepage',
-  Item = List.Item,
-  Brief = Item.Brief;
+  Item = List.Item;
 
 function HomePage ({ location, dispatch, homepage, app }) {
-  const { users: { username, useravatar } } = app,
-    { data: { selfDescription = '', studentId = '', email = '' } } = homepage,
+  const { users: { username } } = app,
+    { data: { idnumber = '', email = '', phone = '', avatar = '', selfdescription = '' } } = homepage,
     handleLoginout = () => {
       dispatch({
         type: 'app/logout',
@@ -35,45 +33,47 @@ function HomePage ({ location, dispatch, homepage, app }) {
 
       ]);
     };
-  return (
-    <div>
-      <div className={styles[`${PrefixCls}-top`]}>
-        <Photoheader dispatch={dispatch} />
-        <div style={{ overflow: 'hidden' }}>
-          <div className={styles[`${PrefixCls}-top-bg`]}
-               style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }}
-          />
-        </div>
-        <div className={styles[`${PrefixCls}-top-avatar`]}>
-          <img src={getImages(useravatar, 'user')} alt="" />
-        </div>
-        <div className={styles[`${PrefixCls}-info`]}>
-          <div className={styles[`${PrefixCls}-info-username`]}>{username}</div>
-          <div className={styles[`${PrefixCls}-info-signature`]}>{}</div>
 
-          <div className={styles[`${PrefixCls}-info-button`]}>
+  return (
+    <div >
+      <div className={styles[`${PrefixCls}-top`]} >
+        <Photoheader dispatch={dispatch} />
+        <div style={{ overflow: 'hidden' }} >
+          <div className={styles[`${PrefixCls}-top-bg`]}
+               style={{ backgroundImage: `url(${getDefaultBg(avatar)})` }}
+          />
+        </div >
+        <div className={styles[`${PrefixCls}-top-avatar`]} >
+          <img src={getImages(avatar, 'user')} alt="" onError={(el => getErrorImg(el, 'user'))} />
+        </div >
+        <div className={styles[`${PrefixCls}-info`]} >
+          <div className={styles[`${PrefixCls}-info-username`]} >{username}</div >
+          <div className={styles[`${PrefixCls}-info-signature`]} >{selfdescription}</div >
+
+          <div className={styles[`${PrefixCls}-info-button`]} >
             <Button
               onClick={handlerChangeRouteClick.bind(this, 'setup', { name: '编辑' }, dispatch)}
-              type="ghost"
+              type="primary"
               inline
               size="small"
-            >编辑个人信息</Button>
-          </div>
-        </div>
-      </div>
-      <div className={styles[`${PrefixCls}-list`]}>
-        <List className="my-list">
-          <Item thumb={<Icon type={getLocalIcon('/sprite/studentID.svg')} />} extra={studentId}>学号</Item>
-          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={email}>Email</Item>
-        </List>
-      </div>
-      <WingBlank>
+            >编辑个人信息</Button >
+          </div >
+        </div >
+      </div >
+      <div className={styles[`${PrefixCls}-list`]} >
+        <List className="my-list" >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/studentID.svg')} />} extra={idnumber} >学号</Item >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={email} >Email</Item >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={phone} >手机号</Item >
+        </List >
+      </div >
+      <WingBlank >
         <Button style={{ border: '1px solid #fff', color: '#fff', background: '#ff5353' }}
                 type="primary"
                 onClick={showAlert}
-        >退出</Button>
-      </WingBlank>
-    </div>
+        >退出</Button >
+      </WingBlank >
+    </div >
   );
 }
 

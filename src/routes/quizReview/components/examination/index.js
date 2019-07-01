@@ -11,7 +11,6 @@ import styles from './index.less';
 class Examination extends React.Component {
   constructor (props) {
     super(props);
-
   }
 
   componentWillMount () {
@@ -44,7 +43,8 @@ class Examination extends React.Component {
       <div >
         {
           questions.map((item, i) => {
-            const { title = '', state = '', grade = '', qtext = '', prompt = '' } = item.info;
+            const { title = '', state = '', grade = '', qtext = '', prompt = '', } = item.info;
+            const { feedback = '', rightanswer = '' } = item.feedback;
             return (
               <Card key={i} className={styles.gard} >
                 <Card.Header
@@ -57,10 +57,21 @@ class Examination extends React.Component {
                   }
                 />
                 <Card.Body >
-                  {item.type !== 'gapselect' && <div className={styles.question} >{qtext}</div >}
+                  {item.type !== 'gapselect' &&
+                  <div className={styles.question} dangerouslySetInnerHTML={{ __html: qtext }} />}
                   <div className={styles.prompt} >{prompt}</div >
                   <WhiteSpace size="lg" />
                   {this.getQuestion(item)}
+                  <WhiteSpace size="lg" />
+                  {
+                    feedback !== '' || rightanswer !== '' ?
+                      <div className={styles.feedback} >
+                        {feedback !== '' ? <div className={styles.feedbackText} >{feedback}</div > : null}
+                        {rightanswer !== '' ? <div >{rightanswer}</div > : null}
+                      </div >
+                      :
+                      null
+                  }
                 </Card.Body >
               </Card >
             );

@@ -9,13 +9,13 @@ import styles from './index.less';
 
 const PrefixCls = 'achievementdetails';
 const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => {
-  const { gradeItems, refreshing, scrollerTop, grade: coursegrade = 0, courseid: retrunCourseid = '', coursename} = achievementdetails,
+  const { gradeItems, refreshing, scrollerTop, grade: coursegrade = 0, courseid: retrunCourseid = '', coursename } = achievementdetails,
     { groups } = app,
     { name, grade, courseid } = location.query,
     getGroups = (group, id) => {
       const arr = [];
       cnIsArray(groups) && groups.filter(item => item.courseid.toString() === id.toString())
-        .map((data, i) => {
+        .map((data) => {
           arr.push({
             label: data.name,
             value: data.id
@@ -38,21 +38,22 @@ const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => 
     };
   return (
     <div>
-      <Photoheader hasBg={false} dispatch={dispatch} size="lg"/>
+      <Photoheader hasBg={false} dispatch={dispatch} size="lg" />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-head`]}>
           <div className={styles[`${PrefixCls}-outer-head-info`]}>
             <div className={styles[`${PrefixCls}-outer-head-info-title`]}>{name || coursename}</div>
             <div
-              className={styles[`${PrefixCls}-outer-head-info-group`]}>{getGroups(groups, courseid || retrunCourseid)}</div>
+              className={styles[`${PrefixCls}-outer-head-info-group`]}
+            >{getGroups(groups, courseid || retrunCourseid)}</div>
           </div>
           <div className={styles[`${PrefixCls}-outer-head-achievement`]}>
-            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]}>{`${grade ? grade : coursegrade}`}</div>
+            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]}>{`${grade || coursegrade}`}</div>
             <div className={styles[`${PrefixCls}-outer-head-achievement-text`]}>我的得分</div>
           </div>
         </div>
       </div>
-      <WhiteSpace/>
+      <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer-list`]}>
         <Refresh
           refreshing={refreshing}

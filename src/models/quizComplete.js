@@ -38,13 +38,10 @@ export default modelExtend(model, {
             questions: data.questions,
           },
         });
+      } else if (data.errorcode === 'attemptalreadyclosed') {
+        yield put({ type: 'goBack' });
       } else {
-        if (data.errorcode === 'attemptalreadyclosed') {
-          // yield put(routerRedux.goBack());
-        } else {
-          Toast.fail(data.message);
-        }
-
+        Toast.fail(data.message);
       }
     },
   },

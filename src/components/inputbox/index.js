@@ -9,7 +9,6 @@ const PrefixCls = 'inputbox';
 class InputBox extends Component {
   constructor (props) {
     super(props);
-
   }
 
 

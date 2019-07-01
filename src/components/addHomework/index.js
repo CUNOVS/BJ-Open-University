@@ -135,7 +135,6 @@ class AddHomework extends React.Component {
       );
     })
   );
-
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       { fileList } = this.state,
@@ -145,7 +144,6 @@ class AddHomework extends React.Component {
       props = {
         beforeUpload: (file) => {
           if (file.size < maxsubmissionsizebytes && fileList.length < maxfilesubmissions) {
-
             this.setState(state => ({
               fileList: [...state.fileList, file],
             }));
@@ -160,6 +158,7 @@ class AddHomework extends React.Component {
         listType: 'picture',
         showUploadList: false,
       };
+    console.log(fileList)
     return (
       <div className={styles.outer} >
         <form className={styles.form} >
@@ -199,7 +198,7 @@ class AddHomework extends React.Component {
                     <Upload
                       {...props}
                     >
-                      <Button type="ghost" >
+                      <Button type="primary" >
                         <Icon type="add" />
                         添加文件
                       </Button >
@@ -212,12 +211,14 @@ class AddHomework extends React.Component {
           }
           <WhiteSpace size="lg" />
           <WingBlank >
-            <Button type="primary" onClick={
-              () => alert('提交作业', '确定提交本次修改?', [
-                { text: '取消', onPress: () => console.log('cancel') },
-                { text: '确定', onPress: () => this.onSubmit() },
-              ])
-            } >提交</Button >
+            <Button type="primary"
+              onClick={
+                () => alert('提交作业', '确定提交本次修改?', [
+                  { text: '取消', onPress: () => console.log('cancel') },
+                  { text: '确定', onPress: () => this.onSubmit() },
+                ])
+              }
+            >提交</Button >
           </WingBlank >
           <WhiteSpace size="lg" />
         </form >

@@ -9,7 +9,6 @@ import styles from './index.less';
 const PrefixCls = 'nav';
 
 function Nav (props) {
-
   const goBack = (backNum) => {
     if (props.isAlert) {
       props.dispatch({
@@ -24,7 +23,6 @@ function Nav (props) {
         props.navEvent();
       }
     }
-
   };
   return (
     <div >
