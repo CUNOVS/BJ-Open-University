@@ -22,6 +22,16 @@ class CoursePage extends React.Component {
 
   }
 
+  componentDidMount () {
+    let videos = [];
+    if (this.contentElement && (videos = this.contentElement.querySelectorAll('video')) && videos.length) {
+      videos.forEach(v => {
+        v.setAttribute('webkit-playsinline', 'webkit-playsinline');// Fix fullscreen problem on IOS 8 and 9
+        v.setAttribute('playsinline', 'playsinline'); // Fix fullscreen problem on IOS 10
+      });
+    }
+  }
+
   render () {
     const { propDatas, dispatch, pathname } = this.props;
     const { data: { content = '', cm = {}, name: pageName = '加载中...' }, isOpen = false, viewImages = [], viewImageIndex = -1, queryName = '' } = propDatas,
@@ -64,19 +74,21 @@ class CoursePage extends React.Component {
     return (
 
       <div>
-        <Nav title={getTitle(queryName || pageName)} dispatch={dispatch} />
+        <Nav title={getTitle(queryName || pageName)} dispatch={dispatch}/>
         <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-title`]}>
             {queryName || pageName}
           </div>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="sm"/>
           <div className={styles[`${PrefixCls}-outer-content`]}>
-            <div dangerouslySetInnerHTML={getContents()} onClick={handleDivClick} />
+            <div dangerouslySetInnerHTML={getContents()} onClick={handleDivClick} ref={ref => {
+              this.contentElement = ref;
+            }}/>
           </div>
         </div>
         {
           isOpen && viewImageIndex !== -1 ?
-            <WxImageViewer onClose={onClose} urls={viewImages} index={viewImageIndex} /> : ''
+            <WxImageViewer onClose={onClose} urls={viewImages} index={viewImageIndex}/> : ''
         }
       </div>
     );

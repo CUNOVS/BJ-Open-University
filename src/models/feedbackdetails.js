@@ -89,10 +89,10 @@ export default modelExtend(model, {
         Toast.fail(message);
       }
     },
-    * sendFeedBack ({ payload }, { call, put, select }) {
+    * sendFeedBack ({ payload, callback }, { call, put, select }) {
       const { success, data, message = '请稍后再试' } = yield call(Service.sendFeedBack, payload);
       if (success) {
-
+        callback && callback();
       } else {
         Toast.fail(message);
       }
@@ -145,7 +145,7 @@ export default modelExtend(model, {
           if (choice.value == currentVal[x]) {
             choice.checked = true;
             return;
-          } 
+          }
           choice.checked = false;
         }
       });

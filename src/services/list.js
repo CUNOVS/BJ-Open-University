@@ -1,6 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: { GetGroupList, GetGradeList, getTeachersList, GetMember, GetContacts, GetGradeCourseList } } = config;
+const { api: { GetGroupList, GetGradeList, getTeachersList, GetMember, GetContacts, GetGradeCourseList, MyOpinionList } } = config;
 
 export async function queryGroup (payload) {
   return request({
@@ -49,3 +49,12 @@ export async function queryGradeCourseList (payload) {
     data: payload,
   });
 }
+
+export async function queryMyOpinionList ({ userid = '' }) {
+  return request({
+    url: `${MyOpinionList}/${userid}`,
+    method: 'get',
+    hasToken: false
+  });
+}
+

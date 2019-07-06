@@ -44,6 +44,7 @@ function Group ({ location, dispatch, group }) {
               listData.map((item) => {
                 return groupRow(item, handlerChangeRouteClick.bind(null, 'groupdetails', {
                   name: '小组成员',
+                  groupName: item.name || '',
                   courseid: item.courseid,
                 }, dispatch));
               })

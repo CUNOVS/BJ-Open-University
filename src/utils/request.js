@@ -57,7 +57,7 @@ const fetch = (options) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-  } 
+  }
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(url, {

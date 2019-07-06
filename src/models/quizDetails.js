@@ -149,7 +149,7 @@ export default modelExtend(model, {
       const data = yield call(sendQuiz, { ...params, attemptid, timeup, finishattempt });
       if (data.success) {
         if (type === 'finish') {
-          yield put(routerRedux.push({
+          yield put(routerRedux.replace({
             pathname: '/quizComplete',
             query: {
               attemptid,

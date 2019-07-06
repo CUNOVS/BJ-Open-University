@@ -30,7 +30,7 @@ const isPass = (grade) => {
 };
 module.exports = {
 
-  chapterRow: ({ title, time, id, type }, onClick) => {
+  chapterRow: ({ title, time, id, type, }, onClick) => {
     /**
      * @author Lowkey
      * @date 2018/10/25
@@ -78,11 +78,11 @@ module.exports = {
       </List >
     );
   },
-  taskRow: (item, click) => {
+  taskRow: (item, click, handDivClick) => {
     // 任务列表
-    const { id, coursename, modulename, name, timestart } = item;
+    const { id, coursename, modulename, name, timestart, availabilityinfo = '' } = item;
     return (
-      <div key={id} className={styles[`${PrefixCls}-task`]} onClick={click} >
+      <div key={id} className={styles[`${PrefixCls}-task`]} onClick={availabilityinfo === '' ? click : null} >
         <div className={styles[`${PrefixCls}-task-title`]} >
           {coursename}
           <div className={styles[`${PrefixCls}-task-title-time`]} >
@@ -95,49 +95,60 @@ module.exports = {
           <span ><Icon type={getLocalIcon(getTaskIcon(modulename))} /></span >
           <span >{name}</span >
         </div >
+        {availabilityinfo !== '' ?
+          <div
+            className={styles[`${PrefixCls}-task-available`]}
+            dangerouslySetInnerHTML={{ __html: availabilityinfo }}
+            onClick={handDivClick}
+          /> : ''}
       </div >
     );
   },
   taskLessonRow: (item, click, dispatch) => {
     // 全部任务列表
-    const { id, fullname, enddate, master, lessonImage } = item;
+    const { id, fullname, enddate, master, courseImage } = item;
 
     return (
       <div key={id} className={styles[`${PrefixCls}-tasklesson`]} onClick={click.bind(null, item, dispatch)} >
-        <div className={styles[`${PrefixCls}-tasklesson-img`]}
-             style={{ backgroundImage: `url(${getImages(lessonImage)})` }} >
-        </div >
-        <div className={styles[`${PrefixCls}-tasklesson-content`]} >
-          <div className={styles[`${PrefixCls}-tasklesson-content-title`]} >{fullname}</div >
-          <div className={styles[`${PrefixCls}-tasklesson-content-teacher`]} >{`责任教师：${master.fullname}`}</div >
-          <div className={styles[`${PrefixCls}-tasklesson-content-time`]} >{`结课日期：${changeLessonDate(enddate)}`}</div >
+        <div className={styles[`${PrefixCls}-tasklesson-title`]} >{fullname}</div >
+        <div className={styles[`${PrefixCls}-tasklesson-container`]} >
+          <div className={styles[`${PrefixCls}-tasklesson-img`]}
+               style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
+          </div >
+          <div className={styles[`${PrefixCls}-tasklesson-content`]} >
+            <div className={styles[`${PrefixCls}-tasklesson-content-teacher`]} >{`责任教师：${master.fullname}`}</div >
+            <div
+              className={styles[`${PrefixCls}-tasklesson-content-time`]} >{`结课日期：${changeLessonDate(enddate)}`}</div >
+          </div >
         </div >
       </div >
     );
   },
   closeLessonRow: (item) => {
     // 已开课程列表
-    const { fullname, master, id, graderaw = 0, attendance = {}, lessonImage = '' } = item,
+    const { fullname, master, id, graderaw = 0, attendance = {}, courseImage = '' } = item,
       { stat = 0 } = attendance;
     return (
       <div key={id} className={styles[`${PrefixCls}-closelesson`]} >
-        <div className={styles[`${PrefixCls}-closelesson-img`]}
-             style={{ backgroundImage: `url(${getImages(lessonImage)})` }} >
-        </div >
-        <div className={styles[`${PrefixCls}-closelesson-content`]} >
-          <div className={styles[`${PrefixCls}-closelesson-content-title`]} >{fullname}</div >
-          <div className={styles[`${PrefixCls}-closelesson-content-teacher`]} >
-            {`责任教师：${master.fullname}`}
+        <div className={styles[`${PrefixCls}-closelesson-title`]} >{fullname}</div >
+        <div className={styles[`${PrefixCls}-closelesson-container`]} >
+          <div className={styles[`${PrefixCls}-closelesson-img`]}
+               style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
           </div >
-          <div className={styles[`${PrefixCls}-closelesson-content-info`]} >
-            {stat ?
-              <div style={{ color: '#1eb259' }} >考勤：达标</div >
-              :
-              <div style={{ color: '#f34e14' }} >考勤：未达标</div >
-            }
-            {
-              <div style={{ color: isPass(graderaw) ? '#1eb259' : '#f34e14' }} >{`成绩：${graderaw}`}</div >
-            }
+          <div className={styles[`${PrefixCls}-closelesson-content`]} >
+            <div className={styles[`${PrefixCls}-closelesson-content-teacher`]} >
+              {`责任教师：${master.fullname}`}
+            </div >
+            <div className={styles[`${PrefixCls}-closelesson-content-info`]} >
+              {stat ?
+                <div style={{ color: '#1eb259' }} >考勤：达标</div >
+                :
+                <div style={{ color: '#f34e14' }} >考勤：未达标</div >
+              }
+              {
+                <div style={{ color: isPass(graderaw) ? '#1eb259' : '#f34e14' }} >{`成绩：${graderaw}`}</div >
+              }
+            </div >
           </div >
         </div >
       </div >
@@ -148,13 +159,13 @@ module.exports = {
     const { fullname = '', graderaw = 0, id, master, enddate, isAttendance = false, hasFinalExam = false, courseImage } = item;
     return (
       <div key={id} className={styles[`${PrefixCls}-openinglessonout`]} onClick={onClick.bind(null, item, dispatch)} >
+        <div className={styles[`${PrefixCls}-openinglessonout-title`]} >{fullname}</div >
         <div className={styles[`${PrefixCls}-openinglesson`]} >
           <div
             className={styles[`${PrefixCls}-openinglesson-img`]}
             style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
           </div >
           <div className={styles[`${PrefixCls}-openinglesson-content`]} >
-            <div className={styles[`${PrefixCls}-openinglesson-content-title`]} >{fullname}</div >
             <div className={styles[`${PrefixCls}-openinglesson-content-teacher`]} >{`责任教师：${master.fullname}`}</div >
             <div className={styles[`${PrefixCls}-openinglesson-content-time`]} >
               {`结课日期：${changeLessonDate(enddate)}`}
@@ -191,21 +202,21 @@ module.exports = {
     // 成绩列表
     return (
       <div key={id} className={styles[`${PrefixCls}-achievement`]} onClick={openState === '0' ? onClick : null} >
-        <div className={styles[`${PrefixCls}-courseImage`]}
-             style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
-
-        </div >
-        <div className={styles[`${PrefixCls}-achievement-content`]} >
-          <div className={styles[`${PrefixCls}-achievement-content-title`]} >{fullname}</div >
-          <div
-            className={styles[`${PrefixCls}-attendanceRow-content-status`]} >{openState === '0' ? `结课日期：${changeLessonDate(enddate)}` : '已结束'}</div >
-          <div className={styles[`${PrefixCls}-achievement-grade`]} >
+        <div className={styles[`${PrefixCls}-achievement-title`]} >{fullname}</div >
+        <div className={styles[`${PrefixCls}-achievement-container`]} >
+          <div className={styles[`${PrefixCls}-courseImage`]}
+               style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
+          </div >
+          <div className={styles[`${PrefixCls}-achievement-content`]} >
+            <div
+              className={styles[`${PrefixCls}-attendanceRow-content-status`]} >{openState === '0' ? `结课日期：${changeLessonDate(enddate)}` : '已结束'}
+            </div >
             <CnBadge
               text={isPass(graderaw) ? '合格' : '不合格'}
               background={isPass(graderaw) ? '#1eb259' : '#f34e14'}
               color="#fff"
               size="xs" />
-            <span >{`课程总得分：${graderaw}`}</span >
+            <div className={styles[`${PrefixCls}-achievement-grade`]} >{`课程总得分：${graderaw}`}</div >
           </div >
         </div >
         <WhiteSpace />
@@ -213,7 +224,7 @@ module.exports = {
     );
   },
   achievementDetailsRow: (item, onClick, dispatch) => {
-    const { title = '', grade = '', id = '', itemType = '', grademax = '-' } = item;
+    const { title = '', grade = '', id = '', itemType = '', grademax = '-', instance = '' } = item;
     return (
       <div
         key={id || (`${itemType}_${cnId()}`)}
@@ -254,10 +265,10 @@ module.exports = {
                       <div className={styles[`${PrefixCls}-teachers-content`]} >
                         <div className={styles[`${PrefixCls}-teachers-content-top`]} >
                           <div className={styles[`${PrefixCls}-teachers-content-top-title`]} >
-                            {items.fullname}
+                            {items.fullname && (items.fullname.length < 10 ? items.fullname : items.fullname.substr(0, 9) + '...') || ''}
                           </div >
                           <div className={styles[`${PrefixCls}-teachers-content-top-type`]} >
-                            角色：责任教师
+                            责任教师
                           </div >
                         </div >
                         <div className={styles[`${PrefixCls}-teachers-content-bottom`]} >
@@ -291,18 +302,18 @@ module.exports = {
                       <div className={styles[`${PrefixCls}-teachers-content`]} >
                         <div className={styles[`${PrefixCls}-teachers-content-top`]} >
                           <div className={styles[`${PrefixCls}-teachers-content-top-title`]} >
-                            {items.userData.fullname}
+                            {items.userData && items.userData.fullname}
                           </div >
                           <div className={styles[`${PrefixCls}-teachers-content-top-type`]} >
-                            角色：辅导教师
+                            {items.roleData && items.roleData.roleName}
                           </div >
                         </div >
                         <div className={styles[`${PrefixCls}-teachers-content-bottom`]} >
                           <Button
                             onClick={onClick.bind(null, 'conversation', {
                               fromuserid: items.id,
-                              name: items.fullname,
-                              avatar: items.userData.avatar
+                              name: items.userData.fullname,
+                              avatar: items.userData && items.userData.avatar
                             }, dispatch)}
                             type="primary"
                             inline
@@ -401,19 +412,20 @@ module.exports = {
     const { fullname, id, enddate, courseImage, attendance: { weekStat } } = item;
     return (
       <div key={id} className={styles[`${PrefixCls}-attendanceRow`]} onClick={onClick} >
-        <div className={styles[`${PrefixCls}-courseImage`]}
-             style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
-
-        </div >
-        <div className={styles[`${PrefixCls}-attendanceRow-content`]} >
-          <div className={styles[`${PrefixCls}-attendanceRow-content-title`]} >{fullname}</div >
-          <div className={styles[`${PrefixCls}-attendanceRow-content-status`]} >
-            <span >本周考勤:</span >
-            <CnBadge text={weekStat ? '达标' : '未达标'} background={weekStat ? '#1eb259' : '#f34e14'} color="#fff"
-                     size="xs" />
+        <div className={styles[`${PrefixCls}-attendanceRow-title`]} >{fullname}</div >
+        <div className={styles[`${PrefixCls}-attendanceRow-container`]} >
+          <div className={styles[`${PrefixCls}-courseImage`]}
+               style={{ backgroundImage: `url(${getImages(courseImage)})` }} >
           </div >
-          <span
-            className={styles[`${PrefixCls}-attendanceRow-content-time`]} >{`结课日期：${changeLessonDate(enddate)}`}</span >
+          <div className={styles[`${PrefixCls}-attendanceRow-content`]} >
+            <div className={styles[`${PrefixCls}-attendanceRow-content-status`]} >
+              <span >本周考勤:</span >
+              <CnBadge text={weekStat ? '达标' : '未达标'} background={weekStat ? '#1eb259' : '#f34e14'} color="#fff"
+                       size="xs" />
+            </div >
+            <span
+              className={styles[`${PrefixCls}-attendanceRow-content-time`]} >{`结课日期：${changeLessonDate(enddate)}`}</span >
+          </div >
         </div >
         <WhiteSpace />
       </div >
@@ -428,6 +440,7 @@ module.exports = {
     const creatDate = new Date(created * 1000).toLocaleString('zh');
     return (
       <Item
+        wrap
         key={id}
         className={styles[`${PrefixCls}-forum`]}
         onClick={onClick.bind(null, 'forumDetails', {
@@ -436,7 +449,8 @@ module.exports = {
         }, dispatch)}
       >
         <div className={styles[`${PrefixCls}-forum-user`]} >
-          <img src={getImages(userpictureurl, 'user')} style={{ marginRight: '10px' }} />
+          <img src={getImages(userpictureurl, 'user')} style={{ marginRight: '10px' }}
+               onError={(el => getErrorImg(el, 'user'))} />
           <div className={styles[`${PrefixCls}-forum-user-info`]} >
             <div >
               <div >{userfullname}</div >
@@ -465,7 +479,7 @@ module.exports = {
   forumDetailsRow: (item, handlerMoreClick, dispatch, maxattachments, maxbytes) => {
     const { canreply, id, created, children, message, subject, userfullname, userpictureurl, attachment = '', attachments } = item;
     return (
-      <Item key={id} className={styles[`${PrefixCls}-forumDetails`]} >
+      <Item wrap key={id} className={styles[`${PrefixCls}-forumDetails`]} onError={(el => getErrorImg(el, 'user'))} >
         <div className={styles[`${PrefixCls}-forumDetails-info`]} >
           <img src={getImages(userpictureurl, '')} style={{ marginRight: '10px' }} />
           <div >{userfullname}</div >
@@ -516,7 +530,7 @@ module.exports = {
            }, dispatch)} >
         <Badge dot={unread} >
           <div className={styles[`${PrefixCls}-message-img`]} >
-            <img src={getImages(avatar, 'user')} alt="" onError={(el => getErrorImg(el, 'user'))}/>
+            <img src={getImages(avatar, 'user')} alt="" onError={(el => getErrorImg(el, 'user'))} />
           </div >
         </Badge >
         <div className={styles[`${PrefixCls}-message-content`]} >
@@ -554,7 +568,7 @@ module.exports = {
     );
   },
   messageRow: (rowData, sectionID, rowID, onClick, dispatch, userid) => {
-    const { id, type, cmid, state, name, timecreated } = rowData;
+    const { id, cmid, state, name, timecreated } = rowData;
     return (
       <Item
         key={id}
@@ -573,5 +587,49 @@ module.exports = {
       </Item >
     );
   },
+  sysNoticeRow: (rowData, sectionID, rowID, onClick, dispatch) => {
+    const { noticeId, noticeTitle, noticeContent, noticeCrateDate } = rowData;
+    return (
+      <Item
+        key={noticeId}
+        wrap
+        className={styles[`${PrefixCls}-messagelist`]}
+        onClick={onClick.bind(null, 'details', {
+          name: '通知详情',
+          type: 'detailsText',
+          content: noticeContent
+        }, dispatch)}
+      >
+        <div className={styles[`${PrefixCls}-messagelist-details`]} >
+          {/*{state === 'unread' ? <Badge text={'未读'} style={{ marginRight: 12 }} /> : null}*/}
+          {noticeTitle}
+        </div >
+        <div className={styles[`${PrefixCls}-messagelist-date`]} >{getCommonDate(noticeCrateDate / 1000)}</div >
+      </Item >
+    );
+  },
+  opinionRow: (rowData, onClick, dispatch) => {
+    const { submitType, submitDate, submitContent, currentStatus, opinionId } = rowData;
+    return (
+      <Item
+        key={opinionId}
+        wrap
+        arrow="horizontal"
+        className={styles[`${PrefixCls}-messagelist`]}
+        onClick={onClick.bind(null, 'details', {
+          name: '我的反馈',
+          type: 'detailsText',
+          content: submitContent
+        }, dispatch)}
+      >
+        <div className={styles[`${PrefixCls}-messagelist-details`]} >
+          {/*{state === 'unread' ? <Badge text={'未读'} style={{ marginRight: 12 }} /> : null}*/}
+          {submitType}
+        </div >
+        <div className={styles[`${PrefixCls}-messagelist-date`]} >{getCommonDate(submitDate / 1000)}</div >
+      </Item >
+    );
+  },
+
 };
 

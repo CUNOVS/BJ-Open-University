@@ -13,7 +13,7 @@ const PrefixCls = 'groupdetails';
 
 
 function GroupDetails ({ location, dispatch, groupdetails }) {
-  const { name = '小组详情', courseid } = location.query,
+  const { name = '小组成员', courseid, groupName = '' } = location.query,
     { listData, hasMore, scrollerTop } = groupdetails,
     onRefresh = (callback) => {
       dispatch({
@@ -68,6 +68,7 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
       <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles.outer} >
+        <div className={styles.title}>{groupName}</div >
         {listData.length > 0 ? getContents(listData) : ''}
       </div >
     </div >

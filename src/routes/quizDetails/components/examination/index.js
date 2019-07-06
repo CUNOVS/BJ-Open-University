@@ -280,7 +280,7 @@ class Examination extends React.Component {
 
 
   render () {
-    const { data: { nextpage = -1, options = {} }, info: { title, state, grade, qtext, prompt }, answer = {} } = this.props.quizDetails;
+    const { data: { nextpage = 1, options = {} }, info: { title, state, grade, qtext, prompt }, answer = {} } = this.props.quizDetails;
     const { navmethod = '', timelimit = 0 } = this.props;
     const { endtime } = options;
     const { showBackModal = false } = this.props.app;

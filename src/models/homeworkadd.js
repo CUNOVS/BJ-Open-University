@@ -53,7 +53,7 @@ export default modelExtend(model, {
         }
       }
     },
-    * AddHomework ({ payload }, { call, put, select }) {
+    * AddHomework ({ payload }, { call, put }) {
       const { success, message = '提交失败' } = yield call(addHomeWork, payload);
       if (success) {
         yield put({ type: 'goBack' });
@@ -72,7 +72,7 @@ export default modelExtend(model, {
           }
         });
 
-        Toast.error(message);
+        Toast.fail(message);
       }
     }
     ,

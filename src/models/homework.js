@@ -2,6 +2,7 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { getLocalIcon } from 'utils';
 import { model } from 'models/common';
+import { routerRedux } from 'dva/router';
 import { Toast } from 'components';
 import { queryHomework, queryHomeWorkComments, sendAssing } from 'services/resource';
 
@@ -81,6 +82,7 @@ export default modelExtend(model, {
       const { success, message = '请稍后再试' } = yield call(sendAssing, payload);
       if (success) {
         Toast.success('提交成功');
+        yield put(routerRedux.go(0));
       } else {
         Toast.fail(message);
       }

@@ -13,7 +13,7 @@ import styles from './index.less';
 const PrefixCls = 'achievement';
 
 function Achievement ({ location, dispatch, achievement }) {
-  const { listData,scrollerTop,refreshing } = achievement;
+  const { listData, scrollerTop, refreshing } = achievement;
   const onRefresh = () => {
 
     },
@@ -38,7 +38,10 @@ function Achievement ({ location, dispatch, achievement }) {
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
         >
-          {listData.length > 0 ? listData.map(item => achievementRow(item, handlerChangeRouteClick.bind(null, 'achievementdetails', { courseid: item.id }, dispatch))) :
+          {listData.length > 0 ? listData.map(item => achievementRow(item, handlerChangeRouteClick.bind(null, 'achievementdetails', {
+              courseid: item.id,
+              grade: item.graderaw || 0
+            }, dispatch))) :
             <NoContent />}
         </Refresh >
       </div >

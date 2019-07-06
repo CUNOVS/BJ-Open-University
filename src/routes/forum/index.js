@@ -140,7 +140,7 @@ class Forum extends React.Component {
             开启一个新话题
           </Button > : null}
         </div >
-        <div className={styles.reset} style={{ height: this.state.height, background: 'white' }} >
+        <div className={styles.reset} style={{ height: this.state.height }} >
           <div className={styles[`${PrefixCls}-title`]} >
             <div ><Icon type="down" />{`话题(${numdiscussions})`}</div >
             <div style={{ color: '#1296db' }} />

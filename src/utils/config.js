@@ -64,6 +64,10 @@ module.exports = {
     AccessTime: '/log/accesstime',
     Log: '/log',
     UpdateInfo: '/personal/updateInfo',
-    SendAssing: '/assignment/commit'
+    SendAssing: '/assignment/commit',
+    GetSysNotice: 'notic/list',
+    OpinionAdd: 'feedback/add',
+    SeedOpinionFiles: 'http://moodle.cunovs.com:9200/file/upload',
+    MyOpinionList: '/feedback'
   },
 };

@@ -332,7 +332,7 @@ const hasSystemEmoji = (content) => {
   return content.match(new RegExp(ranges.join('|'), 'g'));
 };
 const getTitle = (title) => {
-  return title.length > 17 ? `${title.substring(0, 16)}...` : title;
+  return title.length > 10 ? `${title.substring(0, 9)}...` : title;
 };
 
 /**

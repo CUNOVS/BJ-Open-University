@@ -164,7 +164,7 @@ const Status = (props) => {
                       type="warning"
                       onClick={(e) => showModal(props.assignId)}
                     >
-                      {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                      添加提交
                     </Button >
                     :
                     null
@@ -257,7 +257,7 @@ const Status = (props) => {
                     type="warning"
                     onClick={(e) => showModal(props.assignId)}
                   >
-                    {submitStatus === 'new' ? '添加提交' : '编辑提交的作业'}
+                    添加提交
                   </Button >
                   :
                   null

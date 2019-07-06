@@ -1,7 +1,7 @@
 @PrefexCls: feedbackdetails;
 
 .@{PrefexCls}-type {
-  margin: 20px;
+  margin: 20px 10px;
 
   & p {
     font-size: @mediumFontSize;
@@ -10,7 +10,6 @@
     margin: 0;
     background: #fff;
   }
-
 }
 
 .outer {
@@ -25,17 +24,40 @@
 
 .label {
   background: #fff;
-  padding: 20px;
+  margin: 0 10px;
+  padding: 10px;
 }
 
 .button {
   margin: 40px 0;
 }
 
-.list {
+.@{PrefexCls}-list {
   :global {
     .am-list-body {
       border: 0;
+    }
+
+    .am-list-item .am-list-line .am-list-extra {
+      flex-basis: 20%;
+    }
+  }
+}
+
+.@{PrefexCls}-hasError {
+  :global {
+    .am-card {
+      .am-card-header .am-card-header-content {
+        color: red;
+      }
+
+      .am-list-content {
+        color: red;
+      }
+
+      .am-card-footer-content {
+        color: red;
+      }
     }
   }
 }

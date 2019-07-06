@@ -63,7 +63,7 @@ const Status = (props) => {
               </div >
               {item.state === 'finished' ?
                 <div >
-                  {item.sumgrades ? `${getGrade()}/${maxgrade}` : '未评分'}
+                  {!isNaN(item.sumgrades) ? `${getGrade()}/${maxgrade}` : '未评分'}
                 </div >
                 :
                 '未评分'}

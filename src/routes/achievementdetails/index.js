@@ -9,7 +9,7 @@ import styles from './index.less';
 
 const PrefixCls = 'achievementdetails';
 const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => {
-  const { gradeItems, refreshing, scrollerTop, grade: coursegrade = 0, courseid: retrunCourseid = '', coursename } = achievementdetails,
+  const { gradeItems, refreshing, scrollerTop, courseid: retrunCourseid = '', coursename } = achievementdetails,
     { groups } = app,
     { name, grade, courseid } = location.query,
     getGroups = (group, id) => {
@@ -37,24 +37,24 @@ const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => 
       }
     };
   return (
-    <div>
+    <div >
       <Photoheader hasBg={false} dispatch={dispatch} size="lg" />
-      <div className={styles[`${PrefixCls}-outer`]}>
-        <div className={styles[`${PrefixCls}-outer-head`]}>
-          <div className={styles[`${PrefixCls}-outer-head-info`]}>
-            <div className={styles[`${PrefixCls}-outer-head-info-title`]}>{name || coursename}</div>
+      <div className={styles[`${PrefixCls}-outer`]} >
+        <div className={styles[`${PrefixCls}-outer-head`]} >
+          <div className={styles[`${PrefixCls}-outer-head-info`]} >
+            <div className={styles[`${PrefixCls}-outer-head-info-title`]} >{name || coursename}</div >
             <div
               className={styles[`${PrefixCls}-outer-head-info-group`]}
-            >{getGroups(groups, courseid || retrunCourseid)}</div>
-          </div>
-          <div className={styles[`${PrefixCls}-outer-head-achievement`]}>
-            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]}>{`${grade || coursegrade}`}</div>
-            <div className={styles[`${PrefixCls}-outer-head-achievement-text`]}>我的得分</div>
-          </div>
-        </div>
-      </div>
+            >{getGroups(groups, courseid || retrunCourseid)}</div >
+          </div >
+          <div className={styles[`${PrefixCls}-outer-head-achievement`]} >
+            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]} >{`${grade}`}</div >
+            <div className={styles[`${PrefixCls}-outer-head-achievement-text`]} >我的得分</div >
+          </div >
+        </div >
+      </div >
       <WhiteSpace />
-      <div className={styles[`${PrefixCls}-outer-list`]}>
+      <div className={styles[`${PrefixCls}-outer-list`]} >
         <Refresh
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -64,9 +64,9 @@ const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => 
           {cnIsArray(gradeItems) && gradeItems.map((item) => {
             return achievementDetailsRow(item, handlerGradeItemClick, dispatch);
           })}
-        </Refresh>
-      </div>
-    </div>
+        </Refresh >
+      </div >
+    </div >
   );
 };
 export default connect(({ loading, achievementdetails, app }) => ({

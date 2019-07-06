@@ -53,7 +53,8 @@ export default {
     updates: {},
     groups: [],
     contacts: [],
-    showBackModal: false
+    showBackModal: false,
+    downloadProgress: 0
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {

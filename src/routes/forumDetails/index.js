@@ -3,7 +3,7 @@ import Nav from 'components/nav';
 import { connect } from 'dva';
 import { Badge, Icon, List, Layout, NoticeBar, WhiteSpace } from 'components';
 import Enclosure from 'components/enclosure';
-import { getImages, getLocalIcon, getCommonDate } from 'utils';
+import { getImages, getLocalIcon, getCommonDate, getErrorImg } from 'utils';
 import InnerHtml from 'components/innerhtml';
 import TitleBox from 'components/titlecontainer';
 import { handlerChangeRouteClick, handlerDivInnerHTMLClick } from 'utils/commonevents';
@@ -62,7 +62,7 @@ class ForumDetails extends React.Component {
         }
         <div className={styles[`${PrefixCls}-master`]} >
           <div className={styles[`${PrefixCls}-master-man`]} >
-            <img src={getImages(parent.userpictureurl, '')} />
+            <img src={getImages(parent.userpictureurl, '')} onError={(el => getErrorImg(el, 'user'))} />
             <span >
               <span className={styles[`${PrefixCls}-master-man-username`]} >{parent.userfullname}</span >
               <span className={styles[`${PrefixCls}-master-man-time`]} >{getCommonDate(parent.created)}</span >

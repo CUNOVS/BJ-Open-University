@@ -19,10 +19,18 @@ function Mine ({ location, dispatch, mine, app }) {
         pathname: '/login',
       }));
     },
+    getContent = (content) => {
+      return (
+        <div
+          style={{ maxHeight: '60vh', overflowY: 'scroll', textAlign: 'left' }}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      );
+    },
     handleUpdateClick = (urls, appVerSion, updateInfo) => {
       if (cnIsAndroid()) {
         if (urls !== '') {
-          Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
+          Modal.alert(`版本更新(${appVerSion})`, getContent(updateInfo), [
             {
               text: '暂不升级',
               onPress: () => this.props.dispatch({
@@ -49,15 +57,8 @@ function Mine ({ location, dispatch, mine, app }) {
             <div className={styles[`${PrefixCls}-top-content-info-username`]} onClick={isLogin ? null : handleLogin} >
               {isLogin ? username : '登录'}
             </div >
-            <Button
-              onClick={handlerChangeRouteClick.bind(null, 'medalList', { name: '勋章' }, dispatch)}
-              type="ghost"
-              inline
-              size="small"
-              style={{ color: '#fff', borderColor: '#ff9a1b', padding: '0 6px' }}
-              icon={<Icon type={getLocalIcon('/mine/chapters.svg')} color="#ff9a1b" size="xs" />
-              }
-            >勋章</Button >
+            <div >
+            </div >
           </div >
         </div >
         <div className={styles[`${PrefixCls}-top-homepage`]} >
@@ -104,7 +105,7 @@ function Mine ({ location, dispatch, mine, app }) {
             使用帮助
           </List.Item >
           <List.Item
-            thumb={<Icon type={getLocalIcon('/mine/help.svg')} />}
+            thumb={<Icon type={getLocalIcon('/mine/edition.svg')} />}
             extra={appVerSion}
             onClick={handleUpdateClick.bind(null, urls, appVerSion, updateInfo)}
           >

@@ -12,6 +12,18 @@
   white-space: nowrap;
 }
 
+.twoLine {
+  margin-bottom: 20px;
+  font-size: @titleFontSize;
+  color: @color-text-base;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .listContent {
   font-size: @mediumFontSize;
   color: @color-text-paragraph;
@@ -156,6 +168,21 @@
       margin-right: 10px;
     }
   }
+
+  &-available {
+    font-size: @smallFontSize;
+    color: #c83737;
+    margin-top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    p, h1, h2, h3, h4, h5, h6, ul, strong, span {
+      margin: 0;
+      font-size: @smallFontSize !important;
+      opacity: 0.7;
+    }
+  }
 }
 
 // taskRow End
@@ -170,7 +197,12 @@
   -moz-box-shadow: @list-shadow;
   box-shadow: @list-shadow;
   margin-bottom: @list-bottom;
-  display: flex;
+  &-title {
+    .twoLine;
+  }
+  &-container {
+    display: flex;
+  }
   &-img {
     .background;
   }
@@ -181,9 +213,6 @@
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
-    &-title {
-      .listTitle;
-    }
     &-teacher, &-time {
       .listContent;
       .textOverflow;
@@ -205,8 +234,13 @@
   -webkit-box-shadow: @list-shadow;
   -moz-box-shadow: @list-shadow;
   box-shadow: @list-shadow;
-  display: flex;
   margin-bottom: 20px;
+  &-title {
+    .twoLine;
+  }
+  &-container{
+    display: flex;
+  }
   &-img {
     .background;
   }
@@ -216,9 +250,6 @@
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
-    &-title {
-      .listTitle;
-    }
     &-teacher {
       .listContent;
       .textOverflow;
@@ -242,7 +273,9 @@
   -moz-box-shadow: @list-shadow;
   box-shadow: @list-shadow;
   margin-bottom: 20px;
-
+  &-title {
+    .twoLine;
+  }
   &-progress {
     padding: 18px 0;
     display: flex;
@@ -285,9 +318,6 @@
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
-    &-title {
-      .listTitle;
-    }
     &-teacher, &-time {
       .listContent;
       .textOverflow;
@@ -321,9 +351,14 @@
 
 .@{PrefixCls}-achievement {
   padding: 20px 30px;
-  display: flex;
   margin-bottom: 20px;
   background: #fff;
+  &-title {
+    .twoLine;
+  }
+  &-container{
+    display: flex;
+  }
   &-content {
     display: flex;
     width: 100%;
@@ -331,9 +366,6 @@
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
-    &-title {
-      .listTitle;
-    }
 
     &-status {
       display: flex;
@@ -349,11 +381,8 @@
     }
   }
   &-grade {
-    font-size: @smallFontSize;
-    margin-top: 10px;
+    font-size: @mediumFontSize;
     color: @color-text-paragraph;
-    display: flex;
-    justify-content: space-between;
   }
 }
 
@@ -368,7 +397,7 @@
       font-size: @mediumFontSize;
     }
     .am-card-header-content {
-      color:@primary-color;
+      color: @primary-color;
     }
   }
 }
@@ -614,7 +643,7 @@
     font-size: @smallFontSize;
     color: @primary-color;
   }
-  &-more{
+  &-more {
     font-size: @smallFontSize;
     color: @primary-color;
   }
@@ -676,11 +705,15 @@
 }
 
 .@{PrefixCls}-attendanceRow {
-  display: flex;
   background: #fff;
   margin-bottom: 20px;
   padding: 20px 30px;
-
+  &-title {
+    .twoLine;
+  }
+  &-container{
+    display: flex;
+  }
   &-content {
     display: flex;
     width: 100%;
@@ -688,9 +721,6 @@
     flex-direction: column;
     justify-content: space-around;
     .textOverflow;
-    &-title {
-      .listTitle;
-    }
 
     &-status {
       display: flex;

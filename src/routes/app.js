@@ -10,7 +10,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { classnames, config, getLocalIcon } from 'utils';
 import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
-import { Loader, TabBar, Icon, Modal } from 'components';
+import { Loader, TabBar, Icon, Modal, ActivityIndicator } from 'components';
 import './app.less';
 
 let lastHref,
@@ -25,12 +25,20 @@ const appendIcon = (tar, i) => {
   }
   return tar;
 };
+const getContent = (content) => {
+  return (
+    <div
+      style={{ maxHeight: '60vh', overflowY: 'scroll', textAlign: 'left' }}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  );
+};
 let tabBars = defaultTabBars;
 tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
 
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { updates: { upgraded = false, urls = '', appVerSion, updateInfo }, showModal } = app;
+  const { updates: { upgraded = false, urls = '', appVerSion, updateInfo }, showModal, downloadProgress } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -61,12 +69,12 @@ const App = ({ children, dispatch, app, loading, location }) => {
         footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
       >
         <div >
-          {updateInfo || cnVersionInfo.content}
+          {getContent(updateInfo) || cnVersionInfo.content}
         </div >
       </Modal >);
     }
     if (isFirst && url !== '') {
-      Modal.alert(appVerSion || cnVersionInfo.title, updateInfo || cnVersionInfo.content, [
+      Modal.alert(appVerSion || cnVersionInfo.title, getContent(updateInfo) || cnVersionInfo.content, [
         {
           text: '暂不升级',
           onPress: () => dispatch({
@@ -86,6 +94,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
     return (<div >
       <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
       {children}
+      <ActivityIndicator
+        toast
+        text={downloadProgress}
+        animating={downloadProgress !== 0}
+      />
     </div >);
   }
 
@@ -140,10 +153,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
 
 App.propTypes = {
   children: PropTypes.element.isRequired,
-  location: PropTypes.object,
   dispatch: PropTypes.func,
-  app: PropTypes.object,
-  loading: PropTypes.object,
   icon: PropTypes.string,
 };
 

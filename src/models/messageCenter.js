@@ -3,21 +3,27 @@ import { model } from 'models/common';
 import { Toast } from 'components';
 import * as query from 'services/message';
 
-const namespace = 'messageCenter';
-
+const namespace = 'messageCenter',
+  getDefaultPaginations = () => ({
+    sysNowPage: 1,
+    sysPageSize: 10,
+    sysTotal: 0
+  });
 export default modelExtend(model, {
   namespace,
   state: {
     count: {},
     talkList: [],
     messageList: [],
+    sysList: [],
     selectIndex: 0,
     nowPage: 0,
     readstart: 0,
     unreadstart: 0,
     hasMore: false,
     isReload: false,
-    type: 'queryMessage'
+    type: 'queryMessage',
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
@@ -33,7 +39,8 @@ export default modelExtend(model, {
               nowPage: 0,
               readstart: 0,
               unreadstart: 0,
-              type: 'queryMessage'
+              type: 'queryMessage',
+              paginations: getDefaultPaginations()
             }
           });
           dispatch({
@@ -132,6 +139,32 @@ export default modelExtend(model, {
         }
       } else {
         Toast.fail(result.message || '未知错误');
+      }
+      if (callback) {
+        callback();
+      }
+    },
+    * querySysNotice ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        { paginations: { sysNowPage, sysPageSize }, sysList } = _this,
+        start = isRefresh ? 1 : sysNowPage,
+        result = yield call(query.querySysNotice, { nowPage: start, pageSize: sysPageSize });
+      if (result) {
+        let { data = [], totalCount = 0 } = result,
+          newLists = [];
+        newLists = start == 1 ? data : [...sysList, ...data];
+        yield put({
+          type: 'updateState',
+          payload: {
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              sysNowPage: start + 1
+            },
+            sysList: newLists
+          },
+        });
       }
       if (callback) {
         callback();

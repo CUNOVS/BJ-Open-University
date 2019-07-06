@@ -4,8 +4,7 @@
  * @Description:
  */
 import React from 'react';
-import propTypes from 'prop-types';
-import { handlerCourseClick, handlerDivInnerHTMLClick } from 'utils/commonevents';
+import { handlerCourseClick, handlerDivInnerHTMLClick, handlerChangeRouteClick } from 'utils/commonevents';
 import { getOffsetTopByBody, getLocalIcon, getImages, pattern } from 'utils';
 import InnerHtml from 'components/innerhtml';
 import Checkbox from 'components/checkbox';
@@ -24,6 +23,10 @@ const LessonItem = (props) => {
     handDivClick = (e) => {
       e.stopPropagation();
       handlerDivInnerHTMLClick(e, courseid, dispatch);
+    },
+    handlerDiscriptionClick = (e) => {
+      e.stopPropagation();
+      handlerChangeRouteClick('details', { name: '描述详情', type: 'discription', content: description }, dispatch);
     };
   if (modname !== 'label') {
     return (
@@ -51,9 +54,20 @@ const LessonItem = (props) => {
             }
           </div >
         </div >
-        {description ? <div className={styles[`${PrefixCls}-outer-describe`]} >
-          <div dangerouslySetInnerHTML={{ __html: description }} onClick={handDivClick} />
-        </div > : ''}
+        {
+          description ?
+            <div className={styles[`${PrefixCls}-outer-describe`]} >
+              <div
+                dangerouslySetInnerHTML={{ __html: description }}
+                onClick={(e) => handlerDiscriptionClick(e)}
+              />
+              <div className={styles[`${PrefixCls}-outer-describe-mask`]} onClick={(e) => handlerDiscriptionClick(e)}>
+                查看详情...
+              </div>
+            </div >
+            :
+            ''
+        }
         {availabilityinfo !== '' ?
           <div
             className={styles[`${PrefixCls}-outer-available`]}

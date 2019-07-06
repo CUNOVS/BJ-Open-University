@@ -76,7 +76,7 @@ module.exports = {
       const weightValue = choice.split(questionTpye.MULTICHOICERATED_VALUE_SEP) || [''];
       choice = weightValue.length == 1 ? weightValue[0] : `(${weightValue[0]}) ${weightValue[1]}`;
 
-      return { value: index + 1, label: choice };
+      return { value: index + 1, label: choice, id: `${item.id}_${index}` };
     });
 
     if (item.subtype == 'r' && item.options.search(questionTpye.MULTICHOICE_HIDENOSELECT) === -1) {

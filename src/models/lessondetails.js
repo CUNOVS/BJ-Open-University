@@ -117,18 +117,20 @@ export default modelExtend(model, {
 
     * queryUrl ({ payload }, { call, put, select }) {
       const { dispatch = '', cmid = '', courseid = '', name = '', ...param } = payload,
-        { success, message = '获取失败', data = [{}] } = yield call(url, {
+        { success, message = '获取失败', data = [] } = yield call(url, {
           cmid,
           courseid,
           name,
           ...param
         }),
         targets = {};
-      if (success && dispatch) {
-        const { id: urlId = '', content = [], cmid: ccmId = '', ...otherDatas } = data[0];
-        handlerCourseClick({ content, ...otherDatas, id: ccmId }, courseid, dispatch);
-      } else {
-        Toast.fail(message);
+      if (data.length) {
+        if (success && dispatch) {
+          const { id: urlId = '', content = [], cmid: ccmId = '', ...otherDatas } = data[0];
+          handlerCourseClick({ content, ...otherDatas, id: ccmId }, courseid, dispatch);
+        } else {
+          Toast.fail(message);
+        }
       }
     },
     * queryResource ({ payload }, { call, put, select }) {

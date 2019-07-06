@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
+import { FormRadio, FormCheckBox } from 'components/formtags';
 import {
   List,
   Button,
@@ -14,8 +15,6 @@ import {
   TextareaItem,
   Card,
   Icon,
-  Radio,
-  Checkbox,
   Modal
 } from 'components';
 import { routerRedux } from 'dva/router';
@@ -27,9 +26,7 @@ import styles from './index.less';
 const alert = Modal.alert;
 const PrefixCls = 'feedbackdetails',
   Item = List.Item,
-  Brief = Item.Brief,
-  RadioItem = Radio.RadioItem,
-  CheckboxItem = Checkbox.CheckboxItem;
+  Brief = Item.Brief;
 
 class FeedBackDetails extends Component {
   constructor (props) {
@@ -45,13 +42,11 @@ class FeedBackDetails extends Component {
     });
   }
 
-  onSubmit = (questions, id) => {
+  onSubmit = (id) => {
     const { page } = this.props.feedbackdetails;
-    this.props.form.validateFields({
-      force: true,
-    }, (error) => {
+    this.props.form.validateFields((error, values) => {
       if (!error) {
-        const data = this.getSubmitVal(this.getPageItemsResponses(questions));
+        const data = this.checkFieldValues(values);
         this.props.dispatch({
           type: 'feedbackdetails/sendFeedBack',
           payload: {
@@ -61,6 +56,7 @@ class FeedBackDetails extends Component {
           }
         });
       } else {
+        this.scrollToField(error);
         Toast.fail('请检查表单');
       }
     });
@@ -77,85 +73,93 @@ class FeedBackDetails extends Component {
     dispatch(routerRedux.goBack());
   };
 
-  getSubmitVal = (data) => {
-    const obj = {};
-    Object.keys(data)
-      .forEach((key, i) => {
-        obj[`responses[${i}][name]`] = key;
-        obj[`responses[${i}][value]`] = data[key];
-      });
-    return obj;
-  };
-
-  getPageItemsResponses = (items) => {
-    const responses = {};
-
-    items.forEach((itemData) => {
-      if (itemData.hasvalue) {
-        let name,
-          value;
-        const nameTemp = `${itemData.typ}_${itemData.id}`;
-
-        if (itemData.typ == 'multichoice' && itemData.subtype == 'c') {
-          name = `${nameTemp}[0]`;
-          responses[name] = 0;
-          itemData.choices.forEach((choice, index) => {
-            name = `${nameTemp}[${index + 1}]`;
-            value = choice.checked ? choice.value : 0;
-            responses[name] = value;
-          });
-        } else {
-          if (itemData.typ == 'multichoice' && itemData.subtype != 'r') {
-            name = `${nameTemp}[0]`;
-          } else {
-            name = nameTemp;
+  complete = (values = '') => {
+    const { id } = this.props.location.query,
+      doComplete = () => {
+        this.props.dispatch({
+          type: 'feedbackdetails/completeFeedBack',
+          payload: {
+            feedbackid: id
           }
-
-          if (itemData.typ === 'multichoice' || itemData.typ === 'multichoicerated') {
-            value = itemData.value || 0;
-          } else if (itemData.typ === 'numeric') {
-            value = itemData.value || itemData.value == 0 ? itemData.value : '';
-
-            if (value !== '') {
-              if ((itemData.rangefrom != '' && value < itemData.rangefrom) ||
-                (itemData.rangeto != '' && value > itemData.rangeto)) {
-              }
-            }
-          } else {
-            value = itemData.value || itemData.value == 0 ? itemData.value : '';
-          }
-
-          responses[name] = value;
+        });
+      };
+    if (values) {
+      const { page } = this.props.feedbackdetails;
+      this.props.dispatch({
+        type: 'feedbackdetails/sendFeedBack',
+        payload: {
+          ...values,
+          feedbackid: id,
+          page
+        },
+        callback: () => {
+          doComplete();
         }
-      }
-    });
-
-    return responses;
+      });
+    } else {
+      doComplete();
+    }
   };
 
-  complete = () => {
-    const { id } = this.props.location.query;
-    this.props.dispatch({
-      type: 'feedbackdetails/completeFeedBack',
-      payload: {
-        feedbackid: id
-      }
+  checkFieldValues = (values) => {
+    let result = {},
+      startIndex = 0;
+    const { questions } = this.props.feedbackdetails,
+      questionsRquired = {};
+    questions.map(question => {
+      const { typ = '', required = false, id } = question;
+      questionsRquired[`${typ}_${id}`] = required;
     });
+    Object.keys(values)
+      .map(attVal => {
+        const value = values[attVal];
+        if (cnIsArray(value)) {
+          result[`responses[${startIndex}][name]`] = attVal + '[0]';
+          result[`responses[${startIndex++}][value]`] = value.length > 0 ? value[0] : 0;
+        } else if (typeof value === 'object') {
+          Object.keys(value)
+            .map((attChild, index) => {
+              if (index === 0) {
+                result[`responses[${startIndex}][name]`] = attVal + '[0]';
+                result[`responses[${startIndex++}][value]`] = 0;
+              }
+              result[`responses[${startIndex}][name]`] = attVal + `[${index + 1}]`;
+              result[`responses[${startIndex++}][value]`] = value[attChild] === true ? index + 1 : 0;
+            });
+        } else {
+          const isRadio = /^(multichoice|multichoicerated)_/.test(attVal);
+          result[`responses[${startIndex}][name]`] = attVal + `${isRadio && questionsRquired[attVal] === true ? '[0]' : ''}`;
+          result[`responses[${startIndex++}][value]`] = value === '' && isRadio ? 0 : value;
+        }
+      });
+    return result;
+  };
+
+  scrollToField = (error) => {
+    const { errors = [{}] } = error[Object.keys(error)[0]],
+      { field } = errors[0];
+    let fieldEl = '';
+    if (field && (fieldEl = document.getElementById(`${PrefixCls}_${field}`))) {
+      fieldEl.scrollIntoView(false);
+    }
   };
 
   showModal = () => {
-    const { questions } = this.props.feedbackdetails;
-    const { id } = this.props.location.query;
     this.props.form.validateFields({
-      force: false,
-    }, (error) => {
+      force: true,
+    }, (error, values) => {
       if (!error) {
-        this.onSubmit(questions, id);
         alert('提交', '确定要提交吗???', [
           { text: '取消', onPress: () => console.log('ok') },
-          { text: '提交', onPress: () => this.complete() },
+          {
+            text: '提交', onPress: () => {
+              //console.log(this.checkFieldValues(values));
+              this.complete(this.checkFieldValues(values));
+            }
+          },
         ]);
       } else {
+        this.scrollToField(error);
         Toast.fail('您的回答中存在未填项');
       }
     });
@@ -179,7 +183,7 @@ class FeedBackDetails extends Component {
             page
           }
         });
-        this.onSubmit(questions, id);
+        this.onSubmit(id);
       } else {
 
       }
@@ -189,7 +193,7 @@ class FeedBackDetails extends Component {
   handlerPrevClick = () => {
     const { page, questions } = this.props.feedbackdetails;
     const { id } = this.props.location.query;
-    this.onSubmit(questions, id);
+    this.onSubmit(id);
     this.props.dispatch({
       type: 'feedbackdetails/updateState',
       payload: {
@@ -262,294 +266,182 @@ class FeedBackDetails extends Component {
     ]);
   };
 
-  renderQuestions = (questions) => {
-    const { getFieldProps, getFieldError } = this.props.form;
-    const result = [];
-    questions && questions.map((item) => {
-      const { typ = '', name = '', otherdata = '', required = false, presentation = '', responsevalue = '', choices = [], template = '', id, value = '', rangefrom = '', rangeto = '' } = item;
-      if (typ === 'info') {
-        result.push(
-          <List key={id} className={styles.info} >
-            <Item multipleLine >
-              {name} <Brief >{otherdata}</Brief >
-            </Item >
-          </List >
-        );
+  renderCard = (key, header, content) => {
+    const { getFieldError } = this.props.form,
+      errors = getFieldError(key);
+    return (
+      <div id={`${PrefixCls}_${key}`}
+           className={`${styles[`${PrefixCls}-list`]} ${errors ? styles[`${PrefixCls}-hasError`] : ''}`}>
+        <WingBlank size="sm">
+          <Card>
+            <Card.Header
+              title={header}
+            />
+            <Card.Body>
+              {content}
+            </Card.Body>
+            <Card.Footer
+              content={errors}
+            />
+          </Card>
+        </WingBlank>
+      </div>);
+  };
+
+  renderQuestions = (questions = []) => {
+    const { getFieldDecorator, getFieldError } = this.props.form,
+      result = [],
+      questionsRquired = {};
+    questions.map((question, index) => {
+      const { typ = '', name = '', otherdata = '', required = false, presentation = '', choices = [], template = '', id, value = '' } = question;
+      let questionKey = `${typ}_${id}`,
+        questionRules = [],
+        questionError = getFieldError(questionKey);
+      questionsRquired[questionKey] = required;
+      if (required === true) {
+        questionRules.push({ required, message: '标记*的题必须回答' });
       }
-      if (typ === 'textfield') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                <InputItem
-                  {...getFieldProps(`${typ}_${id}`, {
-                    initialValue: value,
-                    rules: [
-                      { required, message: '标记*的题必须回答' },
-                    ],
-                  })}
-                  onChange={(val) => this.textChange(val, id)}
-                  maxLength={presentation.split('|')[1]}
-                  clear
-                  error={!!getFieldError(`${typ}_${id}`)}
-                  placeholder="请回答"
-                />
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'numeric') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={
-                  <span >
-                    <span >{this.renderTitle(name, required)}</span >
-                    <span style={{ marginLeft: '10px' }} >
-                      {`(${rangefrom}~${rangeto})`}
-                    </span >
-                  </span >
+      switch (typ) {
+        case 'info':
+          result.push(
+            <List key={questionKey} className={styles.info}>
+              <Item multipleLine>
+                {name} <Brief>{otherdata}</Brief>
+              </Item>
+            </List>
+          );
+          result.push(<WhiteSpace/>);
+          break;
+        case 'textfield':
+          result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+            initialValue: value, // 初始值
+            rules: questionRules,
+          })(
+            <InputItem
+              placeholder="请回答"
+              maxLength={presentation.split('|')[1]}
+            />
+          )));
+          result.push(<WhiteSpace/>);
+          break;
+        case 'textarea':
+          result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+            initialValue: value, // 初始值
+            rules: questionRules,
+          })(
+            <TextareaItem
+              rows={6}
+              placeholder={'在此输入回答'}
+            />
+          ), questionError));
+          result.push(<WhiteSpace/>);
+          break;
+        case 'numeric':
+          const presentations = presentation.split('|');
+          let numericTitle = this.renderTitle(name, required);
+          if (presentations.length === 2) {
+            const minSum = presentations[0] !== '' ? presentations[0] * 1 : -1,
+              maxSum = presentations[1] !== '' ? presentations[1] * 1 : -1;
+            if (minSum !== -1 && maxSum !== -1 && maxSum > minSum) {
+              questionRules.push({
+                validator: (rule, val, callback) => {
+                  let message = '';
+                  if (required === true ? true : val !== '') {
+                    if (!/^[\d]+$/.exec(val)) {
+                      message = '输入值必须为整数';
+                    } else if (val < minSum || val > maxSum) {
+                      message = `输入值应在${minSum}~${maxSum}之间`;
+                    }
+                  }
+                  callback(message === '' ? [] : message);
                 }
-              />
-              <Card.Body >
-                <InputItem
-                  {...getFieldProps(`${typ}_${id}`, {
-                    initialValue: value,
-                    rules: [
-                      { required, message: '标记*的题必须回答' },
-                      { pattern: /^(?:0|[1-9][0-9]?|100)$/, message: '输入超出范围' },
-                    ],
-                  })}
-                  onChange={(val) => this.textChange(val * 1, id)}
-                  clear
-                  error={!!getFieldError(`${typ}_${id}`)}
-                  onErrorClick={() => {
-                    Toast.fail(getFieldError(`${typ}_${id}`));
-                  }}
-                  placeholder="请回答"
-                />
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'label') {
-        result.push(<div className={styles.label} ><InnerHtml data={presentation} /></div >);
-      }
-      if (typ === 'multichoice' && template !== 'multichoice-c' && template !== 'multichoice-d') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                {cnIsArray(choices) && choices
-                  .map((item, i) => (
-                    <RadioItem
-                      {...getFieldProps(`${typ}_${id}`, {
-                        initialValue: value * 1,
-                        rules: [
-                          { required: false, message: '标记*的题必须回答' },
-                        ],
-                      })}
-                      wrap
-                      key={item.value}
-                      checked={value * 1 === item.value}
-                      onClick={() => this.radioChange(item.value, id)}
-                    >
-                      {item.label}
-                    </RadioItem >
-                  ))}
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'multichoice' && template === 'multichoice-c') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                <List className={styles.list} >
-                  {cnIsArray(choices) && choices
-                    .map((item, i) => (
-                      <CheckboxItem
-                        wrap
-                        {...getFieldProps(`${typ}_${id}`)}
-                        checked={item.checked}
-                        onChange={(val) => this.checkboxChange(item.value, id)}
-                        value={item.value + 1}
-                        key={item.value}
-                      >
-                        {item.label}
-                      </CheckboxItem >
-                    ))}
-                </List >
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-        return false;
-      }
-      if (typ === 'multichoice' && template === 'multichoice-d') {
-        result.push(
-          <div key={item.id} className={styles.picker} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                <Picker
-                  {...getFieldProps(`${typ}_${id}`, {
-                    initialValue: [value * 1],
-                    rules: [
-                      { required, message: '标记*的题必须回答' },
-                    ],
-                  })}
-                  onChange={(val) => this.pickerChange(val, id)}
-                  data={choices}
-                  cols={1}
-                  title={item.label}
-                  extra="请选择(可选)"
-                >
-                  <List.Item arrow="horizontal" >{''}</List.Item >
-                </Picker >
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'multichoicerated' && template !== 'multichoice-d') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                {cnIsArray(choices) && choices
-                  .map((item, i) => (
-                    <RadioItem
-                      {...getFieldProps(`${typ}_${id}`, {
-                        initialValue: value * 1,
-                        rules: [
-                          { required, message: '标记*的题必须回答' },
-                        ],
-                      })}
-                      key={item.value}
-                      checked={value * 1 === item.value}
-                      onClick={() => this.radioChange(item.value, id)}
-                    >
-                      {item.label}
-                    </RadioItem >
-                  ))}
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'multichoicerated' && template === 'multichoice-d') {
-        result.push(
-          <div key={item.id} className={styles.picker} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                <Picker
-                  {...getFieldProps(`${typ}_${id}`, {
-                    initialValue: [value * 1],
-                    rules: [
-                      { required, message: '标记*的题必须回答' },
-                    ],
-                  })}
-                  onChange={(val) => this.pickerChange(val, id)}
-                  data={choices}
-                  cols={1}
-                  title={item.label}
-                  extra="请选择(可选)"
-                >
-                  <List.Item arrow="horizontal" >{''}</List.Item >
-                </Picker >
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
-      }
-      if (typ === 'textarea') {
-        result.push(
-          <div key={item.id} >
-            <Card full >
-              <Card.Header
-                title={this.renderTitle(name, required)}
-              />
-              <Card.Body >
-                <TextareaItem
-                  {...getFieldProps(`${typ}_${id}`, {
-                    initialValue: value,
-                    rules: [{ required, message: '标记*的题必须回答' }],
-                  })}
-                  onChange={(val) => this.textChange(val, id)}
-                  rows={6}
-                  placeholder={'在此输入回答'}
-                />
-              </Card.Body >
-            </Card >
-            <WhiteSpace />
-          </div >
-        );
+              });
+              numericTitle = (<span>
+                    <span>{numericTitle}</span>
+                    <span style={{ marginLeft: '10px' }}>
+                      {`(${minSum}~${maxSum})`}
+                    </span>
+                  </span>);
+            }
+          }
+          result.push(this.renderCard(questionKey, numericTitle, getFieldDecorator(questionKey, {
+            initialValue: value * 1 || '', // 初始值
+            rules: questionRules,
+          })(
+            <InputItem
+              type={'money'}
+              placeholder="请回答"
+            />
+          )));
+          result.push(<WhiteSpace/>);
+          break;
+        case 'label':
+          result.push(<div className={styles.label}><InnerHtml data={presentation}/></div>);
+          break;
+        case 'multichoice':
+        case 'multichoicerated':
+          const items = choices.filter(c => (required === true ? c.value !== 0 : true));
+          if (template === 'multichoice-c') {
+            result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+              initialValue: '', // 初始值
+              rules: questionRules,
+            })(
+              <FormCheckBox items={choices} label={question.label} keys={`comp_${questionKey}`}/>
+            )));
+            result.push(<WhiteSpace/>);
+          } else if (template === 'multichoice-r') {
+            result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+              initialValue: '', // 初始值
+              rules: questionRules,
+            })(
+              <FormRadio items={items} label={question.label} keys={`comp_${questionKey}`}/>
+            )));
+          } else if (template === 'multichoice-d') {
+            result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+              initialValue: [], // 初始值
+              rules: questionRules,
+            })(
+              <Picker data={items} cols={1}>
+                <List.Item arrow="horizontal" wrap>{question.label}</List.Item>
+              </Picker>
+            )));
+          }
+          result.push(<WhiteSpace/>);
+          break;
       }
     });
     return result;
   };
 
   renderTitle = (name, required) => (
-    <span >
-      {required ? <Icon type={getLocalIcon('/components/required.svg')} /> : null}
-      <span >{name}</span >
-    </span >
+    <span>
+      {required ? <Icon type={getLocalIcon('/components/required.svg')}/> : null}
+      <span>{name}</span>
+    </span>
   );
 
   render () {
     const { name = '答题', anonymous = 1, id = '' } = this.props.location.query,
       { questions, hasprevpage, hasnextpage, page } = this.props.feedbackdetails;
     const { showBackModal = false } = this.props.app;
-    console.log(showBackModal);
+    //anonymous变为了字符"1"
     return (
-      <div >
-        <Nav title={name} dispatch={this.props.dispatch} hasShadow isAlert />
-        <div className={styles[`${PrefixCls}-type`]} >
-          <TitleBox title="模式" sup="" />
-          <p >{anonymous === 1 ? '匿名方式' : '实名方式'}</p >
-        </div >
-        <form className={styles.outer} >
-          {this.renderQuestions(questions)}
-        </form >
-        <WingBlank >
-          <div className={styles.button} >
+      <div>
+        <Nav title={name} dispatch={this.props.dispatch} hasShadow isAlert/>
+        <div className={styles[`${PrefixCls}-type`]}>
+          <TitleBox title="模式" sup=""/>
+          <p>{anonymous == 1 ? '匿名方式' : '实名方式'}</p>
+        </div>
+        {this.renderQuestions(questions)}
+        <WingBlank>
+          <div className={styles.button}>
             {
               hasprevpage ?
                 <Button
                   onClick={this.handlerPrevClick}
                 >
                   上一页
-                </Button >
+                </Button>
                 :
                 null
             }
@@ -559,7 +451,7 @@ class FeedBackDetails extends Component {
                   type="primary"
                   onClick={this.handlerNextClick}
                 >下一页
-                </Button >
+                </Button>
                 :
                 <Button
                   style={{ marginTop: '10px' }}
@@ -567,12 +459,12 @@ class FeedBackDetails extends Component {
                   onClick={() => this.showModal()}
                 >
                   提交答案
-                </Button >
+                </Button>
             }
-          </div >
-        </WingBlank >
+          </div>
+        </WingBlank>
         {showBackModal && this.showBackMoadl()}
-      </div >
+      </div>
     );
   }
 }

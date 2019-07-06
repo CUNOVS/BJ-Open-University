@@ -21,16 +21,16 @@ class NoContent extends React.Component {
   componentDidMount () {
     const element = ReactDOM.findDOMNode(this.lv);
     const currentHeight = getOffsetTopByBody(element);
-    this.setState({
-      height: cnhtmlHeight - currentHeight,
-    });
+    this.setState((state) => ({
+      height: state.height - currentHeight,
+    }));
   }
 
   render () {
     return (
-      <div ref={el => this.lv = el} style={{ textAlign: 'center', paddingTop: '50px', height: this.state.height }} >
+      <div ref={el => this.lv = el} className={styles.outer} style={{ height: this.state.height }} >
         <img style={{ width: '60px' }} src={this.props.images} alt="" />
-        <p className={styles.content}>{this.props.context}</p >
+        <p className={styles.content} >{this.props.context}</p >
       </div >
     );
   }

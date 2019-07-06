@@ -6,7 +6,7 @@ import { List, Badge, Icon, Tabs } from 'antd-mobile';
 import ReactDOM from 'react-dom';
 import ListView from 'components/listview';
 import { handlerMessageClick, handlerChangeRouteClick } from 'utils/commonevents';
-import { messageListRow, messageRow } from 'components/row';
+import { messageListRow, messageRow, sysNoticeRow } from 'components/row';
 import { ListSkeleton } from 'components/skeleton';
 import { getImages, getLocalIcon, getOffsetTopByBody, getCommonDate, pattern } from 'utils';
 import NoContent from 'components/nocontent';
@@ -19,6 +19,7 @@ const PrefixCls = 'messageCenter',
   messageCenter,
   loadingMessage: loading.effects['messageCenter/queryMessage'],
   loadingTalk: loading.effects['messageCenter/queryTalkMessage'],
+  loadingSys: loading.effects['messageCenter/querySysNotice'],
   app,
 }))
 
@@ -58,34 +59,6 @@ class MessageCenter extends React.Component {
     });
   }
 
-  getSysMessage = (data) => (
-    <div className={styles[`${PrefixCls}-sys`]} style={{ height: this.state.height }} >
-      <div className={styles[`${PrefixCls}-title`]} >
-        <div className={styles[`${PrefixCls}-title-content`]} ><Icon type={getLocalIcon('/conmponents/xiaox.svg')} />通知列表
-        </div >
-        <div
-          style={{ color: this.state.color }}
-          onClick={this.Click.bind(this, this.state.sign)}
-          className={styles[`${PrefixCls}-title-content`]}
-        >全部标记为已读<Icon type={getLocalIcon('/conmponents/check.svg')} />
-        </div >
-      </div >
-      <List className={styles[`${PrefixCls}-zong`]} >
-        {data.map((item, index) => (
-          <Item key={index} onClick={handlerChangeRouteClick} >
-            <div className={styles[`${PrefixCls}-reply`]} >
-              <img src={getImages('', '')} />
-              <div className={styles[`${PrefixCls}-reply-left`]} >
-                <div style={{ fontSize: '0.28rem', color: 'black' }} >系统通知</div >
-                <div className={styles[`${PrefixCls}-twoLine`]} >{item.content}</div >
-              </div >
-            </div >
-          </Item >
-        ))}
-      </List >
-    </div >
-  );
-
   Click = (sign) => {
     if (sign) {
       this.setState({
@@ -101,28 +74,41 @@ class MessageCenter extends React.Component {
   };
 
   render () {
-    const { messageList, talkList, count: { newsCount, noticeCount }, selectIndex = 0, type, scrollerTop, hasMore, isReload } = this.props.messageCenter,
-      { loadingMessage, loadingTalk } = this.props,
+    const { messageList, talkList, sysList, paginations, count: { newsCount, noticeCount }, selectIndex = 0, type, scrollerTop, hasMore, isReload } = this.props.messageCenter,
+      { loadingMessage, loadingTalk, loadingSys } = this.props,
       { users: { userid } } = this.props.app,
       onTabsChange = (tabs, index) => {
+        const currentType = [
+          'queryMessage',
+          'queryTalkMessage',
+          'querySysNotice'
+        ];
         this.props.dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
             selectIndex: index,
-            type: index === 0 ? 'queryMessage' : 'queryTalkMessage',
+            type: currentType[index],
             hasMore: false,
             isRefresh: true,
             talkList: [],
+
           },
         });
         if (index === 1) {
           this.props.dispatch({
             type: `${PrefixCls}/queryTalkMessage`,
-            payload: {}
+            payload: { isRefresh: true }
+          });
+        }
+        if (index === 2) {
+          this.props.dispatch({
+            type: `${PrefixCls}/querySysNotice`,
+            payload: { isRefresh: true }
           });
         }
       },
       onRefresh = (callback) => {
+        console.log(type);
         this.props.dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -199,6 +185,30 @@ class MessageCenter extends React.Component {
         );
 
         return result;
+      },
+      getSysMessage = (lists) => {
+        const { sysNowPage, sysTotal, sysPageSize } = paginations,
+          hasMoreNotice = (sysTotal > 0) && ((sysNowPage > 1 ? sysNowPage - 1 : 1) * sysPageSize < sysTotal),
+          result = [];
+        result.push(
+          <div style={{ padding: '0 12px', marginTop: '10px' }} >
+            <ListView
+              layoutHeader={''}
+              dataSource={lists}
+              layoutRow={(rowData, sectionID, rowID) => {
+                return sysNoticeRow(rowData, sectionID, rowID, handlerChangeRouteClick, this.props.dispatch);
+              }}
+              onEndReached={onEndReached}
+              onRefresh={onRefresh}
+              hasMore={hasMoreNotice}
+              onScrollerTop={onScrollerTop.bind(null)}
+              scrollerTop={scrollerTop}
+              useBodyScroll
+            />,
+          </div >
+        );
+
+        return result;
       };
     return (
       <div >
@@ -216,9 +226,9 @@ class MessageCenter extends React.Component {
           tabBarInactiveTextColor="#b7b7b7"
           tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
           tabs={[
-            { title: <Badge text={`${noticeCount > 0 ? noticeCount : ''}`} >课程活动</Badge >},
-            { title: <Badge text={`${newsCount > 0 ? newsCount : ''}`} >消息</Badge >},
-            { title: <Badge >系统通知</Badge >},
+            { title: <Badge text={`${noticeCount > 0 ? noticeCount : ''}`} >课程活动</Badge > },
+            { title: <Badge text={`${newsCount > 0 ? newsCount : ''}`} >消息</Badge > },
+            { title: <Badge >系统通知</Badge > },
           ]}
         >
           {loadingMessage && !isReload ?
@@ -231,7 +241,14 @@ class MessageCenter extends React.Component {
             :
             <div className={styles.reset} >{talkList.length > 0 ? getTalkMessage(talkList) : <NoContent />}</div >
           }
-          <div className={styles.reset} ><NoContent /></div >
+          {loadingSys && !isReload ?
+            <ListSkeleton />
+            :
+            <div
+              className={styles.reset} >{cnIsArray(sysList.data) && sysList.data.length > 0 ? getSysMessage(sysList.data) :
+              <NoContent />}</div >
+          }
+          {/*<div className={styles.reset} ><NoContent /></div >*/}
         </Tabs >
       </div >
     );

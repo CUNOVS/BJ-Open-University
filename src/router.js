@@ -93,6 +93,24 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'myopinion',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/myopinion'));
+              cb(null, require('routes/myopinion/'));
+            }, 'myopinion');
+          },
+        },
+        {
+          path: 'opiniondetails',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/opiniondetails'));
+              cb(null, require('routes/opiniondetails/'));
+            }, 'opiniondetails');
+          },
+        },
+        {
           path: 'building',
           getComponent (nextState, cb) {
             require.ensure([], (require) => {

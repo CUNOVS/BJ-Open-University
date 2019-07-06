@@ -5,7 +5,12 @@ import { Layout, WhiteSpace, Icon, List, Tabs } from 'components';
 import Refresh from 'components/pulltorefresh';
 import { taskRow, taskLessonRow } from 'components/row';
 import { getLocalIcon } from 'utils';
-import { handlerLessonListClick, handlerChangeRouteClick, handlerCourseClick } from 'utils/commonevents';
+import {
+  handlerLessonListClick,
+  handlerChangeRouteClick,
+  handlerCourseClick,
+  handlerDivInnerHTMLClick
+} from 'utils/commonevents';
 import Notice from 'components/noticebar/index';
 import TimeLine from 'components/timeline/index';
 import NoContent from 'components/nocontent';
@@ -20,12 +25,14 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
   ];
 
   const { Header, BaseLine } = Layout,
-    { taskList, bannerNotice, taskAllList, refreshing = false, selectIndex = 0, count = '' } = dashboard,
-    moreMessage = () => {
+    { taskList, taskAllList, refreshing = false, selectIndex = 0, count = '', sysNotice } = dashboard,
+    moreMessage = (text) => {
       dispatch(routerRedux.push({
-        pathname: '/moreMessage',
+        pathname: '/details',
         query: {
-          name: '通知',
+          type: 'detailsText',
+          content: text,
+          name: '通知详情'
         },
       }));
     },
@@ -59,7 +66,11 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
         count={count}
         handlerClick={handlerChangeRouteClick.bind(null, 'messageCenter', { name: '消息中心' }, dispatch)}
       />
-      <Notice banner={bannerNotice} messageL={moreMessage} />
+      {sysNotice.noticeContent && sysNotice.noticeContent !== '' ?
+        <Notice content={sysNotice.noticeContent} click={() => moreMessage(sysNotice.noticeContent)} />
+        :
+        null
+      }
       <WhiteSpace />
       <Tabs
         tabs={tabs}
@@ -80,7 +91,7 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
               cnIsArray(taskList) && taskList.length > 0 ?
                 <Refresh refreshing={refreshing} onRefresh={onRefresh.bind(null, 'query')} >
                   {taskList.map((item, i) => {
-                    return taskRow(item, handlerCourseClick.bind(null, item, item.courseid, dispatch));
+                    return taskRow(item, handlerCourseClick.bind(null, item, item.courseid, dispatch), (e) => handlerDivInnerHTMLClick(e, item.courseid, dispatch));
                   })}
                   <BaseLine />
                 </Refresh >

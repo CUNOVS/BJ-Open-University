@@ -23,6 +23,7 @@ export default modelExtend(model, {
     taskAllList: [],
     refreshing: false,
     selectIndex: 0,
+    sysNotice: ''
   },
 
   subscriptions: {
@@ -34,6 +35,13 @@ export default modelExtend(model, {
           });
           dispatch({
             type: 'query',
+          });
+          dispatch({
+            type: 'querySysNotice',
+            payload: {
+              nowPage: 1,
+              pageSize: 10
+            }
           });
         }
       });
@@ -81,6 +89,19 @@ export default modelExtend(model, {
         });
       } else {
         Toast.fail(message);
+      }
+    },
+    * querySysNotice ({ payload }, { call, put }) {
+      const { success, data } = yield call(query.querySysNotice, payload);
+      if (success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            sysNotice: data.data[0]
+          }
+        });
+      } else {
+
       }
     },
   },

@@ -2,13 +2,10 @@ import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { config, cookie } from 'utils';
 import { setAvatar, updateInfo } from 'services/setup';
+import { routerRedux } from 'dva/router';
 import { Toast } from 'antd-mobile';
 
-const MD5 = require('md5'),
-  encrypt = (word) => {
-    return MD5(word, 'hex');
-  },
-  { _cs } = cookie,
+const { _cs } = cookie,
   { userTag: { useravatar } } = config;
 
 export default modelExtend(model, {
@@ -17,13 +14,14 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen((location) => {
-        let { pathname, query } = location;
+        let { pathname } = location;
         if (pathname.startsWith('/setup')) {
 
         }
       });
     },
   },
+
   effects: {
     * setAvatar ({ payload }, { call, put }) {
       const data = yield call(setAvatar, payload);
@@ -37,7 +35,6 @@ export default modelExtend(model, {
             },
           },
         });
-        yield put({ type: 'goBack' });
         Toast.success('修改成功');
       } else {
         Toast.fail(data.message || '修改失败');
@@ -47,7 +44,7 @@ export default modelExtend(model, {
       const { users: { userid } } = yield select(_ => _.app),
         data = yield call(updateInfo, { ...payload, userid });
       if (data.success) {
-        yield put({ type: 'goBack' });
+        yield put(routerRedux.go(0));
         Toast.success('修改成功');
       } else {
         Toast.fail(data.msg || '修改失败');

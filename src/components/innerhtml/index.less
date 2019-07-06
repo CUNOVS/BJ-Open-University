@@ -9,7 +9,7 @@
 }
 
 .@{PrefixCls}-outer {
-  padding: 20px;
+  margin: 15px;
   overflow: hidden;
   font-size: 30px;
   line-height: 1.5em;
@@ -21,6 +21,8 @@
 
   & div {
     width: 100% !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
   }
 
   ul, li, ol {
@@ -70,6 +72,10 @@
         position: relative;
         display: inline-block;
       }
+    }
+
+    .lessondetails-lessonInfo .@{PrefixCls}-outer div p {
+      max-width: 94% !important;
     }
   }
 }

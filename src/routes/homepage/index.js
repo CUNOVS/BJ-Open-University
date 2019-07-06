@@ -17,19 +17,19 @@ const PrefixCls = 'homepage',
 
 function HomePage ({ location, dispatch, homepage, app }) {
   const { users: { username } } = app,
-    { data: { idnumber = '', email = '', phone = '', avatar = '', selfdescription = '' } } = homepage,
+    { data: { id = '', email = '', phone = '', avatar = '', selfdescription = '' } } = homepage,
     handleLoginout = () => {
       dispatch({
         type: 'app/logout',
       });
     },
     showAlert = () => {
-      Modal.alert('退出', '学习平台', [
+      Modal.alert('退出', '您确定要退出学习状态吗？', [
         {
-          text: ' 退出',
+          text: ' 立即退出',
           onPress: handleLoginout,
         },
-        { text: '再看看', onPress: () => console.log('cancel') },
+        { text: '暂不', onPress: () => console.log('cancel') },
 
       ]);
     };
@@ -39,8 +39,9 @@ function HomePage ({ location, dispatch, homepage, app }) {
       <div className={styles[`${PrefixCls}-top`]} >
         <Photoheader dispatch={dispatch} />
         <div style={{ overflow: 'hidden' }} >
-          <div className={styles[`${PrefixCls}-top-bg`]}
-               style={{ backgroundImage: `url(${getDefaultBg(avatar)})` }}
+          <div
+            className={styles[`${PrefixCls}-top-bg`]}
+            style={{ backgroundImage: `url(${getDefaultBg(avatar)})` }}
           />
         </div >
         <div className={styles[`${PrefixCls}-top-avatar`]} >
@@ -52,7 +53,7 @@ function HomePage ({ location, dispatch, homepage, app }) {
 
           <div className={styles[`${PrefixCls}-info-button`]} >
             <Button
-              onClick={handlerChangeRouteClick.bind(this, 'setup', { name: '编辑' }, dispatch)}
+              onClick={handlerChangeRouteClick.bind(this, 'setup', { name: '编辑个人信息' }, dispatch)}
               type="primary"
               inline
               size="small"
@@ -62,9 +63,9 @@ function HomePage ({ location, dispatch, homepage, app }) {
       </div >
       <div className={styles[`${PrefixCls}-list`]} >
         <List className="my-list" >
-          <Item thumb={<Icon type={getLocalIcon('/sprite/studentID.svg')} />} extra={idnumber} >学号</Item >
-          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={email} >Email</Item >
-          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={phone} >手机号</Item >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/studentID.svg')} />} extra={id} >学号</Item >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/email.svg')} />} extra={email} >邮箱</Item >
+          <Item thumb={<Icon type={getLocalIcon('/sprite/contacts.svg')} />} extra={phone} >手机号</Item >
         </List >
       </div >
       <WingBlank >

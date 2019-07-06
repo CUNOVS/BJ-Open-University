@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { Modal, Toast } from 'components';
-import { doDecode, cookie, config, userToken } from 'utils';
+import { doDecode, cookie, config, userToken, downLoadFile } from 'utils';
 
 const { userTag: { userid, usertoken } } = config,
   { _cg } = cookie;
@@ -27,15 +27,33 @@ const handlerCourseClick = (params, courseid, dispatch) => {
   const { modname = '', modulename = '', name = '', id = '', instance = '', httpurl = '', contents = [{}] } = params,
     targets = {};
   if ((modname || modulename) === 'resource') {
-    const { fileurl: fileUrl = '', mimetype: mimeType = '', filename: fileName = '', fileIdPrefix = '' } = contents[0];
+    const {
+      fileurl: fileUrl = '', mimetype: mimeType = '', filename: fileName = '', fileIdPrefix = '', fileCallbak = () => {
+      }
+    } = contents[0];
     if (fileUrl !== '') {
+      const downloadProgress = (text = 0) => {
+        if (dispatch) {
+          dispatch({
+            type: 'app/updateState',
+            payload: {
+              downloadProgress: text
+            }
+          });
+        } else {
+          fileCallbak(text !== 0);
+        }
+      };
+      downloadProgress('下载中...');
       cnGetOrDownAndOpenFile({
         fileName: `${fileIdPrefix !== '' ? fileIdPrefix : courseid}_${fileName}`,
         fileUrl: `${fileUrl}${fileUrl.indexOf('?') === -1 ? '?' : '&'}token=${userToken()}`,
         mimeType
       }, (e) => {
-        Toast.info('文件已打开。');
+        downloadProgress();
+        Toast.info('正在打开文件...');
       }, (error) => {
+        downloadProgress();
         let msg = '';
         if (error.message) {
           msg = error.message;
@@ -90,7 +108,7 @@ const handlerCourseClick = (params, courseid, dispatch) => {
         modname: modname || modulename
       };
       break;
-    case'svp':
+    case 'svp':
     case 'superclass':
       let regExps = [],
         { url: scUrl = '', name: scName = '', chapter_id: chapterid = '' } = params;
@@ -124,7 +142,9 @@ const handlerCourseClick = (params, courseid, dispatch) => {
       };
       break;
     default:
-      Toast.offline(`暂不支持${(modname || modulename)}类型标签，请使用PC端打开。`);
+      if ((modname || modulename) !== '') {
+        Toast.offline(`暂不支持${(modname || modulename)}类型标签，请使用PC端打开。`);
+      }
   }
   const { pathname = '', param = {}, notRoute = false } = targets;
   if (pathname !== '') {
@@ -149,8 +169,8 @@ const handlerCourseClick = (params, courseid, dispatch) => {
   }
 };
 
-const handlerGradeItemClick = ({ itemType = '', name = '', id = '', courseid = '' }, dispatch) => {
-  handlerCourseClick({ modulename: itemType, id }, courseid, dispatch);
+const handlerGradeItemClick = ({ itemType = '', name = '', id = '', courseid = '', instance = '' }, dispatch) => {
+  handlerCourseClick({ modulename: itemType, id, instance }, courseid, dispatch);
 };
 
 const handlerTagAHrefParseParam = (params, courseid, dispatch) => {
@@ -158,11 +178,14 @@ const handlerTagAHrefParseParam = (params, courseid, dispatch) => {
   if (modname !== '') {
     let targetParams = '';
     if (modname === 'resource') {
-      const { fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', id = '', ...otherParams } = params;
+      const {
+        fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', id = '', callback: fileCallbak = () => {
+        }, ...otherParams
+      } = params;
       if (id === '' && (fileurl !== '' || filename !== '')) {
         targetParams = {
           contents: [{
-            fileurl: fileurl || href, mimetype, filename, fileIdPrefix
+            fileurl: fileurl || href, mimetype, filename, fileIdPrefix, fileCallbak
           }],
           ...otherParams
         };

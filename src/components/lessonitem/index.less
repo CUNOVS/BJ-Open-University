@@ -48,10 +48,25 @@
     -webkit-line-clamp: 2;
     p, h1, h2, h3, h4, h5, h6, ul {
       margin: 0;
+      font-size: @smallFontSize !important;
+    }
+    &-mask {
+      position: relative;
+      width: 100%;
+      margin-top: -20px;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: right;
+      color: @primary-color;
+      background-image: -webkit-linear-gradient(top, hsla(0, 0%, 100%, .5), #fff);
+      background-image: -moz-linear-gradient(top, hsla(0, 0%, 100%, .5), #fff);
+      background-image: -ms-linear-gradient(top, hsla(0, 0%, 100%, .5), #fff);
+      background-image: -o-linear-gradient(top, hsla(0, 0%, 100%, .5), #fff);
+      background-image: linear-gradient(180deg, hsla(0, 0%, 100%, .5), #fff)
     }
   }
   &-available {
-    font-size: @smallFontSize;
+    font-size: @smallFontSize !important;
     color: #c83737;
     margin-top: 20px;
     overflow: hidden;

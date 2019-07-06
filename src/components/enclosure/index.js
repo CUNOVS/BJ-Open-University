@@ -29,43 +29,64 @@ const getIcon = (type) => {
   return '/components/file.svg';
 };
 
-const Enclosure = (props) => {
-  const { data, fileIdPrefix } = props,
-    fileClick = (item) => {
-      const { fileurl, filename, mimetype, timemodified } = item;
-      handlerTagAHrefParseParam({
-        fileurl,
-        filename,
-        mimetype,
-        modname: 'resource',
-        fileIdPrefix: `${fileIdPrefix}_${timemodified}`
-      }, '', null);
+class Enclosure extends React.Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      isDownLoad: false,
     };
-  return (
-    <div >
-      {cnIsArray(data) &&
-      data.length > 0 &&
-      data.map((item, i) => {
-        const { filename, timemodified } = item;
-        return (
-          <div key={i} className={styles.outer} onClick={fileClick.bind(null, item)} >
-            <div className={styles.img} >
-              <Icon type={getLocalIcon(getIcon(filename))} size="lg" color="#22609c" />
-            </div >
-            <div className={styles.content} >
-              <div className={styles.left} >
-                <span >{filename}</span >
-                <span >{getCommonDate(timemodified)}</span >
-              </div >
-              <div className={styles.right} >
-                下载
-              </div >
-            </div >
-          </div >
-        );
-      })
-      }
-    </div >
-  );
-};
+  }
+
+  downLoaded = (isLoading = false) => {
+    this.setState({
+      isDownLoad: isLoading
+    });
+  };
+
+  fileClick = (item) => {
+    const { fileIdPrefix } = this.props;
+    const { fileurl, filename, mimetype, timemodified } = item;
+    handlerTagAHrefParseParam({
+      fileurl,
+      filename,
+      mimetype,
+      modname: 'resource',
+      fileIdPrefix: `${fileIdPrefix}_${timemodified}`,
+      callback: this.downLoaded,
+    }, '', null);
+  };
+
+  render () {
+    const { data } = this.props;
+    const { isDownLoad } = this.state;
+    return (
+      <div>
+        {cnIsArray(data) &&
+        data.length > 0 &&
+        data.map((item, i) => {
+          const { filename, timemodified } = item;
+          return (
+            <div key={i} className={styles.outer} onClick={isDownLoad ? null : this.fileClick.bind(null, item)}>
+              <div className={styles.img}>
+                <Icon type={getLocalIcon(getIcon(filename))} size="lg" color="#22609c"/>
+              </div>
+              <div className={styles.content}>
+                <div className={styles.left}>
+                  <span>{filename}</span>
+                  <span>{getCommonDate(timemodified)}</span>
+                </div>
+                <div className={styles.right}>
+                  {isDownLoad ? <Icon type={'loading'} size="xs" color="#22609c"/> : '下载'}
+                </div>
+              </div>
+            </div>
+          );
+        })
+        }
+      </div>
+    );
+  }
+}
+
 export default Enclosure;

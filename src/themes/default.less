@@ -23,6 +23,24 @@
 @list-bottom: 20px; //列表底边距
 @statusbar-height: 50px; //状态栏高度
 
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+[contenteditable = "true"], input, textarea {
+  -webkit-user-select: auto !important;
+  -khtml-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  -o-user-select: auto !important;
+  user-select: auto !important;
+}
+
 .textOverflow {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -37,6 +55,6 @@
 
 :global {
   .am-tabs-default-bar-tab-active {
-    font-size: @titleFontSize ;
+    font-size: @titleFontSize;
   }
 }

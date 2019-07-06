@@ -6,7 +6,7 @@ import FileUpload from 'react-fileupload';
 import { routerRedux } from 'dva/router';
 import { getErrorImg, getImages, getLocalIcon, config, cookie } from 'utils';
 import doUserAvatarUpload from 'utils/formsubmit';
-import styles from './index.less';
+import './index.less';
 
 const PrefixCls = 'setup',
   prompt = Modal.prompt,
@@ -19,25 +19,7 @@ class Setup extends React.Component {
     super(props);
   }
 
-  handleUserNameClick = (user) => {
-    prompt('修改昵称', '', [
-      { text: '取消' },
-      {
-        text: '确定',
-        onPress: (value) => {
-          this.props.dispatch({
-            type: 'setup/setUserInfo',
-            payload: {
-              params: { realName: value },
-              images: {},
-              mediaFile: {},
-            },
-          });
-        },
-      },
-    ], 'default', `${user}`);
-  };
-  handleEmailClick = () => {
+  handleEmailClick = (email) => {
     prompt('修改邮箱', '', [
       { text: '取消' },
       {
@@ -51,10 +33,10 @@ class Setup extends React.Component {
           });
         },
       },
-    ], 'default', '');
+    ], 'default', `${email}`);
   };
 
-  handlePhoneClick = () => {
+  handlePhoneClick = (phone) => {
     prompt('修改手机号', '', [
       { text: '取消' },
       {
@@ -68,11 +50,12 @@ class Setup extends React.Component {
           });
         },
       },
-    ], 'default', '');
+    ], 'default', `${phone}`);
   };
 
   render () {
     const { name = '' } = this.props.location.query,
+      { data: { email = '', phone = '' } } = this.props.homepage,
       uploadSuccess = (res) => {
         const { itemid, userid } = res[0];
         this.props.dispatch({
@@ -103,7 +86,7 @@ class Setup extends React.Component {
         },
       };
 
-    const { users: { username, useravatar } } = this.props.app;
+    const { users: { useravatar } } = this.props.app;
     return (
       <div >
         <Nav title={name} dispatch={this.props.dispatch} hasShadow />
@@ -122,10 +105,10 @@ class Setup extends React.Component {
                 </FileUpload >
               </div >
             </List.Item >
-            <List.Item onClick={this.handleEmailClick} >
-              Email地址
+            <List.Item extra={email} onClick={this.handleEmailClick.bind(null, email)} >
+              邮箱
             </List.Item >
-            <List.Item onClick={this.handlePhoneClick} >
+            <List.Item extra={phone} onClick={this.handlePhoneClick.bind(null, phone)} >
               手机号
             </List.Item >
           </List >
@@ -136,8 +119,9 @@ class Setup extends React.Component {
   }
 }
 
-export default connect(({ loading, setup, app }) => ({
+export default connect(({ loading, setup, app, homepage }) => ({
   loading: loading.global,
   setup,
   app,
+  homepage
 }))(Setup);

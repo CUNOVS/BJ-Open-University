@@ -7,9 +7,11 @@ var cunovs = {
     content: '为保证正常使用，请先升级应用'
   },
   cnGlobalIndex: 0,
+  cnDownLoadProgress: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
   cnApiServiceUrl: 'http://moodle.cunovs.com:8080',
+  // cnApiServiceUrl: 'http://192.168.0.202:8082',
   cnMoodleServeUrl: 'http://moodle.cunovs.com',
   cnDownloadFileTag: 'tag_cunovs_download_files',
   cnMiniType: {
@@ -388,8 +390,10 @@ var cunovs = {
         cordova.plugins.fileOpener2.showOpenWithDialog(
           filePath,
           miniType,
-          onSuccess,
-          onError
+          {
+            success: onSuccess,
+            error: onError
+          }
         );
       } else {
         onError({ 'message': errorMessage });
