@@ -22,7 +22,7 @@ module.exports = {
     GetForumReply: '/forum/comments',
     AddNewForum: '/forum/add',
     ReplyForum: '/forum/postadd',
-    UploadFiles: `${cnMoodleServeUrl}/webservice/upload.php`,
+    UploadFiles: () => cnGetServiceUrl('moodle', '/webservice/upload.php'),
     GetPage: '/page',
     GetUserInfo: '/personal',
     GetMessageCount: '/msg/counts',
@@ -67,7 +67,12 @@ module.exports = {
     SendAssing: '/assignment/commit',
     GetSysNotice: 'notic/list',
     OpinionAdd: 'feedback/add',
-    SeedOpinionFiles: 'http://moodle.cunovs.com:9200/file/upload',
-    MyOpinionList: '/feedback'
+    SeedOpinionFiles: () => cnGetServiceUrl('manager', '/file/upload'),
+    MyOpinionList: '/feedback',
+    ManualCompletion: '/cm/completion',
+    GetVersion: '/config/appVersion',
+    HelpUrl: () => cnGetServiceUrl('help', '/cnvhelp/index.html'),
+    GetChoice: '/vote',
+    SendChoice: '/vote/submit'
   },
 };

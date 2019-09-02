@@ -1,52 +1,76 @@
 import React from 'react';
 import { connect } from 'dva';
-import { createForm } from 'rc-form';
 import { Radio, List, Checkbox } from 'components';
+import { createForm } from 'rc-form';
 import ResultIcon from '../icon';
 import styles from './index.less';
 
 const RadioItem = Radio.RadioItem,
   CheckboxItem = Checkbox.CheckboxItem;
 
-@createForm()
+
 class Choose extends React.Component {
   constructor (props) {
+    const { answer } = props;
     super(props);
-    this.state = {};
+    this.state = {
+      radioValue: answer.find(item => item.checked === true) && answer.find(item => item.checked === true).value,
+      value: this.initValue()
+    };
   }
 
   componentWillMount () {
 
   }
 
-  componentDidMount () {
+  componentWillReceiveProps () {
+    const { answer } = this.props;
+    this.setState({
+      radioValue: this.state.radioValue,
+      value: this.state.value,
+    });
+  }
 
+  componentDidMount () {
+    const { answer } = this.props;
+    this.setState({
+      radioValue: this.state.radioValue,
+      value: this.state.value
+    });
   }
 
 
-  checkboxChange = (value, id) => {
-    this.props.dispatch({
-      type: 'quizDetails/updateCheckVal',
-      payload: {
-        value,
-        id
-      }
+  radioChange = (value) => {
+    this.setState({ radioValue: value }, () => {
+      this.props.onChange(this.state.radioValue);
     });
   };
 
-  radioChange = (value, id) => {
-    this.props.dispatch({
-      type: 'quizDetails/updateVal',
-      payload: {
-        value,
-        id
+  initValue = () => {
+    const value = {};
+    this.props.answer.map(item => {
+      value[item.id] = (item.checked === true);
+    });
+    return value;
+  };
+
+  checkboxChange = (item) => {
+    const { value } = this.state;
+    value[item.id] = !value[item.id];
+    this.setState({ value }, () => {
+      let hasValue = false;
+      for (let att in value) {
+        hasValue = !!value[att];
+        if (hasValue === true) {
+          break;
+        }
       }
+      this.props.onChange(hasValue ? value : '');
     });
   };
 
   render () {
-    const { answer, form, type = 'quiz' } = this.props;
-    const { getFieldProps } = form;
+    const { answer, type = 'quiz' } = this.props;
     return (
       <List >
         {
@@ -54,13 +78,10 @@ class Choose extends React.Component {
             if (item.type === 'radio') {
               return (
                 <RadioItem
-                  {...getFieldProps(item.name, {
-                    initialValue: item.value,
-                  })}
                   wrap
                   key={item.id}
-                  checked={item.checked}
-                  onClick={type === 'quiz' ? () => this.radioChange(item.value, item.id) : null}
+                  checked={this.state.radioValue === item.value}
+                  onClick={type === 'quiz' ? () => this.radioChange(item.value) : null}
                 >
                   <div className={styles.answer} >
                     {item.label}
@@ -73,8 +94,9 @@ class Choose extends React.Component {
             return (
               <CheckboxItem
                 key={i}
-                checked={item.checked}
-                onChange={type === 'quiz' ? () => this.checkboxChange(item.value, item.id) : () => (false)}
+                wrap
+                checked={this.state.value[item.id] === true}
+                onChange={type === 'quiz' ? () => this.checkboxChange(item) : () => (false)}
               >
                 <div className={styles.answer} >
                   {item.label}
@@ -96,4 +118,4 @@ Choose.defaultProps = {
   type: 'quiz'
 };
 
-export default Choose;
+export default createForm()(Choose);

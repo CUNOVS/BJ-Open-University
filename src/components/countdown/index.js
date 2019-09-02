@@ -31,7 +31,8 @@ class CountDown extends React.Component {
 
   getTimeRemaining () {
     if (this.props.endTime > 0) {
-      return this.props.endTime * 1000 - (new Date());
+      console.log(this.props.endTime);
+      return (this.props.endTime) * 1000 - (new Date().getTime());
     }
   }
 
@@ -70,18 +71,18 @@ class CountDown extends React.Component {
       number: '00',
       label: '小时',
     },
-    {
-      id: 1,
-      type: 'minutes',
-      number: '00',
-      label: '分钟',
-    },
-    {
-      id: 2,
-      type: 'seconds',
-      number: '00',
-      label: '秒',
-    }];
+      {
+        id: 1,
+        type: 'minutes',
+        number: '00',
+        label: '分钟',
+      },
+      {
+        id: 2,
+        type: 'seconds',
+        number: '00',
+        label: '秒',
+      }];
     let totalSeconds = Math.round(this.state.timeRemaining / 1000);
     timer.forEach(time => {
       switch (time.type) {

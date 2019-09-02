@@ -13,7 +13,6 @@ class Essay extends React.Component {
   }
 
   componentWillMount () {
-
   }
 
   componentDidMount () {
@@ -21,12 +20,12 @@ class Essay extends React.Component {
   }
 
   textChange = (value) => {
-    this.props.dispatch({
-      type: 'quizDetails/updateTextVal',
-      payload: {
-        value,
-      }
-    });
+    // this.props.dispatch({
+    //   type: 'quizDetails/updateTextVal',
+    //   payload: {
+    //     value,
+    //   }
+    // });
   };
 
   render () {
@@ -35,9 +34,9 @@ class Essay extends React.Component {
     return (
       <TextareaItem
         {...getFieldProps(answer.name || 'textarea', {
-          initialValue: answer.value,
+          initialValue: answer.value||'',
         })}
-        onChange={(val) => this.textChange(val)}
+        // onChange={(val) => this.textChange(val)}
         placeholder="请回答"
         disabled={type !== 'quiz'}
         rows={answer.rows || 8}

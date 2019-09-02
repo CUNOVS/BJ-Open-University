@@ -11,6 +11,7 @@ import { handlerChangeRouteClick } from 'utils/commonevents';
 import { getImages, getErrorImg, getLocalIcon } from 'utils';
 import { ContentSkeleton } from 'components/skeleton';
 import Introduction from 'components/introduction';
+import StatusBox from 'components/statusBox';
 import Status from './components/status';
 import GradeBox from './components/gradebox';
 import styles from './index.less';
@@ -21,7 +22,7 @@ const alert = Modal.alert;
 @connect(({ quiz, loading }) => ({ // babel装饰器语法糖
   quiz,
   loading: loading.effects[`${PrefixCls}/queryQuiz`],
-}))
+  }))
 class Quiz extends PureComponent {
   constructor (props) {
     super(props);
@@ -90,7 +91,7 @@ class Quiz extends PureComponent {
       { data: { id, navmethod = '', options = {}, timelimit = 0 }, info = {} } = this.props.quiz;
     const { dispatch } = this.props;
     const { accessrules = [] } = options;
-    alert('限时测验', `时间将从你开始做测验时倒数计时，而你必须在时限到之前提交答案。你确定你现在就要开始作答？`, [
+    alert('限时测验', '您一旦开始做答，系统将自动计时。您需在计时结束前提交答案，或者计时结束时系统将自动提交答案。您确定现在开始做答吗？', [
       { text: '取消', onPress: () => console.log('cancel') },
       {
         text: '开始',
@@ -109,7 +110,7 @@ class Quiz extends PureComponent {
 
   render () {
     const { name } = this.props.location.query,
-      { data: { id, intro, options = {}, buttontext, hasquestions, visiblebutton, attempts = [], feedbacktext, hasfeedback, finalgrade, grademethod, maxgrade, isfinished, preventnewattemptreasons = [], courseid, name: quizName = '', navmethod = '', timelimit = 0, sumgrades, decimalpoints }, info = {} } = this.props.quiz,
+      { data: { id, intro, options = {}, supportedMsg, buttontext, hasquestions, visiblebutton, attempts = [], feedbacktext, hasfeedback, finalgrade, grademethod, maxgrade, isfinished, preventnewattemptreasons = [], courseid, name: quizName = '', navmethod = '', timelimit = 0, sumgrades, decimalpoints }, info = {} } = this.props.quiz,
       { preventaccessreasons = [] } = options,
       { loading, dispatch } = this.props;
     const method = this.getMethod(grademethod);
@@ -135,9 +136,11 @@ class Quiz extends PureComponent {
             >
               尚未添加试题
             </NoticeBar > : ''}
-          <div className={styles[`${PrefixCls}-describe`]} >
-            {intro !== '' ? <Introduction data={intro} courseid={courseid} dispatch={this.props.dispatch} /> : ''}
-          </div >
+          {intro !== '' ?
+            <div className={styles[`${PrefixCls}-describe`]} >
+              <Introduction data={intro} courseid={courseid} dispatch={this.props.dispatch} />
+            </div >
+            : ''}
           <div className={styles[`${PrefixCls}-info`]} >
             {cnIsArray(options.accessrules) && options.accessrules.map((item, i) => {
               return <div key={i} >{item}</div >;
@@ -151,24 +154,20 @@ class Quiz extends PureComponent {
             cnIsArray(attempts) && attempts.length > 0
               ?
               <Status
-                data={attempts}
-                decimalpoints={decimalpoints}
-                maxgrade={maxgrade}
-                sumgrades={sumgrades}
-                dispatch={dispatch}
-              />
+                  data={attempts}
+                  decimalpoints={decimalpoints}
+                  maxgrade={maxgrade}
+                  sumgrades={sumgrades}
+                  dispatch={dispatch}
+                />
               :
               ''
           }
+          {finalgrade >= 0 ? <GradeBox {...gradePros} /> : null}
           <WhiteSpace size="lg" />
           <WhiteSpace size="lg" />
           <WingBlank >
-            <GradeBox {...gradePros} />
-          </WingBlank >
-          <WhiteSpace size="lg" />
-          <WhiteSpace size="lg" />
-          <WingBlank >
-            {visiblebutton ?
+            {visiblebutton && !supportedMsg ?
               <Button
                 type="primary"
                 onClick={timelimit > 0 ? this.showModal : handlerChangeRouteClick
@@ -183,28 +182,28 @@ class Quiz extends PureComponent {
                     dispatch)}
               >{buttontext}</Button > : ''}
           </WingBlank >
+          {!visiblebutton && preventnewattemptreasons.length > 0 ?
+            /* <NoticeBar
+               marqueeProps={{ loop: true }}
+               mode="closable"
+               icon={null}
+             >
+               {preventnewattemptreasons[0]}
+             </NoticeBar > */
+            <StatusBox status={'unuseful'} content={preventnewattemptreasons[0]} color="#d24747" />
+            :
+            ''
+          }
+          {preventaccessreasons.length > 0 ?
+            <StatusBox status={'unuseful'} content={preventaccessreasons[0]} color="#d24747" />
+            :
+            ''}
           {
-            preventnewattemptreasons.length > 0 ?
-              <NoticeBar
-                marqueeProps={{ loop: true }}
-                mode="closable"
-                icon={null}
-              >
-                {preventnewattemptreasons[0]}
-              </NoticeBar >
+            supportedMsg ?
+              <StatusBox status={'unuseful'} content={supportedMsg} color="#d24747" />
               :
               ''
           }
-          {preventaccessreasons.length > 0 ?
-            <NoticeBar
-              marqueeProps={{ loop: true }}
-              mode="closable"
-              icon={null}
-            >
-              {preventaccessreasons[0]}
-            </NoticeBar >
-            :
-            ''}
         </div >}
       </div >
     );

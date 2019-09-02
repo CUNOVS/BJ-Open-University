@@ -136,7 +136,7 @@ class Opinion extends Component {
           hasShadow
           renderNavRight={
             <span
-              style={{ color: '#fff' }}
+              className={styles.feedback}
               onClick={handlerChangeRouteClick.bind(this, 'myopinion', { name: '我的反馈' }, this.props.dispatch)} >
               我的反馈
             </span >
@@ -171,6 +171,7 @@ class Opinion extends Component {
               {...getFieldProps('submitUserPhone', {
                 initialValue: '',
               })}
+
             >
               电话(选填)
             </InputItem >
@@ -189,9 +190,6 @@ class Opinion extends Component {
               <Button type="primary" onClick={this.onSubmit.bind(this)} >提交</Button >
             </div >
           </form >
-          <div className={styles[`${PrefixCls}-outer-footer`]} >
-            感谢您为我们提供宝贵的意见或建议
-          </div >
         </div >
       </div >
     );

@@ -91,7 +91,6 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
       <div style={{ padding: '1rem 0', background: 'white' }} >
         {getStatus(contacts, id) ?
           <Button
-            size="small"
             type="primary"
             loading={addLoading}
             style={{ margin: '0 1rem' }}
@@ -100,7 +99,6 @@ function Userpage ({ location, dispatch, userpage, addLoading, deleteLoading }) 
           >{deleteText}
           </Button > :
           <Button
-            size="small"
             type="primary"
             loading={deleteLoading}
             style={{ margin: '0 1rem' }}

@@ -4,18 +4,14 @@
 .@{PrefixCls}-outer {
 
   &-head {
-    display: flex;
-    justify-content: space-between;
     width: 100%;
-    padding: 80px 20px 30px 60px;
+    padding: 90px 20px 30px 60px;
     box-sizing: border-box;
     background: @navColor;
-    -moz-box-shadow: 0 10px 10px #ccdae8;
-    -webkit-box-shadow: 0 10px 10px #ccdae8;
-    box-shadow: 0 10px 10px #ccdae8;
+    line-height: @common-line-height;
 
-    &-info {
-      font-size: 40px;
+      &-info {
+      font-size: @titleFontSize;
       color: #fff;
       flex-grow: 1;
       &-title {
@@ -23,21 +19,19 @@
       }
 
       &-group {
-        font-size: @mediumFontSize;
+        font-size: @smallFontSize;
         margin-top: 20px;
       }
     }
     &-achievement {
-      align-self: flex-end;
-      flex-basis: 35%;
+      margin-top: 20px;
       text-align: right;
       color: #fff;
       &-num {
-        font-size: 60px;
-      }
-      &-text {
-        font-size: @smallFontSize;
-        margin-top: 10px;
+        font-size: 46px;
+        & span {
+          font-size: @mediumFontSize;
+        }
       }
 
     }

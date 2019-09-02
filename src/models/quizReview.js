@@ -51,7 +51,7 @@ export default modelExtend(model, {
           });
           const { attemptid } = query;
           dispatch({
-            type: 'queryReview',
+            type: 'query',
             payload: {
               attemptid,
             },
@@ -61,7 +61,7 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * queryReview ({ payload }, { call, put }) {
+    * query ({ payload }, { call, put }) {
       const data = yield call(queryReview, payload);
       if (data.success) {
         yield put({

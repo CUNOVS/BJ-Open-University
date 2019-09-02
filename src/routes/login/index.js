@@ -66,12 +66,11 @@ class Login extends React.Component {
                     Toast.fail(getFieldError(userKey));
                   }}
                 >
-                  <div style={{
-                    backgroundImage: `url(${user})`,
-                    backgroundSize: 'cover',
-                    height: '22px',
-                    width: '22px',
-                  }}
+                  <div
+                    className={styles.icon}
+                    style={{
+                      backgroundImage: `url(${user})`,
+                    }}
                   />
                 </InputItem >
               </div >
@@ -96,12 +95,11 @@ class Login extends React.Component {
                     Toast.fail(getFieldError(powerKey));
                   }}
                 >
-                  <div style={{
-                    backgroundImage: `url(${pwd})`,
-                    backgroundSize: 'cover',
-                    height: '22px',
-                    width: '22px',
-                  }}
+                  <div
+                    className={styles.icon}
+                    style={{
+                      backgroundImage: `url(${pwd})`,
+                    }}
                   />
                 </InputItem >
               </div >

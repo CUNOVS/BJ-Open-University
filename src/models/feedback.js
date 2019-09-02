@@ -13,12 +13,13 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
-        const { id = '', courseid = '' } = query;
+        const { id = '', courseid = '', cmid = '' } = query;
         if (pathname === '/feedback') {
           dispatch({
             type: 'queryFeedback',
             payload: {
               id,
+              cmid,
               courseid
             }
           });

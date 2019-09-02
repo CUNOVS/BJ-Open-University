@@ -22,6 +22,8 @@
 
 .@{PrefixCls}-tutorteacher, .@{PrefixCls}-masterteacher {
   padding: 10px 20px;
+  max-width: 22vh;
+  .textOverflow;
   display: table-cell;
   text-align: center;
   vertical-align: middle;
@@ -33,14 +35,19 @@
   font-size: @smallFontSize;
 }
 
+.@{PrefixCls}-attendance-outer {
+  position: relative;
+  padding-bottom: 60px;
+}
+
 .@{PrefixCls}-attendance {
   position: absolute;
-  bottom: -50px;
+  top: -32px;
   left: 0;
   right: 0;
   margin: 0 auto;
   width: 88%;
-  height: 90px;
+  height: 80px;
   display: flex;
   padding: 0 20px;
   justify-content: space-between;
@@ -53,11 +60,11 @@
   &-info {
     display: flex;
     align-items: center;
-    font-size: @titleFontSize;
-    & span{
-      margin-right: 20px;
+    font-size: @mediumFontSize;
+    & span {
+      margin-left: 20px;
       font-weight: 500;
-      color:@color-text-base;
+      color: @color-text-base;
     }
   }
 

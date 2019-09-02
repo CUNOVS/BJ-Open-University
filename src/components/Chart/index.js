@@ -26,33 +26,34 @@ const label = {
   }
 };
 
-const getData = (data) => {
+const getData = (data, key) => {
   const res = [];
   data.length > 0 && data.map(items => {
-    const datas = cnDecode(items);
-    if (datas.answertext) {
-      res.push({
-        answertext: datas.answertext,
-        answercount: parseInt(datas.answercount)
-      });
+      const datas = cnDecode(items);
+      if (datas.answertext) {
+        res.push({
+          answertext: datas.answertext,
+          answercount: parseInt(datas.answercount),
+          [key]: parseInt(datas.answercount),
+        });
+      }
     }
-  }
   );
   return res;
 };
 
 class Charts extends React.Component {
   render () {
-    const { name, data } = this.props;
+    const { name, data, axisDataKey } = this.props;
     return (
       <div >
-        <div style={{ padding: '0 20px', fontSize: '16px' }} >{name}</div >
-        <Chart width="100%" data={getData(data)} defs={defs} pixelRatio={window.devicePixelRatio * 2} >
+        <div style={{ padding: '0 20px', fontSize: '0.28rem' }} >{name}</div >
+        <Chart data={getData(data, axisDataKey)} defs={defs} pixelRatio={window.devicePixelRatio * 2} >
           <Axis dataKey="answertext" label={label} grid={null} />
           <Axis dataKey="answercount" label={formatLabel} line={null} grid={Global._defaultAxis.grid} />
           <Coord transposed />
           <Tooltip />
-          <Geom geom="interval" position="answertext*answercount" />
+          <Geom geom="interval" position={`answertext*${axisDataKey}`} />
         </Chart >
       </div >
     );

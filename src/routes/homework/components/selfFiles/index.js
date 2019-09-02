@@ -18,16 +18,21 @@ const SelfFiles = (props) => {
     <div className={styles.outer} >
       {Result && Result.map((item, i) => {
         return (
-          <div key={i} >
-            <h3 >{item.name}</h3 >
-            {
-              item.type === 'onlinetext'
-                ?
-                <Breviary data={item.editorfields[0].text} dispatch={props.dispatch} />
-                :
-                item.files && item.files.length > 0 ? <Enclosure data={item.files} fileIdPrefix={fileIdPrefix} /> : ''
-            }
-          </div >
+          item.type === 'onlinetext' ?
+            <div
+              className={styles.text}
+              key={i}
+            >
+              <h3 >{item.name}</h3 >
+              <Breviary data={item.editorfields[0].text} dispatch={props.dispatch} />
+            </div >
+            : item.files && item.files.length > 0 ?
+              <div className={styles.file} key={i} >
+                <h3 >{item.name}</h3 >
+                <Enclosure data={item.files} fileIdPrefix={fileIdPrefix} />
+              </div >
+              :
+              ''
         );
       })}
     </div >

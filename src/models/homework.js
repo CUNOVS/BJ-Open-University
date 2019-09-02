@@ -78,11 +78,19 @@ export default modelExtend(model, {
         Toast.fail(message);
       }
     },
-    * sendAssing ({ payload }, { call }) {
-      const { success, message = '请稍后再试' } = yield call(sendAssing, payload);
+    * sendAssing ({ payload }, { put, call }) {
+      const { cmid, coursesId: courseid, assignmentid } = payload;
+      const { success, message = '请稍后再试' } = yield call(sendAssing, { assignmentid });
       if (success) {
         Toast.success('提交成功');
-        yield put(routerRedux.go(0));
+        yield put({
+          type: 'queryHomework',
+          payload: {
+            cmid,
+            ssignId: assignmentid,
+            courseid,
+          },
+        });
       } else {
         Toast.fail(message);
       }

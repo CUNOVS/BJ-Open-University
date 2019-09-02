@@ -4,6 +4,7 @@ import { WhiteSpace, List, Icon } from 'components';
 import { getLocalIcon } from 'utils';
 import Nav from 'components/nav';
 import { achievementRow } from 'components/row';
+import { ListSkeleton } from 'components/skeleton';
 import Refresh from 'components/pulltorefresh';
 import NoContent from 'components/nocontent';
 import { handlerChangeRouteClick } from 'utils/commonevents';
@@ -12,7 +13,7 @@ import styles from './index.less';
 
 const PrefixCls = 'achievement';
 
-function Achievement ({ location, dispatch, achievement }) {
+function Achievement ({ location, dispatch, achievement, loading }) {
   const { listData, scrollerTop, refreshing } = achievement;
   const onRefresh = () => {
 
@@ -38,11 +39,17 @@ function Achievement ({ location, dispatch, achievement }) {
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
         >
-          {listData.length > 0 ? listData.map(item => achievementRow(item, handlerChangeRouteClick.bind(null, 'achievementdetails', {
-              courseid: item.id,
-              grade: item.graderaw || 0
-            }, dispatch))) :
-            <NoContent />}
+          {
+            loading ?
+              <ListSkeleton />
+              :
+              listData.length > 0 ? listData.map(item => achievementRow(item, handlerChangeRouteClick.bind(null, 'achievementdetails', {
+                courseid: item.id,
+                grade: item.graderaw || 0
+              }, dispatch)))
+                :
+                <NoContent />
+          }
         </Refresh >
       </div >
     </div >
@@ -50,6 +57,6 @@ function Achievement ({ location, dispatch, achievement }) {
 }
 
 export default connect(({ loading, achievement }) => ({
-  loading,
+  loading: loading.effects['achievement/queryList'],
   achievement,
 }))(Achievement);

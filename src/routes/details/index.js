@@ -25,14 +25,14 @@ const Details = ({ location, dispatch, details, homework = {} }) => {
         const { data } = homework,
           { submitDataType = [] } = data;
         return <InnerHtml data={getDefaultText(submitDataType)} />;
-      } else if (type === 'quizFeedback' || type === 'discription'||type === 'detailsText') {
+      } else if (type === 'quizFeedback' || type === 'discription' || type === 'detailsText') {
         return <InnerHtml data={content} />;
       }
     };
   return (
-    <div >
+    <div className={styles.outer} >
       <Nav title={name} dispatch={dispatch} />
-      <div className={styles.outer} >
+      <div className={styles.contaniner} >
         {getContent()}
       </div >
     </div >

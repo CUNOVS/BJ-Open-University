@@ -1,5 +1,6 @@
 import React from 'react';
 import { List, Checkbox } from 'components';
+import styles from './index.less';
 
 const CheckboxItem = Checkbox.CheckboxItem;
 
@@ -8,8 +9,8 @@ class FormCheckBox extends React.Component {
     super(props);
     const { items = [], value = {} } = props;
     this.CheckboxItems = items.map((option) => {
-      const { value, label, id } = option;
-      return { value, label, id };
+      const { value: itemValue, label, id, checked = false } = option;
+      return { value: itemValue, label, id, checked };
     });
     this.state = {
       value: Object.keys(value).length === 0 ? this.initValue() : value
@@ -41,13 +42,13 @@ class FormCheckBox extends React.Component {
 
   render () {
     return (
-      <div id={this.props.keys || ''}>
+      <div id={this.props.keys || ''} className={styles.checkbox} >
         {this.CheckboxItems.map(item =>
           <CheckboxItem key={item.id} checked={this.state.value[item.id] === true} wrap
-                        onClick={() => setTimeout(this.onChange.bind(null, item), 1)}>
+                        onClick={() => setTimeout(this.onChange.bind(null, item), 1)} >
             {item.label}
-          </CheckboxItem>)}
-      </div>
+          </CheckboxItem >)}
+      </div >
     );
   }
 }

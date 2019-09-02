@@ -1,13 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Toast } from 'components';
 import Nav from 'components/nav';
 import { connect } from 'dva';
 import ChatRoom from 'components/chatroom';
-import styles from './index.less';
 
-
-const PrefixCls = 'conversation';
 let Index = 0;
 const Conversation = ({ location, dispatch, conversation, app }) => {
   const { name, fromuserid, avatar } = location.query;

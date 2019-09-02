@@ -38,9 +38,9 @@ function MyOpinion ({ location, dispatch, myopinion, loading }) {
       }
     };
   return (
-    <div className={styles[`${PrefixCls}-outer`]} >
+    <div >
       <Nav title={name} dispatch={dispatch} hasShadow />
-      <div >
+      <div className={styles[`${PrefixCls}-outer`]} >
         <WhiteSpace />
         {
           loading && !refreshing ?
@@ -56,9 +56,6 @@ function MyOpinion ({ location, dispatch, myopinion, loading }) {
                 {cnIsArray(list) && list.map((item) => {
                   return opinionRow(item, handlerChangeRouteClick, dispatch);
                 })}
-                <WhiteSpace size="lg" />
-                <WhiteSpace size="lg" />
-                <WhiteSpace size="lg" />
                 <WhiteSpace size="lg" />
               </Refresh >
               :

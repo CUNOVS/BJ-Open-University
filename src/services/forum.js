@@ -37,7 +37,7 @@ export async function replyForum (payload) {
 
 export async function UploadFile (payload) {
   return request({
-    url: UploadFiles,
+    url: UploadFiles(),
     method: 'post',
     data: payload,
     hasToken: false

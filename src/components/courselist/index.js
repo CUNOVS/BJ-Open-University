@@ -23,9 +23,7 @@ const CourseList = (props) => {
             <div className={styles[`${PrefixCls}-header`]} >
               {
                 props.activityIndex > 0 && props.activityIndex - 1 === i ?
-                  <span >
-                    <Icon type={getLocalIcon('/components/nike.svg')} color="#f0da24" />
-                  </span >
+                  <Icon type={getLocalIcon('/components/nike.svg')} color="#f0da24" />
                   : null
               }
               <span >{d.name}</span >
@@ -39,7 +37,13 @@ const CourseList = (props) => {
           {
             d.modules && d.modules.map((p) => {
               return (
-                <LessonItem key={p.id} data={p} dispatch={props.dispatch} courseid={props.courseid} />
+                <LessonItem
+                  key={p.id}
+                  data={p}
+                  loadingCheck={props.loadingCheck}
+                  dispatch={props.dispatch}
+                  courseid={props.courseid}
+                />
               );
             })
           }

@@ -1,0 +1,46 @@
+@PrefixCls: forum;
+
+.@{PrefixCls}-head {
+  padding: 30px;
+  background: white;
+
+  &-title {
+    font-weight: 600;
+    font-size: @titleFontSize;
+    color: @color-text-base;
+  }
+
+  &-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    color: @color-text-paragraph;
+    font-size: @mediumFontSize;
+  }
+}
+
+.@{PrefixCls}-title {
+  background: #dbdbdb;
+  padding: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: @titleFontSize;
+  div:nth-child(1) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.@{PrefixCls}-button {
+  margin: 40px 20px 20px;
+}
+
+.reset {
+  :global {
+    .am-list-body div:not(:last-child) .am-list-line {
+      border: 0 none;
+    }
+  }
+}

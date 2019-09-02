@@ -26,7 +26,7 @@ export default modelExtend(model, {
               }
             });
             dispatch({
-              type: 'query',
+              type: 'queryList',
             });
           }
         }
@@ -35,7 +35,7 @@ export default modelExtend(model, {
   },
 
   effects: {
-    * query (_, { call, put, select }) {
+    * queryList (_, { call, put, select }) {
       const { users: { userid } } = yield select(k => k.app);
       const { data, success, message = '请稍后再试' } = yield call(getAttendanceList, { userid });
       if (success) {

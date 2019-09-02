@@ -20,9 +20,9 @@ class Header extends React.Component {
   render () {
     return (
       <div className={styles[`${PrefixCls}-logo-outer`]} >
-        <div onClick={this.qrCodeClick} >
-          <Icon type={getLocalIcon('/dashboard/QRcode.svg')} color="#fff" />
-        </div >
+        {/*<div onClick={this.qrCodeClick} >*/}
+          {/*<Icon type={getLocalIcon('/dashboard/QRcode.svg')} color="#fff" />*/}
+        {/*</div >*/}
         <div className={styles['logo-box']} >
           <img src={require('themes/images/logo.png')} alt="" />
         </div >

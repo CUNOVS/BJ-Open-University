@@ -434,6 +434,24 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'set',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/mine'));
+              cb(null, require('routes/set/'));
+            }, 'set');
+          },
+        },
+        {
+          path: 'choice',
+          getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('models/choice'));
+              cb(null, require('routes/choice/'));
+            }, 'choice');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

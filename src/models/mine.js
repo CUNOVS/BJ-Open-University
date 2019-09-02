@@ -28,12 +28,20 @@ export default modelExtend(model, {
   namespace: 'mine',
   state: {
     gridDatas: defaultDatas,
+    localFileTotals: cnGetLocalFileSize(),
+    clearProgress: 0
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/mine') {
-
+          dispatch({
+            type: 'updateState',
+            payload: {
+              localFileTotals: cnGetLocalFileSize(),
+              clearProgress: 0
+            }
+          });
         }
       });
     }

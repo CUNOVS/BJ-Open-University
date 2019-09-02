@@ -44,7 +44,7 @@ export default modelExtend(model, {
       const { users: { userid } } = yield select(_ => _.app),
         data = yield call(updateInfo, { ...payload, userid });
       if (data.success) {
-        yield put(routerRedux.go(0));
+        yield put({ type: 'goBack' });
         Toast.success('修改成功');
       } else {
         Toast.fail(data.msg || '修改失败');

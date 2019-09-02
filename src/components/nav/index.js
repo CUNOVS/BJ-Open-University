@@ -3,7 +3,7 @@ import { NavBar, Icon } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import classNames from 'classnames';
-import { getTitle } from 'utils';
+import { getTitle, getAntTabBar } from 'utils';
 import styles from './index.less';
 
 const PrefixCls = 'nav';
@@ -25,19 +25,19 @@ function Nav (props) {
     }
   };
   return (
-    <div >
-      <div className={classNames(styles[`${PrefixCls}-header-box`], { [styles.shadow]: props.hasShadow })} >
-        <div className={styles[`${PrefixCls}-header`]} >
+    <div>
+      <div className={classNames(styles[`${PrefixCls}-header-box`], { [styles.shadow]: props.hasShadow })}>
+        <div className={classNames(styles[`${PrefixCls}-header`], { [styles['nav-position-fixed']]: props.navFixed })}>
           <NavBar
             leftContent=""
             onLeftClick={props.isGoBack ? () => goBack(props.backNum) : null}
             mode="light"
-            icon={props.isGoBack ? <Icon type="left" color="#fff" /> : null}
+            icon={props.isGoBack ? <Icon type="left" color="#fff"/> : null}
             rightContent={props.renderNavRight}
-          >{getTitle(props.title)}</NavBar >
-        </div >
-      </div >
-    </div >
+          >{getTitle(props.title)}</NavBar>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -48,6 +48,7 @@ Nav.defaultProps = {
   renderNavRight: null,
   title: '',
   navEvent: null,
+  navFixed: true,
   backNum: -1,
   hasShadow: false,
   isGoBack: true,

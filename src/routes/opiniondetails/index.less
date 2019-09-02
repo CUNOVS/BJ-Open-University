@@ -1,5 +1,39 @@
+@import '../../themes/default.less';
+
 .outer {
   padding: 20px;
-  min-height: 100vh;
   background: #fff;
+  .info {
+    border-bottom: 2px solid #ddd;
+    padding: 20px 0;
+    font-size: @smallFontSize;
+    display: flex;
+    justify-content: space-between;
+  }
+  .content {
+    margin: 40px 0;
+    font-size: @mediumFontSize;
+    color: @color-text-paragraph;
+    text-indent: 2em;
+    line-height: @common-line-height;
+  }
+  .imgbox {
+    img {
+      margin: 20px 0;
+      width: 100%;
+    }
+  }
+}
+
+.reply {
+  margin: 20px 0;
+
+  font-size: @mediumFontSize;
+  color: @color-text-paragraph;
+  line-height: @common-line-height;
+  >p {
+    padding: 20px 20px 40px;
+    margin: 0;
+    background: #fff;
+  }
 }

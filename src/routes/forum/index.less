@@ -1,13 +1,17 @@
+@import "../../themes/default";
+
 @PrefixCls: forum;
 
 .@{PrefixCls}-head {
-  padding: 30px;
+  padding: 32px 30px;
   background: white;
 
   &-title {
     font-weight: 600;
     font-size: @titleFontSize;
     color: @color-text-base;
+    line-height: @common-line-height;
+    .break;
   }
 
   &-bottom {
@@ -24,12 +28,12 @@
   background: #dbdbdb;
   padding: 0.2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-size: @titleFontSize;
-  div:nth-child(1) {
-    display: flex;
-    align-items: center;
+  word-break: break-all;
+  word-wrap: break-word;
+  div {
+    margin-left: 20px;
   }
 }
 

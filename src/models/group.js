@@ -16,6 +16,14 @@ export default modelExtend(model, {
         if (pathname === '/group') {
           if (action === 'PUSH') {
             dispatch({
+              type: 'updateState',
+              payload: {
+                listData: [],
+                refreshing: false,
+                scrollerTop: 0
+              }
+            });
+            dispatch({
               type: 'query',
             });
           }

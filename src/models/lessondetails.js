@@ -8,7 +8,7 @@ import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { Toast } from 'components';
 import { handlerCourseClick } from 'utils/commonevents';
-import { queryLessonDetails } from 'services/lesson';
+import { queryLessonDetails, manualCompletion } from 'services/lesson';
 import { url, queryResource } from 'services/resource';
 
 
@@ -38,7 +38,9 @@ export default modelExtend(model, {
     refreshing: false,
     selected: 0,
     activityIndex: 0,
-    accordionIndex: ['0']
+    accordionIndex: ['0'],
+    courseid: '',
+    scrollerTop: 0
   },
   subscriptions: {
     setup ({ history, dispatch }) {
@@ -51,9 +53,11 @@ export default modelExtend(model, {
               payload: {
                 data: [],
                 selectIndex: 0,
+                scrollerTop: 0,
                 refreshing: false,
                 activityIndex: 0,
-                accordionIndex: ['0']
+                accordionIndex: ['0'],
+                courseid
               },
             });
             dispatch({
@@ -133,7 +137,7 @@ export default modelExtend(model, {
         }
       }
     },
-    * queryResource ({ payload }, { call, put, select }) {
+    * queryResource ({ payload }, { call }) {
       const { dispatch = '', cmid = '', courseid = '', instance = '', ...otherDatas } = payload,
         { success, message = '获取失败', data = [{}] } = yield call(queryResource, {
           cmid,
@@ -144,6 +148,22 @@ export default modelExtend(model, {
         yield handlerCourseClick({ ...otherDatas, contents: data, id: cmid }, courseid, dispatch);
       } else {
         Toast.fail(message);
+      }
+    },
+    * manualCompletion ({ payload, callback }, { call, put, select }) {
+      const { users: { userid } } = yield select(_ => _.app);
+      const { courseid } = yield select(_ => _.lessondetails);
+      const { success, message } = yield call(manualCompletion, payload);
+      if (success) {
+        yield put({
+          type: 'updateDetails',
+          payload: { userid, courseid }
+        });
+
+        if (callback) yield callback(-1);
+      } else {
+        Toast.fail(message || '未知错误');
+        if (callback) yield callback(-1);
       }
     },
   },

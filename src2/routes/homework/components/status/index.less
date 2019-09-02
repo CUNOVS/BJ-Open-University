@@ -1,0 +1,65 @@
+@import "../../../../themes/default";
+
+@PrefixCls: status;
+
+.@{PrefixCls}-status {
+  padding: 30px;
+  background: #fff;
+  &-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    &-left {
+      display: flex;
+      align-items: center;
+      font-size: @mediumFontSize;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    &-right {
+      display: flex;
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+  &-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: @mediumFontSize;
+    color: @color-text-base;
+    margin-bottom: 40px;
+    span:first-child {
+      display: flex;
+      align-items: center;
+      color: @color-text-paragraph;
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.@{PrefixCls}-list {
+  :global {
+    .am-list-item img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+    }
+    .am-list-body {
+      border: 0;
+    }
+  }
+}
+
+.grade {
+  font-size: @titleFontSize;
+  padding-left: 40px;
+}
+
+.feedback {
+  padding: 20px 0;
+}

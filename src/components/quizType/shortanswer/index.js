@@ -39,7 +39,7 @@ class ShortAnswer extends React.Component {
             initialValue: answer.value,
           })}
           disabled={type !== 'quiz'}
-          onChange={(val) => this.textChange(val)}
+          // onChange={(val) => this.textChange(val)}
           clear
           placeholder="请回答"
         />

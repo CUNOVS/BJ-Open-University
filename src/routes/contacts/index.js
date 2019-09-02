@@ -21,9 +21,10 @@ const Contacts = ({ location, dispatch, contacts }) => {
       </div >
       <div className={styles[`${PrefixCls}-contactsbox`]} >
         <Accordion defaultActiveKey="0" className="my-accordion" >
-          <Accordion.Panel header={<span style={{ color: '#00ce41' }} >{`在线(${onLine.length})`}</span >} >
+          <Accordion.Panel header={<span style={{ color: '#22609c' }} >{`在线(${onLine.length})`}</span >} >
             {contactsRow(onLine, handlerChangeRouteClick, dispatch)}
           </Accordion.Panel >
+          <WhiteSpace />
           <Accordion.Panel header={`离线(${offLine.length})`} >
             {contactsRow(offLine, handlerChangeRouteClick, dispatch)}
           </Accordion.Panel >

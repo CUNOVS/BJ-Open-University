@@ -40,7 +40,7 @@ function Opening ({ location, dispatch, opening, loading }) {
     };
   return (
     <div >
-      <Nav title={name} isGoBack={false} hasShadow />
+      <Nav title={name} isGoBack={false} hasShadow navFixed={false} />
       <WhiteSpace />
       <div className={styles[`${PrefixCls}-outer`]} >
         {

@@ -9,7 +9,7 @@ import styles from './index.less';
 
 const PrefixCls = 'achievementdetails';
 const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => {
-  const { gradeItems, refreshing, scrollerTop, courseid: retrunCourseid = '', coursename } = achievementdetails,
+  const { gradeItems, refreshing, scrollerTop, courseid: retrunCourseid = '', coursename, graderaw = '' } = achievementdetails,
     { groups } = app,
     { name, grade, courseid } = location.query,
     getGroups = (group, id) => {
@@ -38,7 +38,7 @@ const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => 
     };
   return (
     <div >
-      <Photoheader hasBg={false} dispatch={dispatch} size="lg" />
+      <Photoheader hasBg={false} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-outer`]} >
         <div className={styles[`${PrefixCls}-outer-head`]} >
           <div className={styles[`${PrefixCls}-outer-head-info`]} >
@@ -48,8 +48,10 @@ const AchievementDetails = ({ location, dispatch, achievementdetails, app }) => 
             >{getGroups(groups, courseid || retrunCourseid)}</div >
           </div >
           <div className={styles[`${PrefixCls}-outer-head-achievement`]} >
-            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]} >{`${grade}`}</div >
-            <div className={styles[`${PrefixCls}-outer-head-achievement-text`]} >我的得分</div >
+            <div className={styles[`${PrefixCls}-outer-head-achievement-num`]} >
+              <span >课程总分：</span >
+              {`${graderaw}`}
+            </div >
           </div >
         </div >
       </div >

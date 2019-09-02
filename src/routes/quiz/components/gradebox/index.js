@@ -18,13 +18,6 @@ const GradeBox = (props) => {
     };
   return (
     <div className={styles.grade} >
-      <div className={styles.left} >
-        <div className={styles.title} >{method}</div >
-        <div className={styles.box} >
-          {finalgrade > 0 ? <span >{`${getGrade(finalgrade)}分`}</span > : '未评分'}
-          <span >{`共${maxgrade}`}</span >
-        </div >
-      </div >
       {
         hasfeedback ?
           <div
@@ -39,12 +32,18 @@ const GradeBox = (props) => {
               dispatch,
               e)}
           >
-            <Icon type={getLocalIcon('/components/feedback.svg')} size="lg" />
+            <Icon type={getLocalIcon('/components/feedback.svg')} />
             <div >总体反馈</div >
           </div >
           :
           null
       }
+      <div className={styles.right} >
+        <div className={styles.box} >
+          <span className={styles.total} >{`共${maxgrade}分`}</span >
+          {finalgrade >= 0 ? <span className={styles.result} >{`${getGrade(finalgrade)}分`}</span > : <span className={styles.result}>未评分</span>}
+        </div >
+      </div >
     </div >
   );
 };

@@ -38,7 +38,8 @@ tabBars = tabBars.map((bar, i) => appendIcon(bar, i));
 
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { updates: { upgraded = false, urls = '', appVerSion, updateInfo }, showModal, downloadProgress } = app;
+  const { updates = {}, showModal, downloadProgress } = app,
+    { upgraded = false, urls = '', appVerSion, updateInfo } = updates;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -49,10 +50,12 @@ const App = ({ children, dispatch, app, loading, location }) => {
 
   cnSetStatusBarStyle(pathname);
   if (lastHref !== href || loading.global) {
-    NProgress.start();
-    progessStart = true;
-    if (!loading.global) {
-      lastHref = href;
+    if (pathname !== '/mine') {
+      NProgress.start();
+      progessStart = true;
+      if (!loading.global) {
+        lastHref = href;
+      }
     }
   }
   if (!loading.global && progessStart) {
@@ -109,6 +112,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
         tintColor="#3f7eba"
         barTintColor="white"
         hidden={false}
+        prerenderingSiblingsNumber={0}
       >
         {tabBars.map((_, index) => {
           const props = Object.assign({

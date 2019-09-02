@@ -1,3 +1,4 @@
+@import "../../themes/default";
 @PrefixCls: lessondetails;
 .@{PrefixCls}-outer {
   max-height: 100vh;
@@ -17,13 +18,12 @@
 .@{PrefixCls}-teacher {
   font-size: 30px;
   padding: 20px 20px 120px;
-  line-height: 1.5em;
+  line-height:@common-line-height;
   text-indent: 2em;
   background: #fff;
 }
 
 .@{PrefixCls}-tagbox {
-  padding-top: 80px;
   padding-bottom: 0;
   &-item{
     background: #fff;

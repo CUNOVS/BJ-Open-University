@@ -9,7 +9,7 @@ const getGroups = (groups, id) => {
   cnIsArray(groups) && groups.filter(item => item.courseid === id)
     .map((data) => {
       arr.push({
-        label: data.name,
+        label: data.name || '',
         value: parseInt(data.id, 10)
       });
     });

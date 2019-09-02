@@ -44,6 +44,7 @@ class AddHomework extends React.Component {
     super(props);
     this.state = {
       fileList: [],
+      hasFilesChange: false
     };
   }
 
@@ -59,19 +60,26 @@ class AddHomework extends React.Component {
     });
   }
 
+  componentWillUnmount () {
+    this.setState({
+      fileList: []
+    });
+  }
+
   onSubmit = () => {
     const { assignId } = this.props;
     this.props.form.validateFields({
       force: true,
     }, (error) => {
       if (!error) {
-        const { fileList } = this.state;
+        const { fileList, hasFilesChange } = this.state;
         const data = {
-          fileList,
+          hasFilesChange,
+          fileList: hasFilesChange ? fileList : [],
           value: {
             ...this.props.form.getFieldsValue(),
             assignmentid: assignId,
-            filemanager: '426570226'
+            //filemanager: '426570226'
           }
         };
         this.props.onSubmit(data);
@@ -83,18 +91,24 @@ class AddHomework extends React.Component {
 
   onRemove = (uid) => {
     this.setState((state) => (
-      { fileList: state.fileList.filter(item => item.uid !== uid) }
+      {
+        fileList: state.fileList.filter(item => item.uid !== uid),
+        hasFilesChange: true
+      }
     ));
   };
 
   getDefaultList = (arr) => {
+    const { fileIdPrefix = '' } = this.props;
     const res = [];
     if (arr.find(item => item.type === 'file')) {
       arr.find(item => item.type === 'file')
         .files
         .map((item, i) => (
           res.push({
-            name: item.filename,
+            fileName: item.filename,
+            filenamePrefix: fileIdPrefix,
+            fileurl: item.fileurl,
             lastModified: item.timemodified * 1000,
             type: item.mimetype,
             uid: `-${i--}`
@@ -114,10 +128,10 @@ class AddHomework extends React.Component {
 
   renderFileList = (files) => (
     files.map((item, i) => {
-      const { name, lastModified, type, uid } = item;
+      const { fileName = '', name = '', lastModified, type, uid } = item;
       return (
         <List key={i} className={styles.fileList} >
-          <Item
+          <List.Item
             extra={
               <div onClick={() => this.onRemove(uid)} >
                 <Icon type={getLocalIcon('/components/delete.svg')} color="#22609c" />
@@ -128,13 +142,21 @@ class AddHomework extends React.Component {
             onClick={() => {
             }}
           >
-            {name}
+            {fileName || name}
             <Brief >{getCommonDate(lastModified / 1000)}</Brief >
-          </Item >
+          </List.Item >
         </List >
       );
     })
   );
+
+  isUploaded = (arr, obj) => {
+    if (cnIsArray(arr) && arr.length > 0) {
+      return arr.find((item => item.name && !item.fileName ? item.name : item.fileName === obj.name));
+    }
+    return false;
+  };
+
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       { fileList } = this.state,
@@ -143,22 +165,23 @@ class AddHomework extends React.Component {
       { wordlimit, wordlimitenabled } = textConfigs,
       props = {
         beforeUpload: (file) => {
-          if (file.size < maxsubmissionsizebytes && fileList.length < maxfilesubmissions) {
+          if (file.size < maxsubmissionsizebytes && fileList.length < maxfilesubmissions && !this.isUploaded(fileList, file)) {
             this.setState(state => ({
               fileList: [...state.fileList, file],
+              hasFilesChange: true
             }));
           } else if (fileList.length >= maxfilesubmissions) {
-            Toast.fail('超过文件最大上传数量');
+            Toast.fail('上传文件数已达上限，不能再次上传。');
+          } else if (this.isUploaded(fileList, file)) {
+            Toast.fail('同名附件已上传，请确认是否重复或改名后再上传。');
           } else {
-            Toast.fail('最大尺寸大于限制尺寸');
+            Toast.fail('文件过大，不能上传');
           }
-
           return false;
         },
         listType: 'picture',
         showUploadList: false,
       };
-    console.log(fileList)
     return (
       <div className={styles.outer} >
         <form className={styles.form} >
@@ -187,22 +210,23 @@ class AddHomework extends React.Component {
               <div >
                 <TitleBox title="文件提交" sup="" />
                 <WingBlank >
-                  <List className={styles.rule} >
-                    <Item >
+                  <div className={styles.rule} >
+                    <div >
                       {maxsubmissionsizebytes && maxfilesubmissions ? `新文件的最大尺寸:${renderSize(maxsubmissionsizebytes)},最多附件${maxfilesubmissions}` : null}
-                    </Item >
-                  </List >
+                    </div >
+                  </div >
                   {this.renderFileList(fileList)}
                   <WhiteSpace size="lg" />
-                  <div className={styles.upload} >
-                    <Upload
+                  <div className={styles.upload} >{
+                    (maxfilesubmissions && fileList.length < maxfilesubmissions) ? <Upload
                       {...props}
                     >
                       <Button type="primary" >
                         <Icon type="add" />
                         添加文件
                       </Button >
-                    </Upload >
+                    </Upload > : ''
+                  }
                   </div >
                 </WingBlank >
               </div >
@@ -211,7 +235,8 @@ class AddHomework extends React.Component {
           }
           <WhiteSpace size="lg" />
           <WingBlank >
-            <Button type="primary"
+            <Button
+              type="primary"
               onClick={
                 () => alert('提交作业', '确定提交本次修改?', [
                   { text: '取消', onPress: () => console.log('cancel') },

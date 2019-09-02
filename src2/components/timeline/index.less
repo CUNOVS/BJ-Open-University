@@ -1,0 +1,15 @@
+@PrefixCls: timeline;
+.@{PrefixCls}-outer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-shadow: @list-shadow;
+  padding: 30px 20px 10px 20px;
+  &-icon {
+    margin-right: 10px;
+  }
+  &-time {
+    font-size: @smallFontSize;
+    color: @color-text-base;
+  }
+}

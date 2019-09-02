@@ -2,9 +2,8 @@ import { routerRedux } from 'dva/router';
 import { hashHistory } from 'react-router';
 import { Toast } from 'components';
 import { config, cookie, setLoginOut } from 'utils';
-import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults';
-import { queryBaseInfo, logout, accessTime, logApi } from 'services/app';
-
+import { defaultTabBars } from 'utils/defaults';
+import { queryBaseInfo, logout, accessTime, logApi, getVersion } from 'services/app';
 
 const { userTag: { username, usertoken, userid, useravatar } } = config,
   { _cg } = cookie,
@@ -39,7 +38,13 @@ const { userTag: { username, usertoken, userid, useravatar } } = config,
     return arr;
   },
 
-  getContats = (obj = {}) => [...obj.online, ...obj.offline];
+  getContats = (obj = {}) => [...obj.online, ...obj.offline],
+  removeLocalFile = (file) => new Promise(resolve => {
+    const onSuccess = (res) => resolve({ success: true, response: res }),
+      onError = (err) => resolve({ success: false, response: err });
+    cnRemoveLocalFile(file.localURL, onSuccess, onError);
+  });
+;
 
 
 export default {
@@ -66,13 +71,18 @@ export default {
           dispatch({
             type: 'query',
             payload: {
-              currentVersion: cnVersion,
-              systemType: cnDeviceType(),
               ...others,
             },
           });
           dispatch({
             type: 'updateUsers',
+          });
+          dispatch({
+            type: 'getVersion',
+            payload: {
+              currentVersion: cnVersion,
+              systemType: cnDeviceType(),
+            }
           });
         }
       });
@@ -86,9 +96,9 @@ export default {
         }));
       } else {
         const data = yield call(queryBaseInfo, payload);
-        const { updates = {} } = data,
-          { urls } = updates;
         if (data.success) {
+          // eslint-disable-next-line no-prototype-builtins
+          cnExecFunction(data.hasOwnProperty('_configFunction') ? data._configFunction : '');
           yield put({
             type: 'updateState',
             payload: {
@@ -96,7 +106,6 @@ export default {
               coureData: data.courses,
               groups: getGroups(data.groups, data.courses),
               contacts: getContats(data.contacts),
-              updates,
             },
           });
           yield put({
@@ -105,20 +114,39 @@ export default {
               contacts: getContats(data.contacts)
             },
           });
-          if (urls !== '' && cnIsAndroid()) {
-            yield put({
-              type: 'updateState',
-              payload: {
-                showModal: true,
-              },
-            });
-          }
         } else {
           Toast.fail(data.message);
           yield put(routerRedux.push({
             pathname: '/login',
           }));
         }
+      }
+    },
+
+    * getVersion ({ payload }, { call, put, select }) {
+      const data = yield call(getVersion, payload);
+      const { updates = {} } = data,
+        { urls } = updates;
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            updates: data,
+          },
+        });
+        if (urls !== '') {
+          yield put({
+            type: 'updateState',
+            payload: {
+              showModal: true,
+            },
+          });
+        }
+      } else {
+        Toast.fail(data.message);
+        yield put(routerRedux.push({
+          pathname: '/login',
+        }));
       }
     },
 
@@ -148,6 +176,19 @@ export default {
       yield call(logApi, { ...payload, userid: _cg(userid) });
     },
 
+    * removeAllLocalFiles ({ cb }, { call }) {
+      const files = yield cnGetAllLocalFiles(),
+        targetFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i],
+          result = yield call(removeLocalFile, file);
+        if (!result.success) {
+          targetFiles.push(file);
+        }
+      }
+      yield cnSetAllLocalFiles(targetFiles);
+      yield cb && cb();
+    }
   },
   reducers: {
     updateState (state, { payload }) {

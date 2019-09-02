@@ -3,17 +3,24 @@ const cheerio = require('cheerio');
 
 module.exports = {
 
-  getQuizInfo: (html) => { // 获取测验信息
+  getQuizInfo: (html, type) => { // 获取测验信息
     const $ = cheerio.load(html);
     const obj = {};
+    if (type === 'description') {
+      obj.title = `${$('.accesshide')
+        .text()}`;
+      obj.qtext = `${$('.qtext')
+        .html()}`;
+      return obj;
+    }
     obj.title = `${$('.no')
       .text()}`;
     obj.state = `${$('.state')
       .text()}`;
     obj.grade = `${$('.grade')
       .text()}`;
-    obj.qtext = `${$('.qtext')
-      .html()}`;
+    obj.qtext = `${$('.qtext').length ? $('.qtext')
+      .html() : ''}`;
     obj.prompt = `${$('.prompt')
       .text()}`;
     return obj;
@@ -199,6 +206,10 @@ module.exports = {
       items.value = el.text();
     }
     return items;
-  }
+  },
 
+  getQuizText: (html) => {
+    const quizText = cheerio('div', html);
+    return quizText.length ? quizText.html() : html;
+  }
 };

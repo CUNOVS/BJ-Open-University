@@ -10,38 +10,38 @@ class Multianswer extends React.Component {
     this.props.onRef(this);
   }
 
-  onSubmit () {
-    const fieldsValue = this.props.form.getFieldsValue(),
-      result = {};
-    for (let att in fieldsValue) {
-      const value = fieldsValue[att];
-      if (cnIsArray(value)) {
-        value.map(v => {
-          result[att] = v;
-        });
-      } else if (typeof value === 'object') {
-        for (let attV in value) {
-          result[attV] = value[attV];
-        }
-      } else {
-        result[att] = value;
-      }
-    }
-    return result;
-  }
+  // onSubmit () {
+  //   const fieldsValue = this.props.form.getFieldsValue(),
+  //     result = {};
+  //   for (let att in fieldsValue) {
+  //     const value = fieldsValue[att];
+  //     if (cnIsArray(value)) {
+  //       value.map(v => {
+  //         result[att] = v;
+  //       });
+  //     } else if (typeof value === 'object') {
+  //       for (let attV in value) {
+  //         result[attV] = value[attV];
+  //       }
+  //     } else {
+  //       result[att] = value;
+  //     }
+  //   }
+  //   return result;
+  // }
 
   render () {
     const { getFieldDecorator } = this.props.form;
     const { answer } = this.props;
     const getSelect = ({ id, value = '', items = [] }) =>
-      (<div >{getFieldDecorator(id, {
+      (<div>{getFieldDecorator(id, {
         initialValue: value // 初始值
       })(
-        <Picker data={items} cols={1} >
-          <List.Item arrow="horizontal" wrap >{'请选择答案'}</List.Item >
-        </Picker >
+        <Picker data={items} cols={1}>
+          <List.Item arrow="horizontal" wrap>{'请选择答案'}</List.Item>
+        </Picker>
       )}
-      </div >);
+      </div>);
     const packContents = (text) => {
         const trs = cheerio('tr', 'table', text),
           tdLength = trs[0].children.length;
@@ -93,13 +93,13 @@ class Multianswer extends React.Component {
         return dataItems.map((dataItem, i) => {
           const { title = '', items } = dataItem;
           if (items.length > 0) {
-            return (<div key={i} >
-              <List renderHeader={() => <h3 className={styles.title} >{title}</h3 >} >{
+            return (<div key={i}>
+              <List renderHeader={() => <h3 className={styles.title}>{title}</h3>}>{
                 items.map((item) => {
                   const { id = '', value = '', size = '', type = 'input', currect = '' } = item;
                   if (type === 'input') {
                     return (
-                      <div key={id} className={styles.answer} >
+                      <div key={id} className={styles.answer}>
                         {getFieldDecorator(id, {
                           initialValue: value // 初始值
                         })(
@@ -110,25 +110,37 @@ class Multianswer extends React.Component {
                           />
                         )}
                         {
-                          currect !== '' && <ResultIcon currect={currect} />
+                          currect !== '' && <ResultIcon currect={currect}/>
                         }
-                      </div >
+                      </div>
                     );
                   }
                   return '';
                 })
               }
-              </List >
-            </div >);
+              </List>
+            </div>);
           }
           return '';
         });
+      },
+      packContentInfos = (text) => {
+        const table = cheerio('table', text),
+          others = table.siblings('p');
+        let result = [];
+        if (others.length) {
+          others.each((i, n) => {
+            result.push(cheerio.html(n));
+          });
+        }
+        return result.length ? <div dangerouslySetInnerHTML={{ __html: result.join('') }}></div> : '';
       };
     return (
-      <div >
+      <div>
+        {packContentInfos(answer)}
         {getContents(answer)}
-        <WhiteSpace size="lg" />
-      </div >
+        <WhiteSpace size="lg"/>
+      </div>
     );
   }
 }
@@ -140,4 +152,4 @@ Multianswer.defaultProps = {
   onRef: () => (false)
 };
 
-export default createForm()(Multianswer);
+export default Multianswer;

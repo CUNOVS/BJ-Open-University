@@ -13,9 +13,7 @@ const PrefixCls = 'timeline';
 const TimeLine = () => {
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <div className={styles[`${PrefixCls}-outer-icon`]}>
-        <Icon type={getLocalIcon('/dashboard/calendar.svg')} color="#22609c" />
-      </div>
+        <Icon type={getLocalIcon('/dashboard/calendar.svg')} size="xs" color="#22609c" />
       <div className={styles[`${PrefixCls}-outer-time`]}>
         {DateChange()}
       </div>

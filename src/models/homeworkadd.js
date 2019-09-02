@@ -3,11 +3,26 @@ import modelExtend from 'dva-model-extend';
 import { UploadFile } from 'services/forum';
 import { addHomeWork } from 'services/resource';
 import { model } from 'models/common';
-import { userTag } from 'utils/config';
+import { userTag, api as configApis } from 'utils/config';
 import { _cg } from 'utils/cookie';
 import { Toast } from 'components';
 
-const { usertoken } = userTag;
+const { usertoken } = userTag,
+  localUploadFile = (uploadFile, params = {}) => new Promise((resolve, reject) => {
+    const onSuccess = (res) => resolve({ success: true, response: res }),
+      onError = (err) => resolve({ success: false, response: err }),
+      curToken = _cg(usertoken);
+    const { fileName = '', fileurl = '', filenamePrefix = '', type = '' } = uploadFile;
+    cnGetOrDownAndUploadFile(configApis.UploadFiles(), {
+      fileName,
+      filenamePrefix,
+      fileUrl: `${fileurl}?token=${curToken}`,
+      mimeType: type
+    }, {
+      ...params,
+      token: curToken
+    }, onSuccess, onError);
+  });
 
 export default modelExtend(model, {
   namespace: 'homeworkadd',
@@ -17,21 +32,44 @@ export default modelExtend(model, {
   },
   effects: {
     * uploadFile ({ payload }, { call, put, select }) {
-      const { fileList, value } = payload;
-      let formData = new FormData();
-      for (let i = 0; i < fileList.length; i++) {
-        const { itemid } = yield select(_ => _.homeworkadd);
-        formData.append('file', fileList[i]);
-        formData.append('token', _cg(usertoken));
-        formData.append('itemid', itemid);
-        formData.append('filearea', 'draft');
-        const response = yield call(UploadFile, formData);
-        formData = new FormData();
-        if (response) {
+      const { fileList = [], value = {} } = payload;
+      let isContinue = true;
+      for (let i = 0; isContinue && i < fileList.length; i++) {
+        const uploadFile = fileList[i];
+        const { itemid = 0 } = yield select(_ => _.homeworkadd);
+        let currentItemid = '',
+          errorMsg = '';
+        if (!uploadFile.fileName && uploadFile.name) {
+          let formData = new FormData();
+          formData.append('file', uploadFile);
+          formData.append('token', _cg(usertoken));
+          formData.append('itemid', itemid);
+          formData.append('filearea', 'draft');
+          const result = yield call(UploadFile, formData);
+          if (result && result[0]) {
+            currentItemid = result[0].itemid || '';
+          } else {
+            errorMsg = result.error;
+          }
+        } else if (uploadFile.fileName) {
+          const { success, ...otherResult } = yield call(localUploadFile, uploadFile, { itemid, filearea: 'draft' });
+          if (success === true) {
+            const { response = [] } = otherResult,
+              responseData = response.length > 0 ? response[0] : {};
+            if (responseData.hasOwnProperty('itemid')) {
+              currentItemid = responseData.itemid;
+            } else if (responseData.hasOwnProperty('error')) {
+              errorMsg = responseData.error;
+            }
+          } else {
+            errorMsg = otherResult.error || (otherResult.response && otherResult.response.message);
+          }
+        }
+        if (currentItemid !== '') {
           yield put({
             type: 'updateState',
             payload: {
-              itemid: response[0].itemid
+              itemid: currentItemid
             }
           });
         } else {
@@ -41,19 +79,21 @@ export default modelExtend(model, {
               animating: false
             }
           });
+          Toast.fail(errorMsg || '上传文件时，发声未知错误，请稍候重试。');
+          isContinue = false;
         }
-        if (i === fileList.length - 1) {
+        if (isContinue && i === fileList.length - 1) {
           yield put({
             type: 'AddHomework',
             payload: {
               ...value,
-              filemanager: response[0].itemid
+              filemanager: currentItemid
             }
           });
         }
       }
     },
-    * AddHomework ({ payload }, { call, put }) {
+    * AddHomework ({ payload, cb }, { call, put }) {
       const { success, message = '提交失败' } = yield call(addHomeWork, payload);
       if (success) {
         yield put({ type: 'goBack' });
@@ -61,17 +101,18 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            animating: false
+            animating: false,
+            itemid: 0
           }
         });
       } else {
         yield put({
           type: 'updateState',
           payload: {
-            animating: false
+            animating: false,
+            itemid: 0
           }
         });
-
         Toast.fail(message);
       }
     }

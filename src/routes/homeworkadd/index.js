@@ -1,9 +1,10 @@
 import React from 'react';
 import Nav from 'components/nav';
-import { ActivityIndicator, Modal } from 'components';
+import { ActivityIndicator, Modal, Toast } from 'components';
 import { routerRedux } from 'dva/router';
 import AddHomework from 'components/addHomework';
 import { connect } from 'dva';
+import styles from '../../themes/default.less';
 
 const alert = Modal.alert;
 
@@ -13,7 +14,7 @@ class HomeWorkAdd extends React.Component {
   }
 
   componentWillMount () {
-
+    document.documentElement.scrollTop = 0;
   }
 
   componentDidMount () {
@@ -28,13 +29,20 @@ class HomeWorkAdd extends React.Component {
     });
   }
 
-
-  onSubmit = (data) => {
-    const { fileList, value } = data;
+  onSubmit = (data = {}) => {
+    let { fileList = [], value = {}, hasFilesChange = false } = data;
+    if (!hasFilesChange && fileList.length === 0 && Object.keys(value).length <= 1) {
+      this.props.dispatch(routerRedux.goBack());
+      Toast.success('提交成功');
+      return;
+    }
     if (fileList.length > 0) {
-      this.props.dispatch({
-        type: 'homeworkadd/uploadFile',
-        payload: data,
+      const { coursesId = '' } = this.props.location.query;
+      fileList = fileList.map(f => {
+        if (typeof f === 'object' && f.filenamePrefix) {
+          f.filenamePrefix = f.filenamePrefix.startsWith(coursesId + '_') ? f.filenamePrefix : `${coursesId}${f.filenamePrefix}`;
+        }
+        return f;
       });
       this.props.dispatch({
         type: 'homeworkadd/updateState',
@@ -42,15 +50,28 @@ class HomeWorkAdd extends React.Component {
           animating: true
         }
       });
+      this.props.dispatch({
+        type: 'homeworkadd/uploadFile',
+        payload: {
+          ...data,
+          fileList,
+        },
+      });
     } else {
+      const clearAllFile = hasFilesChange === true ? { itemid: 0, filemanager: 1 } : {};
       this.props.dispatch({
         type: 'homeworkadd/AddHomework',
-        payload: value,
-      });
-      this.props.dispatch({
-        type: 'homeworkadd/updateState',
         payload: {
-          animating: true
+          ...value,
+          ...clearAllFile
+        },
+        cb: () => {
+          this.props.dispatch({
+            type: 'homeworkadd/updateState',
+            payload: {
+              animating: true
+            }
+          });
         }
       });
     }
@@ -99,16 +120,17 @@ class HomeWorkAdd extends React.Component {
       { itemid, animating } = this.props.homeworkadd,
       { data = {} } = this.props.homework,
       { configs = [], submitDataType } = data;
-    const { showBackModal = false } = this.props.app;
+    const { showBackModal = false, users: currentUser = {} } = this.props.app;
     const props = {
       configs: this.getInfo(configs),
       assignId,
       onSubmit: this.onSubmit,
       itemid,
       submitDataType,
+      fileIdPrefix: currentUser.hasOwnProperty('userid') ? `_${currentUser.userid}_` : ''
     };
     return (
-      <div >
+      <div className={styles.whiteBg} >
         <Nav title="提交" dispatch={this.props.dispatch} isAlert />
         <AddHomework {...props} />
         <ActivityIndicator

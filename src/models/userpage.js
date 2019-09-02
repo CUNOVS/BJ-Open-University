@@ -20,14 +20,23 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(location => {
-        let { pathname, query } = location;
+        let { pathname, query, action } = location;
         if (pathname.startsWith('/userpage')) {
-          dispatch({
-            type: 'query',
-            payload: {
-              userid: query.userid,
-            },
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                data: {},
+                contacts: [],
+              },
+            });
+            dispatch({
+              type: 'query',
+              payload: {
+                userid: query.userid,
+              },
+            });
+          }
         }
       });
     },

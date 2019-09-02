@@ -11,7 +11,21 @@ class AttendanceHead extends React.Component {
     super(props);
   }
 
-  getPassedNum = (arr) => arr.filter(item => item.stat === 1).length;
+  getPassedNum = (arr) => {
+    const { weekStat } = this.props.attendance;
+    let num = 0;
+    arr.map((item, i) => {
+      if (item[i] === 1) {
+        num += 1;
+      }
+    });
+    if (weekStat) {
+      num += 1;
+    }
+    return num;
+  };
+
+  getNoPassedNum = (arr) => arr.filter(item => item.stat === 0).length;
 
   render () {
     const { fullname, startdate, enddate, attendance } = this.props,
@@ -36,7 +50,7 @@ class AttendanceHead extends React.Component {
                 </div >
               </div >
               <div className={styles[`${PrefixCls}-population-content-right-imag-tips`]} >
-                {`累计未达标周次${passedWeeks.length - this.getPassedNum(passedWeeks)}`}
+                {`累计未达标周次${this.getNoPassedNum(passedWeeks)}`}
               </div >
             </div >
           </div >

@@ -1,0 +1,43 @@
+@PrefixCls: lessondetails;
+.@{PrefixCls}-outer {
+  max-height: 100vh;
+}
+
+.@{PrefixCls}-list {
+  :global {
+    .am-list-body {
+      border: 0 none;
+    }
+    .am-list-item:not(:last-child) .am-list-line {
+      border: 0 none;
+    }
+  }
+}
+
+.@{PrefixCls}-teacher {
+  font-size: 30px;
+  padding: 20px 20px 120px;
+  line-height: 1.5em;
+  text-indent: 2em;
+  background: #fff;
+}
+
+.@{PrefixCls}-tagbox {
+  padding-top: 80px;
+  padding-bottom: 0;
+  &-item{
+    background: #fff;
+  }
+}
+
+.@{PrefixCls}-lessonInfo {
+  padding: 20px;
+
+  &-title {
+    font-size: @titleFontSize;
+    color: @color-text-base;
+    font-weight: bold;
+    padding: 20px ;
+  }
+}
+

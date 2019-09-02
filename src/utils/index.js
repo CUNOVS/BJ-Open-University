@@ -217,6 +217,13 @@ const queryArray = (array, key, keyAlias = 'key') => {
   }
   return null;
 };
+
+const isUsefulPic = (src) => {
+  const ImgObj = new Image();
+  ImgObj.src = src;
+
+  return ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0);
+};
 /**
  *
  * @param path
@@ -224,7 +231,7 @@ const queryArray = (array, key, keyAlias = 'key') => {
  * @returns {*}
  */
 const getImages = (path = '', type = 'defaultImg') => {
-  if (path instanceof Blob || path.startsWith('blob:')) {
+  if (path instanceof Blob || path.startsWith('blob:') || path.startsWith('data:')) {
     return path;
   }
   if (path === '' || !path) {
@@ -244,20 +251,31 @@ const getImages = (path = '', type = 'defaultImg') => {
  * @returns {*}
  */
 const getDefaultBg = (path = '') => {
-  if (path instanceof Blob || path.startsWith('blob:')) {
+  if (path instanceof Blob || path.startsWith('blob:')|| path.startsWith('data:')) {
     return path;
   }
   if (path === '' || !path) {
     return defaultBg;
   }
   if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path.match(/token=/) ? path : `${path}?token=${userToken()}`;
+    if (path.match(/token=/)) {
+      return isUsefulPic(path) ? path : defaultBg;
+    }
+    return isUsefulPic(`${path}?token=${userToken()}`) ? `${path}?token=${userToken()}` : defaultBg;
   }
   return `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`.match(/token=/) ?
-    `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+    isUsefulPic(`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`) ?
+      `${config.baseURL + (path.startsWith('/') ? '' : '/') + path}`
+      :
+      defaultBg
     :
-    (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`);
+    isUsefulPic((`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`))
+      ?
+      (`${config.baseURL + (path.startsWith('/') ? '' : '/') + path}?token=${userToken()}`)
+      :
+      defaultBg;
 };
+
 const getErrorImg = (el, type = 'default') => {
   if (el && el.target) {
     if (type !== 'user') {
@@ -288,7 +306,7 @@ const setLoginOut = () => {
   _cr(userloginname);
   cnDeleteAlias(_cg(userloginname), _cg(usertoken));
 };
-const getLocalIcon = (icon) => {
+const getLocalIcon = (icon = '') => {
   const regex = /\/([^\/]+?)\./g;
   let addIconName = [];
   if (icon.startsWith('/') && (addIconName = regex.exec(icon)) && addIconName.length > 1) {
@@ -298,16 +316,25 @@ const getLocalIcon = (icon) => {
   return icon;
 };
 
+const getAntTabBar = () => {
+  const tabBarEl = document.querySelector('.am-tabs-tab-bar-wrap .am-tab-bar-bar');
+  return tabBarEl && tabBarEl.clientHeight ? tabBarEl : '';
+};
+
 /**
  *
  * @param el 当前元素
  * @returns {number} 父元素不是body时元素相对body的offsetTop
  */
 const getOffsetTopByBody = (el) => {
-  let offsetTop = 0;
+  let offsetTop = 0,
+    tabbarDiv;
   while (el && el.tagName !== 'BODY') {
     offsetTop += el.offsetTop;
     el = el.offsetParent;
+  }
+  if ((tabbarDiv = getAntTabBar()) && tabbarDiv.offsetTop) {
+    offsetTop += (cnhtmlHeight - tabbarDiv.offsetTop);
   }
   return offsetTop;
 };
@@ -402,6 +429,7 @@ module.exports = {
   classnames,
   getErrorImg,
   getDefaultBg,
+  isUsefulPic,
   getImages,
   queryURL,
   setLoginIn,
@@ -416,6 +444,7 @@ module.exports = {
   hasSystemEmoji,
   DateChange,
   getTitle,
+  getAntTabBar,
   changeLessonDate,
   getTaskIcon,
   isToday,

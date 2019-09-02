@@ -1,0 +1,33 @@
+@import '../../themes/default.less';
+
+@PrefixCls: medal;
+
+.@{PrefixCls}-imag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  background: white;
+  img {
+    height: 180px;
+    width: 180px;
+  }
+}
+
+.@{PrefixCls}-top {
+  background: #e6e6e6;
+  padding: 20px;
+}
+
+.@{PrefixCls}-title {
+  color: #888;
+  display: flex;
+  align-items: center;
+}
+
+.@{PrefixCls}-text {
+  background: white;
+  font-size: @mediumFontSize;
+  padding: 30px;
+  font-weight: 500;
+}

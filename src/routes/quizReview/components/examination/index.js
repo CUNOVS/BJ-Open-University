@@ -1,4 +1,5 @@
 import React from 'react';
+import { createForm } from 'rc-form';
 import { Card, WhiteSpace } from 'components';
 import Choose from 'components/quizType/choose';
 import Essay from 'components/quizType/essay';
@@ -8,6 +9,7 @@ import ShortAnswer from 'components/quizType/shortanswer';
 import Gapselect from 'components/quizType/gapselect';
 import styles from './index.less';
 
+@createForm()
 class Examination extends React.Component {
   constructor (props) {
     super(props);
@@ -31,9 +33,9 @@ class Examination extends React.Component {
     } else if (item.type === 'match') {
       return <Match answer={item.choose} type="review" />;
     } else if (item.type === 'multianswer') {
-      return <Multianswer answer={item.html} type="review" />;
+      return <Multianswer answer={item.html} form={this.props.form} type="review" />;
     } else if (item.type === 'gapselect') {
-      return <Gapselect answer={item.html} type="review" />;
+      return <Gapselect answer={item.html} form={this.props.form} type="review" />;
     }
   };
 

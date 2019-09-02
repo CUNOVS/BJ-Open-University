@@ -17,7 +17,7 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
     { listData, hasMore, scrollerTop } = groupdetails,
     onRefresh = (callback) => {
       dispatch({
-        type: `${PrefixCls}/queryList`,
+        type: `${PrefixCls}/query`,
         payload: {
           callback,
           isRefresh: true,
@@ -27,7 +27,7 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
     },
     onEndReached = (callback) => {
       dispatch({
-        type: `${PrefixCls}/queryList`,
+        type: `${PrefixCls}/query`,
         payload: {
           callback,
           courseid
@@ -57,18 +57,21 @@ function GroupDetails ({ location, dispatch, groupdetails }) {
           onRefresh={onRefresh}
           hasMore={hasMore}
           onScrollerTop={onScrollerTop.bind(null)}
+          useBodyScroll
           scrollerTop={scrollerTop}
         />
       );
 
       return result;
     };
+
   return (
     <div >
       <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
       <div className={styles.outer} >
-        <div className={styles.title}>{groupName}</div >
+        <div className={styles.title} >{groupName}</div >
+        <WhiteSpace />
         {listData.length > 0 ? getContents(listData) : ''}
       </div >
     </div >

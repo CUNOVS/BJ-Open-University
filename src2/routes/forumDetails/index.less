@@ -1,0 +1,44 @@
+@PrefixCls: forumDetails;
+
+.@{PrefixCls}-master {
+  padding: 30px 30px 40px;
+  background: white;
+  &-man {
+    background: white;
+    display: flex;
+    align-items: center;
+    font-size: @titleFontSize;
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-right: 0.2rem;
+    }
+    > span {
+      display: flex;
+      flex-direction: column;
+    }
+    &-username {
+      font-size: @titleFontSize;
+      margin-bottom: 10px;
+    }
+    &-time {
+      font-size: @smallFontSize;
+      color: @color-text-paragraph;
+    }
+  }
+  > div:nth-child(2) {
+    font-size: @mediumFontSize;
+    line-height: 0.4rem;
+  }
+  > div:nth-child(3) {
+    display: flex;
+    align-items: center;
+    color: @primary-color;
+    justify-content: flex-end;
+  }
+}
+
+.@{PrefixCls}-replyList {
+  padding: 20px;
+}

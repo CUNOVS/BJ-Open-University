@@ -13,49 +13,53 @@ import styles from './index.less';
 const PrefixCls = 'photobox';
 
 const PhotoBox = (props) => (
-  <div className={styles[`${PrefixCls}-outer`]} style={{ backgroundImage: `url(${props.bg})` }} >
-    <div className={styles[`${PrefixCls}-teacher`]} >
-      {props.tutor.length > 0 ?
-        props.tutor.slice(0, 2)
-          .map(item => (
-            <span
-              key={item.id}
-              className={styles[`${PrefixCls}-tutorteacher`]}
-              onClick={props.handlerChartClick.bind(null, 'conversation', {
-                fromuserid: item.id,
-                name: item.userData.fullname,
-              }, props.dispatch)}
-            >
+  <div >
+    <div className={styles[`${PrefixCls}-outer`]} style={{ backgroundImage: `url(${props.bg})` }} >
+      <div className={styles[`${PrefixCls}-teacher`]} >
+        {props.tutor.length > 0 ?
+          props.tutor.slice(0, 2)
+            .map(item => (
+              <span
+                key={item.id}
+                className={styles[`${PrefixCls}-tutorteacher`]}
+                onClick={props.handlerChartClick.bind(null, 'conversation', {
+                  fromuserid: item.id,
+                  name: item.userData.fullname,
+                }, props.dispatch)}
+              >
       辅导教师：{item.userData.fullname || ''}
             </span >
-          )) : null}
-      {props.master.length > 0 ?
-        <span
-          key={props.master[0].id}
-          className={styles[`${PrefixCls}-masterteacher`]}
-          onClick={props.handlerChartClick.bind(null, 'conversation', {
-            fromuserid: props.master[0].id,
-            name: props.master[0].fullname
-          }, props.dispatch)}
-        >
+            )) : null}
+        {props.master.length > 0 ?
+          <span
+            key={props.master[0].id}
+            className={styles[`${PrefixCls}-masterteacher`]}
+            onClick={props.handlerChartClick.bind(null, 'conversation', {
+              fromuserid: props.master[0].id,
+              name: props.master[0].fullname
+            }, props.dispatch)}
+          >
       责任教师：{props.master[0].fullname || ''}
         </span > :
-        null}
+          null}
+      </div >
     </div >
-    {props.hasAttendance ?
-      <div className={styles[`${PrefixCls}-attendance`]} onClick={props.attendanceClick} >
-        <div className={styles[`${PrefixCls}-attendance-info`]} >
-          <span ><Icon type={getLocalIcon('/components/attendance.svg')} color="#22609c" /></span >
-          <span >本周考勤</span >
+    {props.hasAttendance && props.daypass !== '0' ?
+      <div className={styles[`${PrefixCls}-attendance-outer`]} >
+        <div className={styles[`${PrefixCls}-attendance`]} onClick={props.attendanceClick} >
+          <div className={styles[`${PrefixCls}-attendance-info`]} >
+            <Icon type={getLocalIcon('/components/attendance.svg')} size="xs" color="#22609c" />
+            <span >本周考勤</span >
+          </div >
+          <CnBadge
+            text={props.weekStat ? '达标' : '未达标'}
+            background={props.weekStat ? '#1eb259' : '#f34e14'}
+            color="#fff"
+          />
         </div >
-        <CnBadge
-          text={props.weekStat ? '达标' : '未达标'}
-          background={props.weekStat ? '#1eb259' : '#f34e14'}
-          color="#fff"
-        />
       </div >
       :
-      ''
+      null
     }
   </div >
 );

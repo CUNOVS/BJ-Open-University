@@ -6,20 +6,25 @@
 }
 
 .@{PrefixCls}-header {
-  position: fixed;
-  z-index: 100;
-  top: 0;
   width: 100%;
   height: @primary-header-height;
+
   :global {
     .am-navbar {
       background: @navColor;
     }
+
     .am-navbar-title {
       font-size: 34px;
       color: #fff;
     }
   }
+}
+
+.nav-position-fixed {
+  position: fixed;
+  z-index: 100;
+  top: 0;
 }
 
 .shadow {

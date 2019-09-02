@@ -6,13 +6,14 @@ import Nav from 'components/nav';
 import AttendanceHead from 'components/attendancehead';
 import WeekBox from 'components/weekbox';
 import { handlerChangeRouteClick } from 'utils/commonevents';
+import { ContentSkeleton } from 'components/skeleton';
 import styles from './index.less';
 
 
 const PrefixCls = 'attendancedetails';
 
 
-function AttendanceDetails ({ location, dispatch, attendancedetails }) {
+function AttendanceDetails ({ location, dispatch, attendancedetails, fetching }) {
   const { name = '考勤详情', fullname = '', startdate, enddate } = location.query,
     { data } = attendancedetails;
   const headProps = {
@@ -25,15 +26,20 @@ function AttendanceDetails ({ location, dispatch, attendancedetails }) {
     <div >
       <Nav title={name} hasShadow dispatch={dispatch} />
       <WhiteSpace />
-      <div className={styles[`${PrefixCls}-outer`]} >
-        <AttendanceHead {...headProps} />
-        <WeekBox attendance={data} />
-      </div >
+      {
+        fetching ?
+          <ContentSkeleton />
+          :
+          <div className={styles[`${PrefixCls}-outer`]} >
+            <AttendanceHead {...headProps} />
+            {parseInt(enddate, 10) * 1000 < new Date().getTime() ? null : <WeekBox attendance={data} />}
+          </div >
+      }
     </div >
   );
 }
 
 export default connect(({ loading, attendancedetails }) => ({
-  loading,
+  fetching: loading.effects[`${PrefixCls}/fetch`],
   attendancedetails,
 }))(AttendanceDetails);

@@ -4,13 +4,12 @@
  * @Description:
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import styles from './index.less';
 import { Icon } from 'components';
 import InnerHtml from 'components/innerhtml';
 import { handlerDivInnerHTMLClick } from 'utils/commonevents';
 import classNames from 'classnames';
+import styles from './index.less';
 
 const PrefixCls = 'introduction';
 
@@ -39,15 +38,19 @@ class Introduction extends React.Component {
           isShow: true,
         });
       }
-    }, 5000);
+    }, 600);
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.dataSource !== this.props.dataSource) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
-      });
-    }
+  componentWillReceiveProps () {
+    this.timer = setTimeout(() => {
+      const outerHei = ReactDOM.findDOMNode(this.out) && ReactDOM.findDOMNode(this.out).offsetHeight,
+        innerHei = ReactDOM.findDOMNode(this.inner) && ReactDOM.findDOMNode(this.inner).offsetHeight;
+      if (innerHei > outerHei) {
+        this.setState({
+          isShow: true,
+        });
+      }
+    }, 300);
   }
 
   componentWillUnmount () {
@@ -60,24 +63,25 @@ class Introduction extends React.Component {
         handlerDivInnerHTMLClick(e, courseid, dispatch);
       };
     return (
-      <div className={styles[`${PrefixCls}-outer`]}>
+      <div className={styles[`${PrefixCls}-outer`]} >
         <div
           ref={el => this.out = el}
-          className={classNames(styles[`${PrefixCls}-outer-content`], { [styles.open]: this.state.isOpen })}
+          className={styles[`${PrefixCls}-outer-content`]}
+          style={{ maxHeight: this.state.isOpen ? '100%' : '14vh' }}
         >
-          <div ref={el => this.inner = el}><InnerHtml data={data} handleClick={handleDivClick.bind(null)} />
-          </div>
-        </div>
+          <div ref={el => this.inner = el} ><InnerHtml data={data} handleClick={handleDivClick.bind(null)} />
+          </div >
+        </div >
         {this.state.isShow ?
           <div className={classNames(styles[`${PrefixCls}-mask`], { [styles.vague]: !this.state.isOpen })}
             onClick={this.handleClick}
           >
             <Icon type={this.state.isOpen ? 'up' : 'down'} size="lg" color="#22609c" />
-          </div>
+          </div >
           :
           ''
         }
-      </div>
+      </div >
     );
   }
 }

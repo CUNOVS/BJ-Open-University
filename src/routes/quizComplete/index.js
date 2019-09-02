@@ -11,6 +11,7 @@ import { List, Button, NoticeBar, WingBlank, WhiteSpace, Modal, Toast } from 'co
 import { handlerChangeRouteClick } from 'utils/commonevents';
 import CountDown from 'components/countdown';
 import TitleBox from 'components/titlecontainer';
+import Nocontent from 'components/nocontent';
 import styles from './index.less';
 
 
@@ -48,11 +49,11 @@ class QuizComplete extends React.Component {
   };
 
   warningClick = () => {
-    Toast.fail('固定导航，只能按顺序答题');
+    Toast.fail('只能按顺序答题');
   };
 
   showModal = () => {
-    alert('提交', '一旦提交，您将不能再修改在这次答题的答案。', [
+    alert('提交', '测验一旦提交，答案将不可更改，请确认是否要提交。', [
       { text: '取消', onPress: () => console.log() },
       { text: '提交', onPress: () => this.onSubmit() },
     ]);
@@ -60,55 +61,66 @@ class QuizComplete extends React.Component {
 
   render () {
     const { name = '完成', attemptid = '', quizid = '', timelimit } = this.props.location.query,
-      { questions } = this.props.quizComplete;
+      { questions } = this.props.quizComplete,
+      { loadingPage = false } = this.props;
     const { page = 0, navmethod = '', data: { options = {} } } = this.props.quizDetails;
     const { endtime } = options;
     return (
       <div >
         <Nav title={name} dispatch={this.props.dispatch} />
-        <div >
-          <TitleBox title="答题情况报告" sup="" />
-          <List >
-            {
-              cnIsArray(questions) && questions.map(item =>
-                (<List.Item
-                  key={item.page}
-                  extra={item.status}
-                  arrow="horizontal"
-                  onClick={
-                    navmethod !== 'sequential' ? handlerChangeRouteClick.bind(null, 'quizDetails', {
-                        quizid,
-                        attemptid,
-                        page: item.page,
-                        state: 'inprogress',
-                        name,
-                        navmethod
-                      }, this.props.dispatch)
-                      :
-                      this.warningClick
+        {
+          loadingPage ?
+            <Nocontent isLoading={loadingPage} />
+            :
+            <div >
+              <div >
+                <TitleBox title="答题情况报告" sup="" />
+                <List >
+                  {
+                    cnIsArray(questions) && questions.map(item =>
+                      (<List.Item
+                        key={item.slot}
+                        extra={item.status}
+                        arrow={navmethod !== 'sequential' ? 'horizontal' : null}
+                        onClick={
+                          navmethod !== 'sequential' ? handlerChangeRouteClick.bind(null, 'quizDetails', {
+                              quizid,
+                              attemptid,
+                              page: item.page,
+                              state: 'inprogress',
+                              name,
+                              navmethod,
+                              timelimit
+                            }, this.props.dispatch)
+                            :
+                            null
+                        }
+                      >
+                        {item.type !== 'description' ? `题目${item.number}` : '信息'}
+                      </List.Item >)
+                    )
                   }
-                >
-                  {item.slot}
-                </List.Item >)
-              )
-            }
-          </List >
-        </div >
-        <WhiteSpace size="lg" />
-        <WingBlank >
-          <Button onClick={handlerChangeRouteClick.bind(null, 'quizDetails', {
-            quizid,
-            attemptid,
-            page,
-            state: 'inprogress',
-            name,
-            navmethod
-          }, this.props.dispatch)}
-          >返回试题</Button >
-          <WhiteSpace />
-          {endtime > 0 && timelimit > 0 ? <CountDown endTime={endtime && endtime} handler={this.onSubmit} /> : null}
-          <Button loading={this.props.sending} type="primary" onClick={this.showModal} >提交所有答案并结束</Button >
-        </WingBlank >
+                </List >
+              </div >
+              <WhiteSpace size="lg" />
+              <WingBlank >
+                <Button onClick={handlerChangeRouteClick.bind(null, 'quizDetails', {
+                  quizid,
+                  attemptid,
+                  page,
+                  state: 'inprogress',
+                  name,
+                  navmethod,
+                  timelimit
+                }, this.props.dispatch)}
+                >返回试题</Button >
+                <WhiteSpace />
+                {endtime > 0 && timelimit > 0 ? <CountDown endTime={endtime && endtime} handler={this.onSubmit} /> : null}
+                <Button loading={this.props.sending} type="primary" onClick={this.showModal} >提交所有答案并结束</Button >
+              </WingBlank >
+              <WhiteSpace size="lg" />
+            </div >
+        }
       </div >
     );
   }

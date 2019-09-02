@@ -3,7 +3,7 @@ import Nav from 'components/nav';
 import { connect } from 'dva';
 import { Icon, List, Button, NoticeBar } from 'components';
 import Introduction from 'components/introduction';
-import { getImages, getDurationDay } from 'utils';
+import { getImages, getDurationDay, getLocalIcon } from 'utils';
 import { forumRow } from 'components/row';
 import NoContent from 'components/nocontent';
 import ListView from 'components/listview';
@@ -37,6 +37,7 @@ class Forum extends React.Component {
         modname
       }
     });
+    localStorage.removeItem('replyOpen');
   }
 
   componentWillUnmount () {
@@ -142,18 +143,23 @@ class Forum extends React.Component {
         </div >
         <div className={styles.reset} style={{ height: this.state.height }} >
           <div className={styles[`${PrefixCls}-title`]} >
-            <div ><Icon type="down" />{`话题(${numdiscussions})`}</div >
-            <div style={{ color: '#1296db' }} />
+            <Icon type={getLocalIcon('/sprite/talk.svg')} />
+            <div >{`话题(${numdiscussions})`}</div >
           </div >
-          {discussions.length > 0 ? getContents(discussions) : <NoContent />}
+          {
+            discussions.length > 0 ?
+              getContents(discussions)
+              :
+              <NoContent isLoading={this.props.loadForum} />
+          }
         </div >
       </div >
     );
   }
 }
 
-
-export default connect(({ forum, app }) => ({
+export default connect(({ loading, forum, app }) => ({
+  loadForum: loading.effects[`${PrefixCls}/queryList`],
   forum,
   app
 }))(Forum);

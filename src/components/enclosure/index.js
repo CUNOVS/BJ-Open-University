@@ -19,12 +19,15 @@ const getIcon = (type) => {
   if (RegExp(/pdf/)
     .exec(type)) {
     return '/components/PDF.svg';
-  } else if (RegExp(/docx/)
+  } else if (RegExp(/word/)
     .exec(type)) {
     return '/components/DOCX.svg';
   } else if (RegExp(/xlsb/)
     .exec(type)) {
     return '/components/EXCEL.svg';
+  } else if (RegExp(/^(\s|\S)+(jpeg|jpg|png|JPG|PNG|)+$/)
+    .exec(type)) {
+    return '/components/IMAGE.svg';
   }
   return '/components/file.svg';
 };
@@ -34,26 +37,26 @@ class Enclosure extends React.Component {
     super(props);
 
     this.state = {
-      isDownLoad: false,
+      isDownLoad: -1,
     };
   }
 
-  downLoaded = (isLoading = false) => {
+  downLoaded = (i = -1) => {
     this.setState({
-      isDownLoad: isLoading
+      isDownLoad: i
     });
   };
 
-  fileClick = (item) => {
-    const { fileIdPrefix } = this.props;
+  fileClick = (item, i) => {
+    const { fileIdPrefix = '' } = this.props;
     const { fileurl, filename, mimetype, timemodified } = item;
     handlerTagAHrefParseParam({
       fileurl,
       filename,
       mimetype,
       modname: 'resource',
-      fileIdPrefix: `${fileIdPrefix}_${timemodified}`,
-      callback: this.downLoaded,
+      fileIdPrefix: `${fileIdPrefix}${fileIdPrefix && fileIdPrefix.indexOf(fileIdPrefix.length - 1) === '_' ? '' : '_'}`,
+      callback: (loading) => this.downLoaded(loading === true ? i : -1),
     }, '', null);
   };
 
@@ -67,7 +70,11 @@ class Enclosure extends React.Component {
         data.map((item, i) => {
           const { filename, timemodified } = item;
           return (
-            <div key={i} className={styles.outer} onClick={isDownLoad ? null : this.fileClick.bind(null, item)}>
+            <div
+              key={i}
+              className={styles.outer}
+              onClick={isDownLoad > -1 ? null : this.fileClick.bind(null, item, i)}
+            >
               <div className={styles.img}>
                 <Icon type={getLocalIcon(getIcon(filename))} size="lg" color="#22609c"/>
               </div>
@@ -77,7 +84,7 @@ class Enclosure extends React.Component {
                   <span>{getCommonDate(timemodified)}</span>
                 </div>
                 <div className={styles.right}>
-                  {isDownLoad ? <Icon type={'loading'} size="xs" color="#22609c"/> : '下载'}
+                  {isDownLoad === i ? <Icon type={'loading'} size="xs" color="#22609c"/> : '下载'}
                 </div>
               </div>
             </div>

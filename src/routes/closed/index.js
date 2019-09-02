@@ -38,13 +38,13 @@ function Closed ({ location, dispatch, closed, loading }) {
     };
 
   return (
-    <div className={styles[`${PrefixCls}-outer`]} >
-      <Nav title="已开课程" isGoBack={false} hasShadow />
-      <div >
-        <WhiteSpace />
+    <div className={styles[`${PrefixCls}-outer`]}>
+      <Nav title="已开课程" isGoBack={false} hasShadow navFixed={false}/>
+      <div>
+        <WhiteSpace/>
         {
           loading && !refreshing ?
-            <ListSkeleton />
+            <ListSkeleton/>
             :
             list.length > 0 ?
               <Refresh
@@ -56,16 +56,16 @@ function Closed ({ location, dispatch, closed, loading }) {
                 {cnIsArray(list) && list.map((item) => {
                   return closeLessonRow(item);
                 })}
-                <WhiteSpace size="lg" />
-                <WhiteSpace size="lg" />
-                <WhiteSpace size="lg" />
-                <WhiteSpace size="lg" />
-              </Refresh >
+                <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
+              </Refresh>
               :
-              <NoContent />
+              <NoContent/>
         }
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }
 

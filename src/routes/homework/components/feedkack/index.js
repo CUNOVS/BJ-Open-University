@@ -23,10 +23,13 @@ const FeedBack = (props) => {
             {
               item.type === 'comments'
                 ?
-                <InnerHtml data={item.editorfields[0].text} />
+                item.editorfields[0].text === '' ? <div className={styles.file} >暂无</div > :
+                  <InnerHtml data={item.editorfields[0].text} />
                 :
                 item.fileareas[0].files.length > 0 ?
-                  <Enclosure data={item.fileareas[0].files} fileIdPrefix={fileIdPrefix} /> : ''
+                  <Enclosure data={item.fileareas[0].files} fileIdPrefix={fileIdPrefix} />
+                  :
+                  <div className={styles.file} >暂无</div >
             }
           </div >
         );

@@ -114,21 +114,21 @@ class FeedBackDetails extends Component {
       .map(attVal => {
         const value = values[attVal];
         if (cnIsArray(value)) {
-          result[`responses[${startIndex}][name]`] = attVal + '[0]';
+          result[`responses[${startIndex}][name]`] = `${attVal}[0]`;
           result[`responses[${startIndex++}][value]`] = value.length > 0 ? value[0] : 0;
         } else if (typeof value === 'object') {
           Object.keys(value)
             .map((attChild, index) => {
               if (index === 0) {
-                result[`responses[${startIndex}][name]`] = attVal + '[0]';
+                result[`responses[${startIndex}][name]`] = `${attVal}[0]`;
                 result[`responses[${startIndex++}][value]`] = 0;
               }
-              result[`responses[${startIndex}][name]`] = attVal + `[${index + 1}]`;
+              result[`responses[${startIndex}][name]`] = `${attVal}[${index + 1}]`;
               result[`responses[${startIndex++}][value]`] = value[attChild] === true ? index + 1 : 0;
             });
         } else {
           const isRadio = /^(multichoice|multichoicerated)_/.test(attVal);
-          result[`responses[${startIndex}][name]`] = attVal + `${isRadio && questionsRquired[attVal] === true ? '[0]' : ''}`;
+          result[`responses[${startIndex}][name]`] = `${attVal}${isRadio && questionsRquired[attVal] === true ? '[0]' : ''}`;
           result[`responses[${startIndex++}][value]`] = value === '' && isRadio ? 0 : value;
         }
       });
@@ -152,8 +152,9 @@ class FeedBackDetails extends Component {
         alert('提交', '确定要提交吗???', [
           { text: '取消', onPress: () => console.log('ok') },
           {
-            text: '提交', onPress: () => {
-              //console.log(this.checkFieldValues(values));
+            text: '提交',
+            onPress: () => {
+              // console.log(this.checkFieldValues(values));
               this.complete(this.checkFieldValues(values));
             }
           },
@@ -191,7 +192,7 @@ class FeedBackDetails extends Component {
   };
 
   handlerPrevClick = () => {
-    const { page, questions } = this.props.feedbackdetails;
+    const { page } = this.props.feedbackdetails;
     const { id } = this.props.location.query;
     this.onSubmit(id);
     this.props.dispatch({
@@ -271,21 +272,22 @@ class FeedBackDetails extends Component {
       errors = getFieldError(key);
     return (
       <div id={`${PrefixCls}_${key}`}
-           className={`${styles[`${PrefixCls}-list`]} ${errors ? styles[`${PrefixCls}-hasError`] : ''}`}>
-        <WingBlank size="sm">
-          <Card>
+        className={`${styles[`${PrefixCls}-list`]} ${errors ? styles[`${PrefixCls}-hasError`] : ''}`}
+      >
+        <WingBlank size="sm" >
+          <Card >
             <Card.Header
               title={header}
             />
-            <Card.Body>
+            <Card.Body >
               {content}
-            </Card.Body>
+            </Card.Body >
             <Card.Footer
               content={errors}
             />
-          </Card>
-        </WingBlank>
-      </div>);
+          </Card >
+        </WingBlank >
+      </div >);
   };
 
   renderQuestions = (questions = []) => {
@@ -304,13 +306,13 @@ class FeedBackDetails extends Component {
       switch (typ) {
         case 'info':
           result.push(
-            <List key={questionKey} className={styles.info}>
-              <Item multipleLine>
-                {name} <Brief>{otherdata}</Brief>
-              </Item>
-            </List>
+            <List key={questionKey} className={styles.info} >
+              <Item multipleLine >
+                {name} <Brief >{otherdata}</Brief >
+              </Item >
+            </List >
           );
-          result.push(<WhiteSpace/>);
+          result.push(<WhiteSpace />);
           break;
         case 'textfield':
           result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
@@ -322,7 +324,7 @@ class FeedBackDetails extends Component {
               maxLength={presentation.split('|')[1]}
             />
           )));
-          result.push(<WhiteSpace/>);
+          result.push(<WhiteSpace />);
           break;
         case 'textarea':
           result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
@@ -334,7 +336,7 @@ class FeedBackDetails extends Component {
               placeholder={'在此输入回答'}
             />
           ), questionError));
-          result.push(<WhiteSpace/>);
+          result.push(<WhiteSpace />);
           break;
         case 'numeric':
           const presentations = presentation.split('|');
@@ -356,12 +358,12 @@ class FeedBackDetails extends Component {
                   callback(message === '' ? [] : message);
                 }
               });
-              numericTitle = (<span>
-                    <span>{numericTitle}</span>
-                    <span style={{ marginLeft: '10px' }}>
-                      {`(${minSum}~${maxSum})`}
-                    </span>
-                  </span>);
+              numericTitle = (<span >
+                <span >{numericTitle}</span >
+                <span style={{ marginLeft: '10px' }} >
+                  {`(${minSum}~${maxSum})`}
+                </span >
+              </span >);
             }
           }
           result.push(this.renderCard(questionKey, numericTitle, getFieldDecorator(questionKey, {
@@ -373,10 +375,10 @@ class FeedBackDetails extends Component {
               placeholder="请回答"
             />
           )));
-          result.push(<WhiteSpace/>);
+          result.push(<WhiteSpace />);
           break;
         case 'label':
-          result.push(<div className={styles.label}><InnerHtml data={presentation}/></div>);
+          result.push(<div className={styles.label} ><InnerHtml data={presentation} /></div >);
           break;
         case 'multichoice':
         case 'multichoicerated':
@@ -386,27 +388,30 @@ class FeedBackDetails extends Component {
               initialValue: '', // 初始值
               rules: questionRules,
             })(
-              <FormCheckBox items={choices} label={question.label} keys={`comp_${questionKey}`}/>
+              <FormCheckBox items={choices} label={question.label} keys={`comp_${questionKey}`} />
             )));
-            result.push(<WhiteSpace/>);
+            result.push(<WhiteSpace />);
           } else if (template === 'multichoice-r') {
             result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
               initialValue: '', // 初始值
               rules: questionRules,
             })(
-              <FormRadio items={items} label={question.label} keys={`comp_${questionKey}`}/>
+              <FormRadio items={items} label={question.label} keys={`comp_${questionKey}`} />
             )));
           } else if (template === 'multichoice-d') {
-            result.push(this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
-              initialValue: [], // 初始值
-              rules: questionRules,
-            })(
-              <Picker data={items} cols={1}>
-                <List.Item arrow="horizontal" wrap>{question.label}</List.Item>
-              </Picker>
-            )));
+            result.push(
+              <div
+                className={styles.picker}
+              >{this.renderCard(questionKey, this.renderTitle(name, required), getFieldDecorator(questionKey, {
+                  initialValue: [], // 初始值
+                  rules: questionRules,
+                })(
+                  <Picker data={items} cols={1} >
+                    <List.Item arrow="horizontal" wrap >{question.label}</List.Item >
+                  </Picker >
+                ))}</div >);
           }
-          result.push(<WhiteSpace/>);
+          result.push(<WhiteSpace />);
           break;
       }
     });
@@ -414,63 +419,67 @@ class FeedBackDetails extends Component {
   };
 
   renderTitle = (name, required) => (
-    <span>
-      {required ? <Icon type={getLocalIcon('/components/required.svg')}/> : null}
-      <span>{name}</span>
-    </span>
+    <span >
+      {required ? <Icon type={getLocalIcon('/components/required.svg')} /> : null}
+      <span >{name}</span >
+    </span >
   );
 
   render () {
     const { name = '答题', anonymous = 1, id = '' } = this.props.location.query,
-      { questions, hasprevpage, hasnextpage, page } = this.props.feedbackdetails;
+      { questions, hasprevpage, hasnextpage, page } = this.props.feedbackdetails,
+      { loadingQuestions = false } = this.props;
     const { showBackModal = false } = this.props.app;
-    //anonymous变为了字符"1"
+    // anonymous变为了字符"1"
     return (
-      <div>
-        <Nav title={name} dispatch={this.props.dispatch} hasShadow isAlert/>
-        <div className={styles[`${PrefixCls}-type`]}>
-          <TitleBox title="模式" sup=""/>
-          <p>{anonymous == 1 ? '匿名方式' : '实名方式'}</p>
-        </div>
+      <div >
+        <Nav title={name} dispatch={this.props.dispatch} hasShadow isAlert />
+        <div className={styles[`${PrefixCls}-type`]} >
+          <TitleBox title="模式" sup="" />
+          <p >{anonymous == 1 ? '匿名方式' : '实名方式'}</p >
+        </div >
         {this.renderQuestions(questions)}
-        <WingBlank>
-          <div className={styles.button}>
+        <WingBlank >
+          <div className={styles.button} >
             {
               hasprevpage ?
                 <Button
                   onClick={this.handlerPrevClick}
                 >
                   上一页
-                </Button>
+                </Button >
                 :
                 null
             }
             {
-              hasnextpage ?
-                <Button
-                  type="primary"
-                  onClick={this.handlerNextClick}
-                >下一页
-                </Button>
+              !loadingQuestions ?
+                hasnextpage ?
+                  <Button
+                    type="primary"
+                    onClick={this.handlerNextClick}
+                  >下一页
+                  </Button >
+                  :
+                  <Button
+                    style={{ marginTop: '10px' }}
+                    type="primary"
+                    onClick={() => this.showModal()}
+                  >
+                    提交答案
+                  </Button >
                 :
-                <Button
-                  style={{ marginTop: '10px' }}
-                  type="primary"
-                  onClick={() => this.showModal()}
-                >
-                  提交答案
-                </Button>
+                null
             }
-          </div>
-        </WingBlank>
+          </div >
+        </WingBlank >
         {showBackModal && this.showBackMoadl()}
-      </div>
+      </div >
     );
   }
 }
 
 export default connect(({ loading, feedbackdetails, app }) => ({
-  loading,
+  loadingQuestions: loading.effects[`${PrefixCls}/query`],
   feedbackdetails,
   app
 }))(createForm()(FeedBackDetails));

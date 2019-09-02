@@ -18,7 +18,7 @@ const PrefixCls = 'quizReview';
 @connect(({ quizReview, loading, quiz }) => ({ // babel装饰器语法糖
   quizReview,
   quiz,
-  loading: loading.effects[`${PrefixCls}/queryQuiz`],
+  loading
 }))
 class QuizReview extends React.Component {
   constructor (props) {
@@ -47,8 +47,7 @@ class QuizReview extends React.Component {
   render () {
     const { name = '回顾' } = this.props.location.query,
       { data: { grade, attempt = [], additionaldata = [] }, questions } = this.props.quizReview,
-      { timestart = 0, state = '', timefinish = 0 } = attempt,
-      { loading } = this.props;
+      { timestart = 0, state = '', timefinish = 0 } = attempt
     const props = {
       questions
     };

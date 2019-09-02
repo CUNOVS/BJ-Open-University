@@ -6,11 +6,10 @@
  */
 import React from 'react';
 import { Icon } from 'components/index';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import styles from './index.less';
 import { getLocalIcon } from 'utils';
 import { routerRedux } from 'dva/router';
+import styles from './index.less';
 
 const PrefixCls = 'transparentheader';
 
@@ -21,7 +20,7 @@ class TransparentHeader extends React.Component {
 
   state = {
     isScroll: false,
-  }
+  };
 
   componentWillMount () {
     this._isMounted = true;
@@ -39,7 +38,6 @@ class TransparentHeader extends React.Component {
         }
       };
     }
-    console.log();
   }
 
   componentWillUnmount () {
@@ -52,35 +50,45 @@ class TransparentHeader extends React.Component {
     };
 
     return (
-      <div>
+      <div >
         {
           this.state.isScroll
             ?
-            <div className={styles[`${PrefixCls}-outer`]}>
-                <div className={styles[`${PrefixCls}-outer-backBtn`]}>
-                <span onClick={hanleBackClick}><Icon style={{ verticalAlign: 'middle' }}
-                    type="left"
-                    color="#000"
-                  /></span>
-                <span className={styles[`${PrefixCls}-outer-backBtn-title`]}>
+            (
+              <div
+                className={styles[`${PrefixCls}-outer`]}
+              >
+                <div className={styles[`${PrefixCls}-outer-backBtn`]} >
+                  <span onClick={hanleBackClick} >
+                    <Icon
+                      style={{ verticalAlign: 'middle' }}
+                      type="left"
+                      color="#000"
+                    />
+                  </span >
+                  <span className={styles[`${PrefixCls}-outer-backBtn-title`]} >
                     {this.props.name}
-                  </span>
-              </div>
+                  </span >
+                </div >
                 <div className={styles[`${PrefixCls}-outer-rightBtn`]} />
-              </div>
+              </div >
+            )
             :
-              <div className={styles[`${PrefixCls}-transparentouter`]}
-              style={{ background: 'transparent' }}
-            >
-              <div className={styles[`${PrefixCls}-transparentouter-backBtn`]} onClick={hanleBackClick}>
-                  <Icon style={{ verticalAlign: 'middle' }} type="left" color="#fff" />
-                </div>
-              <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]}>
+            (
+              <div
+                className={styles[`${PrefixCls}-transparentouter`]}
+                style={{ background: 'transparent' }}
+              >
+                <div className={styles[`${PrefixCls}-transparentouter-backBtn`]} onClick={hanleBackClick} >
+                  <Icon style={{ verticalAlign: 'middle' }} type="left" color="#fff" size="md"  />
+                </div >
+                <div className={styles[`${PrefixCls}-transparentouter-rightBtn`]} >
                   {this.props.children}
-                </div>
-            </div>
+                </div >
+              </div >
+            )
         }
-      </div>
+      </div >
     );
   }
 }

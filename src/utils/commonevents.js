@@ -1,10 +1,11 @@
 import { routerRedux } from 'dva/router';
 import { Modal, Toast } from 'components';
+import { resource } from 'utils/defaults';
 import { doDecode, cookie, config, userToken, downLoadFile } from 'utils';
 
 const { userTag: { userid, usertoken } } = config,
   { _cg } = cookie;
-
+const alert = Modal.alert;
 const handlerLessonListClick = ({ id = '' }, dispatch) => {
   dispatch(routerRedux.push({
     pathname: '/lessondetails',
@@ -28,7 +29,7 @@ const handlerCourseClick = (params, courseid, dispatch) => {
     targets = {};
   if ((modname || modulename) === 'resource') {
     const {
-      fileurl: fileUrl = '', mimetype: mimeType = '', filename: fileName = '', fileIdPrefix = '', fileCallbak = () => {
+      fileurl: fileUrl = '', mimetype: mimeType = '', filename: fileName = '', fileIdPrefix = '', fileOpenCallback = () => {
       }
     } = contents[0];
     if (fileUrl !== '') {
@@ -41,10 +42,10 @@ const handlerCourseClick = (params, courseid, dispatch) => {
             }
           });
         } else {
-          fileCallbak(text !== 0);
+          fileOpenCallback(text !== 0);
         }
       };
-      downloadProgress('下载中...');
+      downloadProgress('加载中...');
       cnGetOrDownAndOpenFile({
         fileName: `${fileIdPrefix !== '' ? fileIdPrefix : courseid}_${fileName}`,
         fileUrl: `${fileUrl}${fileUrl.indexOf('?') === -1 ? '?' : '&'}token=${userToken()}`,
@@ -128,7 +129,10 @@ const handlerCourseClick = (params, courseid, dispatch) => {
         };
       } else {
         delete targets.pathname;
-        Toast.offline(`因参数丢失，无法使用${(modname || modulename)}类型标签，请使用PC端打开。`);
+        alert('无法显示此资源', '请使用网页版学习平台查看此资源。', [
+          { text: '知道了', onPress: () => console.log('cancel') },
+        ]);
+        // Toast.offline(`因参数丢失，无法使用${(modname || modulename)}类型标签，请使用PC端打开。`);
       }
       break;
     case 'httpurl':
@@ -141,9 +145,26 @@ const handlerCourseClick = (params, courseid, dispatch) => {
         modname: modname || modulename
       };
       break;
+    case 'choice':
+      targets.pathname = '/choice';
+      targets.param = {
+        voteId: instance,
+        modname: modname || modulename
+      };
+      break;
+    case 'label':
+      if (params.href) {
+        alert('不能查看此资源', `请先按要求完成【${name}】`, [
+          { text: '知道了', onPress: () => console.log('cancel') },
+        ]);
+      }
+      break;
     default:
       if ((modname || modulename) !== '') {
-        Toast.offline(`暂不支持${(modname || modulename)}类型标签，请使用PC端打开。`);
+        alert('无法显示此资源', '请使用网页版学习平台查看此资源。', [
+          { text: '知道了', onPress: () => console.log('cancel') },
+        ]);
+        // Toast.offline(`暂不支持${(modname || modulename)}类型标签，请使用PC端打开。`);
       }
   }
   const { pathname = '', param = {}, notRoute = false } = targets;
@@ -179,13 +200,13 @@ const handlerTagAHrefParseParam = (params, courseid, dispatch) => {
     let targetParams = '';
     if (modname === 'resource') {
       const {
-        fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', id = '', callback: fileCallbak = () => {
+        fileurl = '', mimetype = '', filename = '', fileIdPrefix = '', href = '', id = '', callback: fileOpenCallback = () => {
         }, ...otherParams
       } = params;
       if (id === '' && (fileurl !== '' || filename !== '')) {
         targetParams = {
           contents: [{
-            fileurl: fileurl || href, mimetype, filename, fileIdPrefix, fileCallbak
+            fileurl: fileurl || href, mimetype, filename, fileIdPrefix, fileOpenCallback
           }],
           ...otherParams
         };
@@ -207,7 +228,12 @@ const handleElementTagAClick = (el, courseId = '', dispatch) => {
       handlerTagAHrefParseParam(params, courseId, dispatch);
     }
   }
-  if (!!hrefParam && !notHasError) Toast.offline(`${courseId !== '' ? '标签解析失败' : '未能查找到课程'}，请使用PC端打开。`);
+  if (!!hrefParam && !notHasError) {
+    alert('无法显示此资源', '请使用网页版学习平台查看此资源。', [
+      { text: '知道了', onPress: () => console.log('cancel') },
+    ]);
+    // Toast.offline(`${courseId !== '' ? '标签解析失败' : '未能查找到课程'}，请使用PC端打开。`);
+  }
 };
 
 const handlerDivInnerHTMLClick = (e, courseId, dispatch) => {
@@ -215,7 +241,11 @@ const handlerDivInnerHTMLClick = (e, courseId, dispatch) => {
     case 'A':
       handleElementTagAClick(e.target, courseId, dispatch);
       break;
-    case 'SPAN':
+    default:
+      if (e.target.hasAttribute('hrefParam') === true) {
+        handleElementTagAClick(e.target, courseId, dispatch);
+        break;
+      }
       let targetEl = e.target.parentElement,
         counts = 0;
       do {
@@ -223,13 +253,12 @@ const handlerDivInnerHTMLClick = (e, courseId, dispatch) => {
           break;
         }
         targetEl = targetEl.parentElement;
-      } while (targetEl != null && counts++ < 10);
+      } while (targetEl != null && counts++ < 5);
 
       if (targetEl != null && targetEl.tagName === 'A') {
         handleElementTagAClick(targetEl, courseId, dispatch);
       }
       break;
-    default:
   }
 };
 

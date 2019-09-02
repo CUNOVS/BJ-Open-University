@@ -1,6 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: { GetLessonDetails, GetOpeningLessons, GetClosedLessons } } = config;
+const { api: { GetLessonDetails, GetOpeningLessons, GetClosedLessons, ManualCompletion } } = config;
 
 export async function queryLessonDetails (payload) {
   return request({
@@ -22,6 +22,14 @@ export async function queryClosedLessons (payload) {
   return request({
     url: GetClosedLessons,
     method: 'get',
+    data: payload,
+  });
+}
+
+export async function manualCompletion (payload) {
+  return request({
+    url: ManualCompletion,
+    method: 'post',
     data: payload,
   });
 }

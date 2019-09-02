@@ -36,7 +36,6 @@ class InputBox extends Component {
               size="small"
               inline
               onClick={this.handleTextSubmit.bind(this)}
-              style={{ height: '0.8rem', lineHeight: '0.8rem' }}
             >发送</Button >
           </div >
         </div >

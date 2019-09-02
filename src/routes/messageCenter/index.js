@@ -12,8 +12,7 @@ import { getImages, getLocalIcon, getOffsetTopByBody, getCommonDate, pattern } f
 import NoContent from 'components/nocontent';
 import styles from './index.less';
 
-const PrefixCls = 'messageCenter',
-  Item = List.Item;
+const PrefixCls = 'messageCenter';
 
 @connect(({ messageCenter, app, loading }) => ({ // babel装饰器语法糖
   messageCenter,
@@ -51,6 +50,15 @@ class MessageCenter extends React.Component {
   };
 
   componentDidMount () {
+    const { selectIndex } = this.props.messageCenter;
+    if (selectIndex === 1) {
+      this.props.dispatch({
+        type: `${PrefixCls}/queryTalkMessage`,
+        payload: {
+          isRefresh: true,
+        },
+      });
+    }
     const element = ReactDOM.findDOMNode(this.vl),
       currentHeight = element.offsetHeight,
       currentH = getOffsetTopByBody(ReactDOM.findDOMNode(this.vll));
@@ -108,7 +116,6 @@ class MessageCenter extends React.Component {
         }
       },
       onRefresh = (callback) => {
-        console.log(type);
         this.props.dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -158,7 +165,7 @@ class MessageCenter extends React.Component {
               onScrollerTop={onScrollerTop.bind(null)}
               scrollerTop={scrollerTop}
               useBodyScroll
-            />,
+            />
           </div >
         );
 
@@ -180,7 +187,7 @@ class MessageCenter extends React.Component {
               onScrollerTop={onScrollerTop.bind(null)}
               scrollerTop={scrollerTop}
               useBodyScroll
-            />,
+            />
           </div >
         );
 
@@ -204,7 +211,7 @@ class MessageCenter extends React.Component {
               onScrollerTop={onScrollerTop.bind(null)}
               scrollerTop={scrollerTop}
               useBodyScroll
-            />,
+            />
           </div >
         );
 

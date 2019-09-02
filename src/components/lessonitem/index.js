@@ -13,12 +13,21 @@ import styles from './index.less';
 const PrefixCls = 'lessonitem';
 
 const LessonItem = (props) => {
-  const { modname, name, modicon, description, availabilityinfo = '', stats = {}, tracking } = props.data,
-    courseid = props.courseid,
+  const { id, modname, name, modicon, description, availabilityinfo = '', stats = {}, tracking } = props.data,
+    { courseid, loadingCheck } = props,
     { state = 0 } = stats,
     dispatch = props.dispatch,
-    handlerCheckboxClick = (e) => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              handlerCheckboxClick = (callback, e) => {
       e.stopPropagation();
+      callback(parseInt(id, 10));
+      dispatch({
+        type: 'lessondetails/manualCompletion',
+        payload: {
+          cmid: id,
+          completed: parseInt(state, 10) === 0 ? '1' : '0',
+        },
+        callback
+      });
     },
     handDivClick = (e) => {
       e.stopPropagation();
@@ -47,7 +56,12 @@ const LessonItem = (props) => {
                 ?
                 (
                   <div className={styles[`${PrefixCls}-outer-top-content-check`]} >
-                    <Checkbox state={state} tracking={tracking} handlerClick={handlerCheckboxClick} />
+                    <Checkbox
+                      state={state}
+                      tracking={tracking}
+                      id={id}
+                      handlerClick={(callback, e) => handlerCheckboxClick(callback, e)}
+                    />
                   </div >
                 )
                 : ''
@@ -61,9 +75,9 @@ const LessonItem = (props) => {
                 dangerouslySetInnerHTML={{ __html: description }}
                 onClick={(e) => handlerDiscriptionClick(e)}
               />
-              <div className={styles[`${PrefixCls}-outer-describe-mask`]} onClick={(e) => handlerDiscriptionClick(e)}>
-                查看详情...
-              </div>
+              <div className={styles[`${PrefixCls}-outer-describe-mask`]} onClick={(e) => handlerDiscriptionClick(e)} >
+                更多
+              </div >
             </div >
             :
             ''
@@ -85,7 +99,13 @@ const LessonItem = (props) => {
             ?
             (
               <div className={styles[`${PrefixCls}-outer-top-content-check`]} >
-                <Checkbox state={state} tracking={tracking} handlerClick={handlerCheckboxClick} />
+                <Checkbox
+                  state={state}
+                  loadingCheck={loadingCheck}
+                  tracking={tracking}
+                  id={id}
+                  handlerClick={handlerCheckboxClick}
+                />
               </div >
             )
             : ''

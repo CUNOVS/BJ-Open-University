@@ -10,25 +10,25 @@ class Gapselect extends React.Component {
     this.props.onRef(this);
   }
 
-  onSubmit () {
-    const fieldsValue = this.props.form.getFieldsValue(),
-      result = {};
-    for (let att in fieldsValue) {
-      const value = fieldsValue[att];
-      if (cnIsArray(value)) {
-        value.map(v => {
-          result[att] = v;
-        });
-      } else if (typeof value === 'object') {
-        for (let attV in value) {
-          result[attV] = value[attV];
-        }
-      } else {
-        result[att] = value;
-      }
-    }
-    return result;
-  }
+  // onSubmit () {
+  //   const fieldsValue = this.props.form.getFieldsValue(),
+  //     result = {};
+  //   for (let att in fieldsValue) {
+  //     const value = fieldsValue[att];
+  //     if (cnIsArray(value)) {
+  //       value.map(v => {
+  //         result[att] = v;
+  //       });
+  //     } else if (typeof value === 'object') {
+  //       for (let attV in value) {
+  //         result[attV] = value[attV];
+  //       }
+  //     } else {
+  //       result[att] = value;
+  //     }
+  //   }
+  //   return result;
+  // }
 
   render () {
     const { getFieldDecorator } = this.props.form;
@@ -37,18 +37,18 @@ class Gapselect extends React.Component {
       (<div className={styles.picker}>{getFieldDecorator(id, {
         initialValue: value // 初始值
       })(
-        <Picker data={items} cols={1} disabled={type !== 'quiz'} >
-          <List.Item arrow="horizontal" wrap >
-            <div className={styles.answer} >
+        <Picker data={items} cols={1} disabled={type !== 'quiz'}>
+          <List.Item arrow="horizontal" wrap>
+            <div className={styles.answer}>
               {'请选择答案'}
               {
-                currect !== '' && <ResultIcon currect={currect} />
+                currect !== '' && <ResultIcon currect={currect}/>
               }
-            </div >
-          </List.Item >
-        </Picker >
+            </div>
+          </List.Item>
+        </Picker>
       )}
-      </div >);
+      </div>);
     const getContents = (html) => {
       const selectEls = cheerio('select', html),
         selectDatas = [];
@@ -69,7 +69,7 @@ class Gapselect extends React.Component {
           id: node.attribs.name,
           value: selectedValue === '' ? '' : [selectedValue],
           items,
-          currect: type !== 'quiz' ? node.next.next.attribs.title || '' : ''
+          currect: type !== 'quiz' && node.next && node.next.next ? node.next.next.attribs.title || '' : ''
         });
       });
       const tags = answer.match(/<p[^>]*>.*?<\/p>/)[0].split(/<span[^>]*>.*?<\/span>/),
@@ -78,7 +78,7 @@ class Gapselect extends React.Component {
         });
       return tags.map((tag, index) => {
         const result = [];
-        result.push(<div dangerouslySetInnerHTML={getHtml(tag.replace(/<[^(br)]>/, ''))} />);
+        result.push(<div dangerouslySetInnerHTML={getHtml(tag.replace(/<[^(br)]>/, ''))}/>);
         if (selectDatas.length > index) {
           result.push(getSelect(selectDatas[index]));
         }
@@ -86,10 +86,10 @@ class Gapselect extends React.Component {
       });
     };
     return (
-      <div className={styles.outer} >
+      <div className={styles.outer}>
         {getContents(answer)}
-        <WhiteSpace size="lg" />
-      </div >
+        <WhiteSpace size="lg"/>
+      </div>
     );
   }
 }
@@ -100,4 +100,4 @@ Gapselect.defaultProps = {
   onRef: () => (false)
 };
 
-export default createForm()(Gapselect);
+export default Gapselect;

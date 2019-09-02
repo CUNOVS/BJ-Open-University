@@ -1,0 +1,19 @@
+@import '../../themes/default.less';
+
+@PrefixCls: CnBadge;
+
+.@{PrefixCls}-normal {
+  border-radius: @radius-xs;
+  padding: 0.2em 0.5em;
+  .textVertical;
+  font-size: @smallFontSize;
+  margin-right: 10px;
+}
+
+.@{PrefixCls}-xs {
+  .textVertical;
+  border-radius: @radius-xs;
+  padding: 0.1em 0.5em;
+  font-size: 28px;
+  margin-right: 10px;
+}

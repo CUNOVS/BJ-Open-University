@@ -5,9 +5,17 @@ import { Icon } from 'antd-mobile';
 import { getImages, getLocalIcon } from 'utils';
 import { routerRedux } from 'dva/router';
 import NoContent from 'components/nocontent';
+import img from '../medal/img.png';
 import styles from './index.less';
 
 const PrefixCls = 'medalList';
+const datas = [
+  {
+    name: '成绩斐然',
+    startDate: '2019年1月1日',
+    id: '1'
+  }
+];
 
 class MedalList extends React.Component {
   constructor (props) {
@@ -31,15 +39,15 @@ class MedalList extends React.Component {
       <div >
         <Nav title={name} dispatch={this.props.dispatch} />
         {
-          data.length > 0 ?
-            data.map((item) => (
+          datas.length > 0 ?
+            datas.map((item) => (
               <div key={item.id} onClick={this.medalPage.bind(this, `${item.name}`, item.id)} >
                 <div className={styles[`${PrefixCls}-disan`]} >
                   <div className={styles[`${PrefixCls}-disan-diyi`]} >
-                    <img src={getImages(item.badgeurl, '')} style={{}} />
+                    <img src={img} style={{}} />
                     <div className={styles[`${PrefixCls}-disan-dier`]} >
                       <div >{item.name}</div >
-                      <div >获得时间:{item.startDate}</div >
+                      <div >{item.startDate}</div >
                     </div >
                   </div >
                   <Icon type="right" size="lg" color="#108ee9" />

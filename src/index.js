@@ -12,7 +12,12 @@ const app = dva({
     effects: true,
   }),
   onError (error) {
-    Toast.offline(error.message);
+    //关闭错误提示
+    if (error && error.message && error.message.includes('网络已断开')) {
+      Toast.offline(error.message);
+    } else {
+      console.error(error);
+    }
   },
 });
 // 2. Model

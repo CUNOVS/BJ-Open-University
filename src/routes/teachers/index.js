@@ -69,6 +69,6 @@ function Teachers ({ location, dispatch, teachers, loading }) {
 }
 
 export default connect(({ loading, teachers }) => ({
-  loading: loading.effects[`${PrefixCls}/query`],
+  loading: loading.effects[`${PrefixCls}/queryList`],
   teachers,
 }))(Teachers);

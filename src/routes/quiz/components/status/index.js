@@ -3,6 +3,7 @@
  * @date 2019/04/02 14:39:52
  * @Description:
  */
+import React from 'react';
 import { Icon } from 'components';
 import { getLocalIcon, getCommonDate } from 'utils';
 import { handlerChangeRouteClick } from 'utils/commonevents';
@@ -25,12 +26,12 @@ const Status = (props) => {
   return (
     <div className={styles.status} >
       <div className={styles.title} >
-        <span ><Icon type="down" color="#22609c" /></span >
+        <span ><Icon type={getLocalIcon('/sprite/statusbar.svg')} color="#22609c" /></span >
         <span >您上次答题的状态</span >
       </div >
       <div className={styles.box} >
         <div className={styles.header} >
-          <div >序号</div >
+          <div >试卷</div >
           <div >状态</div >
           <div >{`成绩/${maxgrade}`}</div >
         </div >
@@ -49,7 +50,8 @@ const Status = (props) => {
             <div
               key={i}
               className={styles.header}
-              onClick={item.state === 'finished' ? handlerChangeRouteClick.bind(null, 'quizReview', {
+              onClick={item.state === 'finished'
+                ? handlerChangeRouteClick.bind(null, 'quizReview', {
                   attemptid: item.id,
                 }, props.dispatch)
                 :
@@ -58,7 +60,7 @@ const Status = (props) => {
             >
               <div >{item.attempt}</div >
               <div >
-                <span >{getStatus(item.state)}</span >
+                <span className={styles.state}>{getStatus(item.state)}</span >
                 <span >{item.timefinish > 0 ? getCommonDate(item.timefinish) : '-'}</span >
               </div >
               {item.state === 'finished' ?

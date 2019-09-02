@@ -86,13 +86,13 @@ module.exports = {
         <div className={styles[`${PrefixCls}-task-title`]} >
           {coursename}
           <div className={styles[`${PrefixCls}-task-title-time`]} >
-            <span style={{ color: isToday(timestart) ? '#f34e14' : '#ff9a1b' }} >
+            <span style={{ color: isToday(timestart) ? '#e20f09' : '#ff9a1b' }} >
               {`截止时间：${changeLessonDate(timestart)}`}
             </span >
           </div >
         </div >
         <div className={styles[`${PrefixCls}-task-content`]} >
-          <span ><Icon type={getLocalIcon(getTaskIcon(modulename))} /></span >
+          <span ><Icon type={getLocalIcon(getTaskIcon(modulename))} size="xs" /></span >
           <span >{name}</span >
         </div >
         {availabilityinfo !== '' ?
@@ -211,12 +211,12 @@ module.exports = {
             <div
               className={styles[`${PrefixCls}-attendanceRow-content-status`]} >{openState === '0' ? `结课日期：${changeLessonDate(enddate)}` : '已结束'}
             </div >
+            <div className={styles[`${PrefixCls}-achievement-grade`]} >{`课程总得分：${graderaw}`}</div >
             <CnBadge
               text={isPass(graderaw) ? '合格' : '不合格'}
               background={isPass(graderaw) ? '#1eb259' : '#f34e14'}
               color="#fff"
               size="xs" />
-            <div className={styles[`${PrefixCls}-achievement-grade`]} >{`课程总得分：${graderaw}`}</div >
           </div >
         </div >
         <WhiteSpace />
@@ -224,7 +224,7 @@ module.exports = {
     );
   },
   achievementDetailsRow: (item, onClick, dispatch) => {
-    const { title = '', grade = '', id = '', itemType = '', grademax = '-', instance = '' } = item;
+    const { title = '', grade = '', id = '', itemType = '', grademax = '-', instance = '', enddate = '' } = item;
     return (
       <div
         key={id || (`${itemType}_${cnId()}`)}
@@ -232,13 +232,16 @@ module.exports = {
         onClick={id === '' ? '' : onClick.bind(null, item, dispatch)}
       >
         <div className={styles[`${PrefixCls}-achievementdetails-top`]} >
-          <span ><Icon type={getLocalIcon(getTaskIcon(itemType))} /></span >
+          <span ><Icon type={getLocalIcon(getTaskIcon(itemType))} size="xs" /></span >
           <span className={classNames({ [styles.disabled]: id === '' })} >{title}</span >
         </div >
         <div className={styles[`${PrefixCls}-achievementdetails-bottom`]} >
           <div className={styles[`${PrefixCls}-achievementdetails-bottom-total`]} >{`总分:${grademax}`}</div >
           <div
             className={classNames(styles[`${PrefixCls}-achievementdetails-bottom-my`], { [styles.disabled]: id === '' })} >{`我的得分:${grade}`}</div >
+        </div >
+        <div className={styles[`${PrefixCls}-achievementdetails-date`]} >
+          {enddate > 0 ? `截止时间：${getCommonDate(enddate)}` : '截止时间:未设置'}
         </div >
       </div >
     );
@@ -331,31 +334,6 @@ module.exports = {
         </Card >
         <WhiteSpace size="lg" />
       </div >
-      // <div key={userid} className={styles[`${PrefixCls}-teachers`]} onClick={onClick}>
-      //   <div className={styles[`${PrefixCls}-teachers-img`]}>
-      //     <img src={getImages(profileimageurl, 'user')} alt="" />
-      //   </div>
-      //   <div className={styles[`${PrefixCls}-teachers-content`]}>
-      //     <div className={styles[`${PrefixCls}-teachers-content-top`]}>
-      //       <div className={styles[`${PrefixCls}-teachers-content-top-title`]}>
-      //         {fullname}
-      //       </div>
-      //       <div className={styles[`${PrefixCls}-teachers-content-top-type`]}>
-      //         责任教师
-      //       </div>
-      //     </div>
-      //     <div className={styles[`${PrefixCls}-teachers-content-bottom`]}>
-      //       <div className={styles[`${PrefixCls}-teachers-content-bottom-lesson`]}>
-      //         {}
-      //       </div>
-      //       <Button
-      //         type="ghost"
-      //         inline
-      //         size="small"
-      //       >发消息</Button>
-      //     </div>
-      //   </div>
-      // </div>
     );
   },
   groupRow: (item, onClick) => {
@@ -436,10 +414,10 @@ module.exports = {
       const groupById = groups.find(item => item.id === id);
       return groupById && groupById.name || '';
     };
-    const { name, id, subject, pinned, userfullname, userpictureurl, message, created, discussion, groupid, numreplies } = rowData;
+    const { name, id, subject, pinned, userfullname, userpictureurl, message, created, discussion, groupid, numreplies, numunread = 0 } = rowData;
     const creatDate = new Date(created * 1000).toLocaleString('zh');
     return (
-      <Item
+      <List.Item
         wrap
         key={id}
         className={styles[`${PrefixCls}-forum`]}
@@ -456,28 +434,75 @@ module.exports = {
               <div >{userfullname}</div >
             </div >
             <div >
-              <div >{getGroups(group, groupid)}</div >
+              {/*<div >{getGroups(group, groupid)}</div >*/}
+              {/*<Badge text={numunread} />*/}
             </div >
           </div >
         </div >
         <div className={styles[`${PrefixCls}-forum-content`]} >
-          {pinned ? <CnBadge text="置顶" background="#f34e14" color="#fff" size="xs" /> : ''}
+          {pinned ?
+            <div style={{ marginRight: '8px' }} ><CnBadge text="置顶" background="#f34e14" color="#fff" size="xs" />
+            </div > : ''}
           <div className={styles[`${PrefixCls}-forum-content-text`]} >{name}</div >
         </div >
         <div className={styles[`${PrefixCls}-forum-foot`]} >
           <div className={styles[`${PrefixCls}-forum-foot-message`]} >
-            <span ><Icon type={getLocalIcon('/components/xiaoxi.svg')} /></span >
+            <Icon type={getLocalIcon('/components/xiaoxi.svg')} size="xs" />
             <span >{numreplies}</span >
           </div >
           <div className={styles[`${PrefixCls}-forum-foot-time`]} >
             {creatDate}
           </div >
         </div >
-      </Item >
+      </List.Item >
     );
   },
-  forumDetailsRow: (item, handlerMoreClick, dispatch, maxattachments, maxbytes) => {
-    const { canreply, id, created, children, message, subject, userfullname, userpictureurl, attachment = '', attachments } = item;
+  forumAllRow: (item, handlerMoreClick, dispatch, maxattachments, maxbytes) => {
+    const renderChild = (item, handlerMoreClick, dispatch, maxattachments, maxbytes) => {
+      const { canreply, id, created, children = [], message, subject, userfullname, attachment = '', attachments } = item;
+      return (
+        <div key={id} className={styles[`${PrefixCls}-child`]} >
+          <div className={styles[`${PrefixCls}-child-info`]} >
+            <div >{userfullname}</div >
+            <div >{getCommonDate(created)}</div >
+          </div >
+          <div className={styles[`${PrefixCls}-child-content`]} >
+            <InnerHtml data={message} />
+            {
+              attachment !== '' ?
+                <Enclosure key={id} data={attachments} />
+                :
+                null
+            }
+          </div >
+          <div className={styles[`${PrefixCls}-child-describe`]} >
+            {canreply ?
+              <div className={styles[`${PrefixCls}-child-reply`]} >
+                <Icon type={getLocalIcon('/components/xiaoxi.svg')} />
+                <span style={{ marginLeft: '3px' }} onClick={handlerMoreClick.bind(null, 'sendForum', {
+                  maxattachments,
+                  maxbytes,
+                  id,
+                  subject,
+                  type: 'reply',
+                }, dispatch)} >{`回复(${children.length})`}</span >
+              </div >
+              :
+              null}
+          </div >
+          {
+            children.length > 0 ?
+              <div className={styles[`${PrefixCls}-child-more`]}
+                   onClick={handlerMoreClick.bind(null, 'replyAll', {}, dispatch)} >查看更多</div >
+              :
+              null
+          }
+
+        </div >
+      );
+    };
+    const { canreply, id, created, children, message, subject, userfullname, userpictureurl, attachment = '', attachments } = item,
+      silceArr = (num) => (children.slice(0, num));
     return (
       <Item wrap key={id} className={styles[`${PrefixCls}-forumDetails`]} onError={(el => getErrorImg(el, 'user'))} >
         <div className={styles[`${PrefixCls}-forumDetails-info`]} >
@@ -488,7 +513,7 @@ module.exports = {
           <InnerHtml data={message} />
           {
             attachment !== '' ?
-              <Enclosure data={attachments} />
+              <Enclosure key={id} data={attachments} />
               :
               null
           }
@@ -509,16 +534,18 @@ module.exports = {
             :
             null}
         </div >
-        {children.length > 0 ? (
-          <div className={styles[`${PrefixCls}-forumDetails-more`]} onClick={handlerMoreClick.bind(null, 'replyAll', {
-            name: userfullname,
-            items: children.join()
-          }, dispatch)} >...查看回复</div >) : null}
+        {children.length > 0 ?
+          <div className={styles[`${PrefixCls}-forumDetails-children`]} >
+            {silceArr(2)
+              .map(item => renderChild(item, handlerMoreClick, dispatch, maxattachments, maxbytes))}
+            {children.length > 0 ? <span >展开</span > : null}
+          </div >
+          : null}
       </Item >
     );
   },
   messageListRow: (rowData, sectionID, rowID, onClick, dispatch) => {
-    const { avatar, details, timecreated, userName, useridfrom, unread } = rowData;
+    const { avatar, details, smallmessage, timecreated, userName, useridfrom, unread } = rowData;
     // 通知列表
     return (
       <div key={useridfrom} className={styles[`${PrefixCls}-message`]}
@@ -543,7 +570,7 @@ module.exports = {
             </div >
           </div >
           <div className={styles[`${PrefixCls}-message-content-details`]} >
-            {details}
+            {smallmessage}
           </div >
         </div >
       </div >
@@ -568,29 +595,35 @@ module.exports = {
     );
   },
   messageRow: (rowData, sectionID, rowID, onClick, dispatch, userid) => {
-    const { id, cmid, state, name, timecreated } = rowData;
+    const { id, jumping = true, cmid, state, name, timecreated } = rowData;
     return (
-      <Item
+      <List.Item
         key={id}
         wrap
+        arrow={jumping ? 'horizontal' : null}
         className={styles[`${PrefixCls}-messagelist`]}
-        onClick={onClick.bind(null, rowData, {
-          cmid,
-          userid,
-        }, dispatch)}
+        onClick={
+          jumping ?
+            onClick.bind(null, rowData, {
+              cmid,
+              userid,
+            }, dispatch)
+            :
+            null
+        }
       >
         <div className={styles[`${PrefixCls}-messagelist-details`]} >
           {state === 'unread' ? <Badge text={'未读'} style={{ marginRight: 12 }} /> : null}
           {name}
         </div >
         <div className={styles[`${PrefixCls}-messagelist-date`]} >{getCommonDate(timecreated)}</div >
-      </Item >
+      </List.Item >
     );
   },
   sysNoticeRow: (rowData, sectionID, rowID, onClick, dispatch) => {
     const { noticeId, noticeTitle, noticeContent, noticeCrateDate } = rowData;
     return (
-      <Item
+      <List.Item
         key={noticeId}
         wrap
         className={styles[`${PrefixCls}-messagelist`]}
@@ -605,21 +638,20 @@ module.exports = {
           {noticeTitle}
         </div >
         <div className={styles[`${PrefixCls}-messagelist-date`]} >{getCommonDate(noticeCrateDate / 1000)}</div >
-      </Item >
+      </List.Item >
     );
   },
   opinionRow: (rowData, onClick, dispatch) => {
     const { submitType, submitDate, submitContent, currentStatus, opinionId } = rowData;
     return (
-      <Item
+      <List.Item
         key={opinionId}
         wrap
         arrow="horizontal"
         className={styles[`${PrefixCls}-messagelist`]}
-        onClick={onClick.bind(null, 'details', {
+        onClick={onClick.bind(null, 'opiniondetails', {
           name: '我的反馈',
-          type: 'detailsText',
-          content: submitContent
+          id: opinionId,
         }, dispatch)}
       >
         <div className={styles[`${PrefixCls}-messagelist-details`]} >
@@ -627,7 +659,7 @@ module.exports = {
           {submitType}
         </div >
         <div className={styles[`${PrefixCls}-messagelist-date`]} >{getCommonDate(submitDate / 1000)}</div >
-      </Item >
+      </List.Item >
     );
   },
 

@@ -119,7 +119,7 @@ class UpLoad extends React.Component {
       const { name, lastModified, type, uid } = item;
       return (
         <List key={i} className={styles.fileList} >
-          <Item
+          <List.Item
             extra={
               <div onClick={() => this.onRemove(uid)} >
                 <Icon type={getLocalIcon('/components/delete.svg')} color="#22609c" />
@@ -127,16 +127,21 @@ class UpLoad extends React.Component {
             }
             thumb={<Icon type={getLocalIcon(getIcon(type))} size="lg" color="#22609c" />}
             multipleLine
-            onClick={() => {
-            }}
           >
             {name}
             <Brief >{getCommonDate(lastModified / 1000)}</Brief >
-          </Item >
+          </List.Item >
         </List >
       );
     })
   );
+
+  isUploaded = (arr, obj) => {
+    if (cnIsArray(arr) && arr.length > 0) {
+      return arr.find((item => item.name === obj.name));
+    }
+    return false;
+  };
 
 
   render () {
@@ -145,14 +150,16 @@ class UpLoad extends React.Component {
       { maxattachments, maxbytes, groups, loading = false, type, subject } = this.props,
       props = {
         beforeUpload: (file) => {
-          if (file.size < maxbytes && fileList.length < maxattachments) {
+          if (file.size < maxbytes && fileList.length < maxattachments && !this.isUploaded(fileList, file)) {
             this.setState(state => ({
               fileList: [...state.fileList, file],
             }));
           } else if (fileList.length >= maxattachments) {
-            Toast.fail('超过文件最大上传数量');
+            Toast.fail('上传文件数已达上限，不能再次上传。');
+          } else if (this.isUploaded(fileList, file)) {
+            Toast.fail('同名附件已上传，请确认是否重复或改名后再上传。');
           } else {
-            Toast.fail('最大尺寸大于限制尺寸');
+            Toast.fail('文件过大，不能上传');
           }
 
           return false;
@@ -163,17 +170,17 @@ class UpLoad extends React.Component {
       };
     return (
       <div >
-        <form >
+        <form className={styles.form} >
           <List.Item >
             <InputItem
               {...getFieldProps('subject', {
-                initialValue: type === 'add' ? '' : `回复：${subject}`,
+                initialValue: type === 'add' ? '' : `${subject}`,
                 rules: [{ required: true, message: '主题必须输入' },
                 ],
               })}
               clear
               error={!!getFieldError('subject') && Toast.fail(getFieldError('subject'))}
-              placeholder="主题"
+              placeholder="请输入"
             >
               主题
             </InputItem >
@@ -187,37 +194,37 @@ class UpLoad extends React.Component {
             />
           </List.Item >
           {
-            type === 'add' ?
+            type === 'add' && cnIsArray(groups) && groups.length > 0 ?
               <div className={styles.group} >
                 <List className="my-list" >
                   <List.Item wrap >
-                    {cnIsArray(groups) && groups[0].label}
+                    {groups[0].label || ''}
                   </List.Item >
                 </List >
               </div >
               :
               null
           }
+          <WhiteSpace size="sm" />
+          <div className={styles.rule} >
+            <div >
+              {maxbytes && maxattachments ? `新文件的最大尺寸:${renderSize(maxbytes)},最多附件${maxattachments}` : null}
+            </div >
+          </div >
+          {this.renderFileList(fileList)}
           <WhiteSpace size="lg" />
-          <WingBlank >
-            <List className={styles.rule} >
-              <List.Item >
-                {maxbytes && maxattachments ? `新文件的最大尺寸:${renderSize(maxbytes)},最多附件${maxattachments}` : null}
-              </List.Item >
-            </List >
-            {this.renderFileList(fileList)}
-            <WhiteSpace size="lg" />
-            <div className={styles.upload} >
-              <Upload
-                {...props}
-              >
+          <div className={styles.upload} >
+            <Upload
+              {...props}
+            >
+              <WingBlank >
                 <Button type="primary" >
                   <Icon type="add" />
                   添加文件
                 </Button >
-              </Upload >
-            </div >
-          </WingBlank >
+              </WingBlank >
+            </Upload >
+          </div >
           <WhiteSpace size="lg" />
           <WingBlank >
             <Button loading={loading} type="primary" onClick={this.onAddSubmit.bind(this)} >提交</Button >

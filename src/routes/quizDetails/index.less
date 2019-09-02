@@ -48,8 +48,14 @@
 }
 
 .list {
-  width: 600px;
+  width: 500px;
   background: #fff;
+  height: 100%;
+  :global {
+    .am-list-item .am-list-line .am-list-extra {
+      font-size: @mediumFontSize;
+    }
+  }
 
 }
 

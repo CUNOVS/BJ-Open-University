@@ -1,7 +1,7 @@
 /* global cordova requestFileSystem LocalFileSystem window */
 
 var cunovs = {
-  cnVersion: '0.0.1',
+  cnVersion: '1.0.1',
   cnVersionInfo: {
     title: '当前版本过低',
     content: '为保证正常使用，请先升级应用'
@@ -10,20 +10,41 @@ var cunovs = {
   cnDownLoadProgress: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
-  cnApiServiceUrl: 'http://moodle.cunovs.com:8080',
   // cnApiServiceUrl: 'http://192.168.0.202:8082',
-  cnMoodleServeUrl: 'http://moodle.cunovs.com',
+  // cnApiServiceUrl: 'http://moodle.cunovs.com:8080',
+  cnApiServiceUrl: 'http://elearningapp.bjou.edu.cn:8080',
+  cnMoodleServeUrl: 'http://elearning.bjou.edu.cn',
+  cnManagerServeUrl: 'http://elearningapp.bjou.edu.cn:9200',
   cnDownloadFileTag: 'tag_cunovs_download_files',
+  cnGetServiceUrl: function (type, suffixPath) {
+    type = type || '' , suffixPath = suffixPath || '';
+    switch (type) {
+      case 'moodle':
+        return cnMoodleServeUrl + suffixPath;
+      case 'manager':
+        return cnManagerServeUrl + suffixPath;
+      case 'help':
+        return cnManagerServeUrl.replace(':9200', ':9000') + suffixPath;
+      default:
+        return '';
+    }
+  },
   cnMiniType: {
     '.doc': 'application/msword',
     '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.wps': 'application/msword',
     '.xls': 'application/vnd.ms-excel',
     '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.et': 'application/vnd.ms-excel',
     '.ogg': 'audio/ogg',
     '.pdf': 'application/pdf',
+    '.caj': 'application/pdf',
     '.pps': 'application/vnd.ms-powerpoint',
     '.ppt': 'application/vnd.ms-powerpoint',
-    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    '.dps': 'application/vnd.ms-powerpoint',
+    '.flv': 'application/octet-stream',
+    '.swf': 'application/x-shockwave-flash'
   },
   cnId: function () {
     return cnGlobalIndex++;
@@ -53,6 +74,9 @@ var cunovs = {
     if (cnIsAndroid()) {
       return 'android';
     }
+    if (cnIsiOS()) {
+      return 'iOS';
+    }
     return '';
   },
   cnSetStatusBarStyle: function (router) {
@@ -61,34 +85,31 @@ var cunovs = {
         router = router || '/';
         switch (router) {
           case '/mine': {
-            StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           case '/closed': {
-            StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           default: {
-            StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#22609c');
           }
         }
+        StatusBar.styleLightContent();
       } else {
         router = router || '/';
         switch (router) {
           case '/':
           case '/dashboard': {
-            StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#22609c');
             break;
           }
           default: {
-            StatusBar.styleDefault();
             StatusBar.backgroundColorByHexString('#22609c');
           }
         }
+        StatusBar.styleLightContent();
       }
     }
   },
@@ -447,15 +468,15 @@ var cunovs = {
             function (entry) {
               if (localStorage && JSON) {
                 entry.file(function (file) {
-                  var value = JSON.parse(localStorage.getItem(cnDownloadFileTag) || '[]');
-                  value.push({
+                  var files = cnGetAllLocalFiles();
+                  files.push({
                     name: file.name,
                     size: file.size,
                     type: file.type,
                     localURL: file.localURL,
                     lastModified: file.lastModified
                   });
-                  localStorage.setItem(cnDownloadFileTag, JSON.stringify(value));
+                  cnSetAllLocalFiles(files);
                 });
               }
               onSuccess(entry);
@@ -476,17 +497,20 @@ var cunovs = {
     onError = onError || cnPrints;
     var fileName = file.fileName || '',
       fileUrl = file.fileUrl || '',
-      mimeType = file.mimeType || '';
+      mimeType = file.mimeType || 'application/pdf';
     if (!fileName) {
       onError({ 'message': '获取本地文件，文件名不能为空。' });
       return;
     }
     if (!cnHasPlugin()) {
-      cnOpen(fileUrl);
+      setTimeout(function () {
+        cnOpen(fileUrl);
+        onSuccess && onSuccess();
+      }, 2000);
       return;
     }
     var fileExistAndOpen = function (entry) {
-      cnOpener2File(entry.toInternalURL(), mimeType, onSuccess, onError);
+      cnOpener2File(cnIsiOS() ? entry.nativeURL : entry.toInternalURL(), mimeType, onSuccess, onError);
     };
     cnGetLocalFile(fileName, {}, fileExistAndOpen, function (error) {
       if (!fileUrl) {
@@ -499,9 +523,106 @@ var cunovs = {
       }
       cnDownloadFile(fileUrl, fileName, null, fileExistAndOpen, onError, onProgress);
     });
-
   }
   ,
+  cnGetOrDownAndUploadFile: function (url, file, params, onSuccess, onError, onProgress) {
+    onError = onError || cnPrints;
+    console.log('cunovs:541', file, url);
+    if (!cnHasPlugin() || !url) {
+      setTimeout(function () {
+        onError({ 'message': !!url ? 'web端，无法获取本机文件。无法修改附件！！！' : '目标上传地址，必须提供。' });
+      }, 300);
+      return;
+    }
+    file = file || {};
+    var fileName = file.fileName || '',
+      fileUrl = file.fileUrl || '',
+      localFilename = (file.filenamePrefix || '') + fileName,
+      mimeType = file.mimeType || 'application/pdf';
+    if (!fileName) {
+      onError({ 'message': '获取本地文件，文件名不能为空。' });
+      return;
+    }
+    params = params || {};
+    var fileExistAndUpload = function (entry) {
+      var options = new FileUploadOptions();
+      options.fileKey = 'file';
+      options.fileName = fileName;
+      options.mimeType = mimeType;
+      options.params = params;
+      var ft = new FileTransfer();
+      ft.onprogress = function (progressEvent) {
+        if (progressEvent.lengthComputable) {
+          console.log(progressEvent.loaded / progressEvent.total);
+        } else {
+          console.log('over');
+        }
+      };
+      onSuccess = onSuccess || cnPrints;
+      var successCb = function (result) {
+        if (result.responseCode === 200) {
+          onSuccess(JSON.parse(result.response));
+        } else {
+          onError(result.response ? JSON.parse(result.response) : result);
+        }
+      };
+      ft.upload(cnIsiOS() ? entry.nativeURL : entry.toInternalURL(), encodeURI(url), successCb, onError, options);
+    };
+    cnGetLocalFile(localFilename, {}, fileExistAndUpload, function (error) {
+      if (!fileUrl) {
+        onError({ 'message': '本地文件不存在，获取网络文件，网络地址不能为空。' });
+        return;
+      }
+      if (!error || !error.code || error.code !== 1) {
+        onError({ 'message': '获取本地文件时发生未知错误。' });
+        return;
+      }
+      onProgress = onProgress || '';
+      cnDownloadFile(fileUrl, localFilename, null, fileExistAndUpload, onError, onProgress);
+    });
+  },
+  cnRemoveLocalFile: function (fileLocalPath, onSuccess, onFailure, onError) {
+    onError = onError || cnPrints;
+    onFailure = onFailure || onError;
+    if (cnHasPlugin() && fileLocalPath) {
+      onSuccess = onSuccess || function () {
+        console.log(fileLocalPath + 'delete success');
+      };
+      window.resolveLocalFileSystemURL(fileLocalPath, function (fileEntry) {
+        fileEntry.remove(onSuccess, onFailure);
+      }, onError);
+    } else {
+      onFailure({ 'message': '本地文件路径为空，不能获取到本地文件。' });
+    }
+  },
+  cnGetAllLocalFiles: function () {
+    var files = '';
+    return localStorage && (files = localStorage.getItem(cnDownloadFileTag)) ? JSON.parse(files) || [] : [];
+  },
+  cnSetAllLocalFiles: function (files) {
+    files = files || '';
+    return localStorage ? localStorage.setItem(cnDownloadFileTag, JSON.stringify(files)) : '';
+  },
+  cnGetLocalFileSize: function () {
+    var totalSize = 0,
+      files = cnGetAllLocalFiles();
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      if (file && file.size) {
+        totalSize += file.size;
+      }
+    }
+    return totalSize;
+  },
+  cnExecFunction: function (func) {
+    if (func) {
+      try {
+        eval(func);
+      } catch (e) {
+        cnPrn(e);
+      }
+    }
+  },
   cnDoScan: function (onSuccess, onError) {
     onError = onError || cnPrints;
     var tag = 'barcodeScanner';
@@ -567,6 +688,9 @@ if (typeof Array.prototype.remove != 'function') {
 (function () {
   var onDeviceReady = function () {
       try {
+        if (cnIsiOS()) {
+          cnhtmlHeight -= 20;
+        }
         if (cnIsDefined(StatusBar) != 'undefined') {
           StatusBar.overlaysWebView(false);
           cnSetStatusBarStyle();
@@ -575,8 +699,20 @@ if (typeof Array.prototype.remove != 'function') {
         navigator.splashscreen.hide();
         if (cordova.InAppBrowser) {
           cnOpen = function (url, target, params, callback) {
-            target = target || '_self';
-            params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#22609c,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            var getDefaultTarget = function () {
+              if (cnIsiOS()) {
+                return '_blank';
+              }
+              return '_self';
+            };
+            var getDefaultParams = function () {
+              if (cnIsiOS()) {
+                return 'location=no,toolbarposition=top,closebuttoncaption=完成,closebuttoncolor=#ffffff,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff';
+              }
+              return 'location=yes,hideurlbar=yes,toolbarcolor=#22609c,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            };
+            target = target || getDefaultTarget();
+            params = params || getDefaultParams();
             callback = callback || new Function();
             var ref = cordova.InAppBrowser.open(url, target, params, callback),
               spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>';
@@ -632,25 +768,49 @@ if (typeof Array.prototype.remove != 'function') {
   var exitApp = function () {
       navigator.app.exitApp();
     },
-    onExitApp = function () {
-      if (typeof (navigator) != 'undefined' && typeof (navigator.app) != 'undefined') {
-        var curHref = window.location.href;
-        if (curHref.indexOf('/login') != -1) {
-          navigator.app.exitApp();
-        } else if (curHref.indexOf('/?_k') != -1) {
-          cnShowToast('再按一次离开APP');
-          document.removeEventListener('backbutton', onExitApp, false);
-          document.addEventListener('backbutton', exitApp, false);
-          var intervalID = window.setTimeout(function () {
-            window.clearTimeout(intervalID);
-            document.removeEventListener('backbutton', exitApp, false);
-            document.addEventListener('backbutton', onExitApp, false);
-          }, 2000);
+    onOpenNotification = function (e) {
+      var urlEncode = function (param, key, encode) {
+        if (param == null) return '';
+        var paramStr = '';
+        var t = typeof (param);
+        if (t == 'string' || t == 'number' || t == 'boolean') {
+          paramStr += '&' + key + '=' + ((encode == null || encode) ? encodeURIComponent(param) : param);
         } else {
-          navigator.app.backHistory();
+          for (var i in param) {
+            var k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : '.' + i);
+            paramStr += urlEncode(param[i], k, encode);
+          }
         }
+        return paramStr;
+      };
+      window.cnClearBadge();
+      var params = e.extras['params'],
+        obj;
+      if (params && (obj = JSON.parse(params)) && obj.routerPath) {
+        var path = obj.routerPath;
+        window.location.href = '#/' + path + '?' + urlEncode(obj)
+          .slice(1);
       }
-    },
+    };
+  onExitApp = function () {
+    if (typeof (navigator) != 'undefined' && typeof (navigator.app) != 'undefined') {
+      var curHref = window.location.href;
+      if (curHref.indexOf('/login') != -1) {
+        navigator.app.exitApp();
+      } else if (curHref.indexOf('/?_k') != -1) {
+        cnShowToast('再按一次离开APP');
+        document.removeEventListener('backbutton', onExitApp, false);
+        document.addEventListener('backbutton', exitApp, false);
+        var intervalID = window.setTimeout(function () {
+          window.clearTimeout(intervalID);
+          document.removeEventListener('backbutton', exitApp, false);
+          document.addEventListener('backbutton', onExitApp, false);
+        }, 2000);
+      } else {
+        navigator.app.backHistory();
+      }
+    }
+  },
     screenChangeEvents = ['webkitfullscreenchange', 'mozfullscreenchange', 'fullscreenchange', 'MSFullscreenChange'];
   for (var i = 0; i < screenChangeEvents.length; i++) {
     document.addEventListener(screenChangeEvents[i], function (e) {
@@ -665,6 +825,7 @@ if (typeof Array.prototype.remove != 'function') {
   document.addEventListener('deviceready', onDeviceReady, false);
   document.addEventListener('resume', onResume, false);
   document.addEventListener('backbutton', onExitApp, false);
+  document.addEventListener('jpush.openNotification', onOpenNotification, false);
 
   function resizeBaseFontSize () {
     var rootHtml = document.documentElement

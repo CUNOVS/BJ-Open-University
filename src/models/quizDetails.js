@@ -4,6 +4,7 @@ import { getLocalIcon } from 'utils';
 import { Toast } from 'components';
 import { routerRedux } from 'dva/router';
 import {
+  getQuizText,
   getQuizInfo,
   choiceQuestion,
   matchQuestion,
@@ -14,26 +15,30 @@ import {
 import { queryExamination, queryLastTimeExamination, sendQuiz, querySummary } from 'services/resource';
 import { model } from 'models/common';
 
-const getAnswer = (data = {}) => {
-  if (data.type === 'multichoice' || data.type === 'truefalse') {
-    data.choose = choiceQuestion(data.html);
-  } else if (data.type === 'essay') {
-    data.choose = essayQusetion(data.html);
-  } else if (data.type === 'match') {
-    data.choose = matchQuestion(data.html);
-  } else if (data.type === 'shortanswer') {
-    data.choose = shortanswerQusetion(data.html);
-  }
-  data.formulation = getTimes(data.html);
+const getAnswer = (data = []) => {
+  data && data.map(item => {
+    item.html = getQuizText(item.html);
+    if (item.type === 'multichoice' || item.type === 'truefalse' || item.type === 'multichoiceset') {
+      item.choose = choiceQuestion(item.html);
+    } else if (item.type === 'essay') {
+      item.choose = essayQusetion(item.html);
+    } else if (item.type === 'match') {
+      item.choose = matchQuestion(item.html);
+    } else if (item.type === 'shortanswer') {
+      item.choose = shortanswerQusetion(item.html);
+    }
+    item.info = getQuizInfo(item.html, item.type);
+    item.formulation = getTimes(item.html);
+  });
   return data;
 };
 export default modelExtend(model, {
   namespace: 'quizDetails',
   state: {
     data: {},
-    questions: [],
-    info: {},
-    answer: {},
+    navigator: [],
+    // info: {},
+    answer: [],
     page: 0,
     navmethod: '',
     attemptid: '',
@@ -44,11 +49,16 @@ export default modelExtend(model, {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/quizDetails' && action === 'PUSH') {
           const { quizid, state, attemptid, page, navmethod = '', timelimit = 0 } = query;
+
           dispatch({
             type: 'updateState',
             payload: {
               navmethod,
-              timelimit
+              timelimit,
+              data: {},
+              navigator: [],
+              info: {},
+              answer: [],
             }
           });
           if (state !== 'inprogress') {
@@ -93,8 +103,8 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             data,
-            info: getQuizInfo(data.questions[0].html),
-            answer: getAnswer(data.questions[0]),
+            // info: getQuizInfo(data.questions[0].html, data.questions[0].type),
+            answer: getAnswer(data.questions),
             attemptid: data.id
           },
         });
@@ -117,14 +127,14 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             data,
-            info: getQuizInfo(data.questions[0].html),
-            answer: getAnswer(data.questions[0]),
+            // info: getQuizInfo(data.questions[0].html, data.questions[0].type),
+            answer: getAnswer(data.questions),
           },
         });
       } else {
         Toast.fail(data.message || '获取失败');
         if (data.errorcode === 'attemptalreadyclosed') {
-          yield put({ type: 'goback' });
+          yield put({ type: 'goBack' });
         }
       }
     },
@@ -135,7 +145,7 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            questions: data.questions,
+            navigator: data.questions,
           },
         });
       } else {
@@ -172,9 +182,9 @@ export default modelExtend(model, {
             type: 'updateState',
             payload: {
               data: {},
-              questions: [],
+              navigator: [],
               info: {},
-              answer: {},
+              answer: [],
               page: 0,
               navmethod: '',
             }

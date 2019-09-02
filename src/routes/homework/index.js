@@ -17,8 +17,9 @@ import styles from './index.less';
 
 const PrefixCls = 'homework';
 
-@connect(({ homework, loading }) => ({ // babel装饰器语法糖
+@connect(({ homework, loading, app }) => ({ // babel装饰器语法糖
   homework,
+  app,
   loading: loading.effects[`${PrefixCls}/queryHomework`],
 }))
 class Homework extends React.Component {
@@ -47,14 +48,19 @@ class Homework extends React.Component {
   }
 
   componentWillUnmount () {
-   
+
   }
 
   render () {
     const { name, assignId, cmid } = this.props.location.query,
+      { users: currentUser = {} } = this.props.app,
       { data, comments } = this.props.homework,
       { loading } = this.props,
       { assignmentsName, coursesName, intro = '', introattachments, coursesId: courseid = '' } = data;
+    //用户文件，以课程id_用户id开头；课程文件，以课程id_模块id开头.
+    const getFileIdPrefix = (type = '') => {
+      return type === '' ? `${courseid}_${cmid}` : `${courseid}_${currentUser.userid || ''}`;
+    };
     return (
       <div style={{ height: '100vh', background: '#fff' }} >
         <Nav
@@ -72,8 +78,8 @@ class Homework extends React.Component {
             </div >
             {intro !== '' && !loading ?
               <Introduction data={intro} dispatch={this.props.dispatch} courseid={courseid} /> : ''}
-            <Enclosure data={introattachments} fileIdPrefix={`${courseid}_${cmid}`} />
-            <List >
+            <Enclosure data={introattachments} fileIdPrefix={getFileIdPrefix()} />
+            <List className={styles.replylist} >
               <List.Item
                 arrow="horizontal"
                 extra={`评论(${comments.length})`}
@@ -95,7 +101,7 @@ class Homework extends React.Component {
                 作业备注
               </List.Item >
             </List >
-            <Status {...data} assignId={assignId} fileIdPrefix={`${courseid}_${cmid}`} dispatch={this.props.dispatch} />
+            <Status {...data} assignId={assignId} fileIdPrefix={getFileIdPrefix('u')} dispatch={this.props.dispatch} />
           </div >
         }
 

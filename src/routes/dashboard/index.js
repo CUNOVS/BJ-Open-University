@@ -67,11 +67,10 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
         handlerClick={handlerChangeRouteClick.bind(null, 'messageCenter', { name: '消息中心' }, dispatch)}
       />
       {sysNotice.noticeContent && sysNotice.noticeContent !== '' ?
-        <Notice content={sysNotice.noticeContent} click={() => moreMessage(sysNotice.noticeContent)} />
+        <Notice content={sysNotice.noticeContent} handlerClick={() => moreMessage(sysNotice.noticeContent)} />
         :
         null
       }
-      <WhiteSpace />
       <Tabs
         tabs={tabs}
         initialPage={0}
@@ -90,7 +89,7 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
               :
               cnIsArray(taskList) && taskList.length > 0 ?
                 <Refresh refreshing={refreshing} onRefresh={onRefresh.bind(null, 'query')} >
-                  {taskList.map((item, i) => {
+                  {taskList.map((item) => {
                     return taskRow(item, handlerCourseClick.bind(null, item, item.courseid, dispatch), (e) => handlerDivInnerHTMLClick(e, item.courseid, dispatch));
                   })}
                   <BaseLine />
@@ -107,7 +106,7 @@ const Dashboard = ({ dashboard, loadingTask, loadingAllTask, dispatch }) => {
             :
             cnIsArray(taskAllList) && taskAllList.length > 0 ?
               <Refresh refreshing={refreshing} onRefresh={onRefresh.bind(null, 'queryAllTask')} >
-                {taskAllList.map((item, i) => {
+                {taskAllList.map((item) => {
                   return taskLessonRow(item, handlerLessonListClick, dispatch);
                 })}
                 <BaseLine />

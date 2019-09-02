@@ -11,7 +11,7 @@ export default modelExtend(model, {
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
-      history.listen(({ pathname, query, action }) => {
+      history.listen(({ pathname }) => {
         if (pathname === '/medalList') {
           dispatch({
             type: 'queryList',

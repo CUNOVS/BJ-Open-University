@@ -9,19 +9,20 @@
 @infoColor: #666;
 @opacity: rgba(0, 0, 0, .5);
 @opacity: rgba(0, 0, 0, .5);
-@titleFontSize: 36px;
-@mediumFontSize: 32px;
-@smallFontSize: 28px;
+@titleFontSize: 32px;
+@mediumFontSize: 28px;
+@smallFontSize: 24px;
 @navColor: linear-gradient(@primary-color, #3574b0);
 @border-color-base: #e0e0e0; // 边框
 @color-text-base: #171717; //文字基色
 @color-text-paragraph: #717171; //段落文字
 @radius-xs: 10px;
 @radius-lg: 15px;
-@padding-list: 30px 20px; //所有列表padding
+@padding-list: 30px; //所有列表padding
 @list-shadow: 0 0 20px #ddd; //列表通用阴影
 @list-bottom: 20px; //列表底边距
 @statusbar-height: 50px; //状态栏高度
+@common-line-height: 1.5em;
 
 * {
   -webkit-touch-callout: none;
@@ -30,6 +31,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 [contenteditable = "true"], input, textarea {
@@ -54,7 +56,20 @@
 }
 
 :global {
+  .am-tabs-default-bar-tab {
+    font-size: @smallFontSize;
+  }
   .am-tabs-default-bar-tab-active {
     font-size: @titleFontSize;
   }
+}
+
+.break {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.whiteBg {
+  min-height: 100vh;
+  background: #fff;
 }

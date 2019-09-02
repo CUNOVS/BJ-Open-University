@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Nav from 'components/nav';
 import { connect } from 'dva';
-import { getImages } from 'utils';
+import { getImages,getLocalIcon } from 'utils';
 import { routerRedux } from 'dva/router';
+import { Icon, card, WingBlank, WhiteSpace, Card } from 'antd-mobile';
+import img from './img.png';
 import styles from './index.less';
-import { Icon } from 'antd-mobile';
 
 const PrefixCls = 'medal';
 
@@ -37,40 +37,34 @@ class Medal extends React.Component {
     const { name } = this.props.location.query,
       { detail = {} } = this.props.medal;
     return (
-      <div style={{ height: this.state.height, background: 'white' }}>
+      <div style={{ height: this.state.height, background: 'white' }} >
         <Nav title={name} dispatch={this.props.dispatch} />
-        <div className={styles[`${PrefixCls}-imag`]} onClick={this.Click.bind(this)}>
-          <img src={getImages(detail.badgeurl)} />
-        </div>
-        <div className={styles[`${PrefixCls}-top`]}>
-          <div className={styles[`${PrefixCls}-title`]}>
-            <Icon type="down" color="#888" size="xs" />
-            勋章详情
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-text`]}>名称: {detail.name}</div>
-        <div className={styles[`${PrefixCls}-text`]}>描述: {detail.diescrip}</div>
-
-        <div className={styles[`${PrefixCls}-top`]}>
-          <div className={styles[`${PrefixCls}-title`]}>
-            <Icon type="down" color="#888" size="xs" />
-            课程
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-text`]}>{detail.lesson}</div>
-
-        <div className={styles[`${PrefixCls}-top`]}>
-          <div className={styles[`${PrefixCls}-title`]}>
-            <Icon type="down" color="#888" size="xs" />
-            有效期
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-text`]}>授予日期: {detail.startDate}</div>
-      </div>
+        <div className={styles[`${PrefixCls}-imag`]} onClick={this.Click.bind(this)} >
+          <img src={img} />
+        </div >
+        <h3 className={styles[`${PrefixCls}-name`]} >成绩斐然</h3 >
+        <div className={styles[`${PrefixCls}-info`]} >
+          <div className={styles[`${PrefixCls}-text`]} >授予日期: <span >2019年1月1日</span ></div >
+          <div className={styles[`${PrefixCls}-text`]} >授予学生: <span >李青</span ></div >
+          <div className={styles[`${PrefixCls}-text`]} >授予机构: <span >北京开放大学</span ></div >
+          <div className={styles[`${PrefixCls}-text`]} >授予课程: <span >学习指南</span ></div >
+        </div >
+        <WingBlank size="lg" >
+          <WhiteSpace size="lg" />
+          <Card >
+            <Card.Header
+              title={<span className={styles[`${PrefixCls}-title`]} >奖章详情</span >}
+              thumb={<Icon type={getLocalIcon('/sprite/medal.svg')} />}
+            />
+            <Card.Body >
+              <div >同学你好，待你完成“活动4.1结合我的职业生涯，提交《我的学习计划》后就会获得此勋章”</div >
+            </Card.Body >
+          </Card >
+          <WhiteSpace size="lg" />
+        </WingBlank >
+      </div >
     );
   }
-
-  s;
 }
 
 

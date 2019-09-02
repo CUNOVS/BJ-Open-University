@@ -1,0 +1,48 @@
+@import "../../themes/default";
+
+@PrefixCls: achievementdetails;
+.@{PrefixCls}-outer {
+
+  &-head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 80px 20px 30px 60px;
+    box-sizing: border-box;
+    background: @navColor;
+    -moz-box-shadow: 0 10px 10px #ccdae8;
+    -webkit-box-shadow: 0 10px 10px #ccdae8;
+    box-shadow: 0 10px 10px #ccdae8;
+
+    &-info {
+      font-size: 40px;
+      color: #fff;
+      flex-grow: 1;
+      &-title {
+        font-weight: bold;
+      }
+
+      &-group {
+        font-size: @mediumFontSize;
+        margin-top: 20px;
+      }
+    }
+    &-achievement {
+      align-self: flex-end;
+      flex-basis: 35%;
+      text-align: right;
+      color: #fff;
+      &-num {
+        font-size: 60px;
+      }
+      &-text {
+        font-size: @smallFontSize;
+        margin-top: 10px;
+      }
+
+    }
+  }
+  &-list {
+    padding: 0 20px;
+  }
+}

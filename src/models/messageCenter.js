@@ -28,30 +28,32 @@ export default modelExtend(model, {
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, action }) => {
-        if (pathname === '/messageCenter' && action === 'PUSH') {
-          dispatch({
-            type: 'updateState',
-            payload: {
-              count: {},
-              talkList: [],
-              messageList: [],
-              selectIndex: 0,
-              nowPage: 0,
-              readstart: 0,
-              unreadstart: 0,
-              type: 'queryMessage',
-              paginations: getDefaultPaginations()
-            }
-          });
+        if (pathname === '/messageCenter') {
           dispatch({
             type: 'queryCount',
           });
-          dispatch({
-            type: 'queryMessage',
-            payload: {
-              nowPage: 0
-            }
-          });
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                count: {},
+                talkList: [],
+                messageList: [],
+                selectIndex: 0,
+                nowPage: 0,
+                readstart: 0,
+                unreadstart: 0,
+                type: 'queryMessage',
+                paginations: getDefaultPaginations()
+              }
+            });
+            dispatch({
+              type: 'queryMessage',
+              payload: {
+                nowPage: 0
+              }
+            });
+          }
         }
       });
     }

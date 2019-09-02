@@ -30,7 +30,8 @@ const tabs = [
 
 @connect(({ lessondetails, loading, app }) => ({ // babel装饰器语法糖
   lessondetails,
-  loading: loading.effects['lessondetails/queryDetails'],
+  loadingData: loading.effects['lessondetails/queryDetails'],
+  loadingCheck: loading.effects['lessondetails/updateDetails'],
   app,
 }))
 
@@ -77,12 +78,14 @@ class LessonDetails extends React.Component {
   render () {
     const { courseid = '' } = this.props.location.query,
       { data: { name = '', summary = '', section0Summary = '', summaryformat = 0, master, tutor, courseImage, guide, resources, id = '', attendanceRule = '', attendance = {}, enddate, startdate, fullname }, refreshing, scrollerTop, selected, activityIndex, accordionIndex } = this.props.lessondetails,
-      { weekStat = 0 } = attendance,
+      { weekStat = 0, config = {} } = attendance,
+      { day_pass = '0' } = config,
       { users: { userid } } = this.props.app,
       dispatch = this.props.dispatch,
       props = {
         courseid,
-        dispatch
+        dispatch,
+        loadingCheck: this.props.loadingCheck,
       };
     const handlerChange = (key) => {
         this.props.dispatch({
@@ -131,6 +134,7 @@ class LessonDetails extends React.Component {
           tutor={tutor}
           dispatch={this.props.dispatch}
           state={weekStat}
+          daypass={day_pass}
           attendanceClick={handlerChangeRouteClick.bind(null, 'attendancedetails', {
             name: '考勤详情',
             courseid,
@@ -147,6 +151,8 @@ class LessonDetails extends React.Component {
             tabBarUnderlineStyle={{ border: '1px solid #22609c' }}
             page={selected}
             swipeable={false}
+            destroyInactiveTab
+            prerenderingSiblingsNumber={0}
             onChange={(tab, index) => {
               this.props.dispatch({
                 type: `${PrefixCls}/updateState`,
@@ -163,8 +169,8 @@ class LessonDetails extends React.Component {
                 onScrollerTop={onScrollerTop.bind(null)}
                 scrollerTop={scrollerTop}
               >
-                {this.props.loading && !refreshing ?
-                  <NoContent />
+                {this.props.loadingData && !refreshing ?
+                  <NoContent isLoading={this.props.loadingData} />
                   :
                   <div className={styles[`${PrefixCls}-lessonInfo`]} >
                     <WhiteSpace size="xs" />
@@ -198,24 +204,26 @@ class LessonDetails extends React.Component {
                   </div >}
               </Refresh >
             </div >
-            <Refresh
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              onScrollerTop={onScrollerTop.bind(null)}
-              scrollerTop={scrollerTop}
-            >
-              {this.props.loading && !refreshing ?
-                <NoContent />
-                : <div >
-                  <CourseList
-                    data={resources}
-                    activityIndex={activityIndex}
-                    accordionIndex={accordionIndex}
-                    {...props}
-                    handlerChange={handlerChange}
-                  />
-                </div >}
-            </Refresh >
+            <div >
+              <Refresh
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                onScrollerTop={onScrollerTop.bind(null)}
+                scrollerTop={scrollerTop}
+              >
+                {this.props.loadingData && !refreshing ?
+                  <NoContent isLoading={this.props.loadingData} />
+                  : <div >
+                    <CourseList
+                      data={resources}
+                      activityIndex={activityIndex}
+                      accordionIndex={accordionIndex}
+                      {...props}
+                      handlerChange={handlerChange}
+                    />
+                  </div >}
+              </Refresh >
+            </div >
           </Tabs >
         </div >
       </div >

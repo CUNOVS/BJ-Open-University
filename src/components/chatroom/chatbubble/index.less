@@ -17,11 +17,12 @@
   border: 1px solid @border;
   border-radius: 8px;
   margin-bottom: 20px;
+  line-height: @common-line-height;
 }
 
 .iconbox(@float) {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   display: block;
   float: @float;
   //overflow: hidden;
@@ -30,7 +31,7 @@
 .left { //左气泡
   display: inline-block;
   box-shadow: 2px 2px 2px #ccc;
-  max-width: 55%;
+  max-width: 60%;
   position: relative;
   background: #9ee62a;
   margin-left: 20px;
@@ -40,7 +41,7 @@
   display: inline-block;
   box-shadow: -2px 2px 5px #CCC;
   margin-right: 25px;
-  max-width:55%;
+  max-width:60%;
   float: right;
   background: #fff;
 }
@@ -56,7 +57,7 @@
 }
 
 .@{PrefixCls}-left {
-  max-width: 75%;
+  max-width: 80%;
   clear: both;
   float: left;
   margin: 60px 0 10px;
@@ -98,7 +99,7 @@
 }
 
 .@{PrefixCls}-right {
-  max-width: 75%;
+  max-width: 80%;
   position: relative;
   clear: both;
   float: right;

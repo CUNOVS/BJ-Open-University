@@ -56,6 +56,7 @@ export default modelExtend(model, {
           },
         });
       } else {
+        yield put({ type: 'goBack' });
         Toast.fail(data.message || '未知错误');
       }
     },

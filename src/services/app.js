@@ -1,6 +1,6 @@
 import { request, config } from 'utils';
 
-const { api: { userLogout, GetBaseInfo, GetUserInfo, GetMedalList, AddContacts, DeleteContacts, GetAttendance, GetAttendanceList, AccessTime, Log, OpinionAdd, SeedOpinionFiles } } = config;
+const { api: { userLogout, GetBaseInfo, GetUserInfo, GetMedalList, AddContacts, DeleteContacts, GetAttendance, GetAttendanceList, AccessTime, Log, OpinionAdd, SeedOpinionFiles, GetVersion } } = config;
 
 
 export async function logout () {
@@ -98,8 +98,16 @@ export async function sendOpinion (payload) {
 
 export async function sendOpinionFiles (payload) {
   return request({
-    url: SeedOpinionFiles,
+    url: SeedOpinionFiles(),
     method: 'post',
+    data: payload,
+    hasToken: false
+  });
+}
+
+export async function getVersion (payload) {
+  return request({
+    url: GetVersion,
     data: payload,
     hasToken: false
   });

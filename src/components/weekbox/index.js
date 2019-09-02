@@ -26,14 +26,21 @@ const getGrid = (obj) => {
   return arr;
 };
 
+const getWeekAttendance = (obj) => {
+  let num = 0;
+  Object.keys(obj)
+    .map((items) => {
+      if (parseInt(obj[items], 10) === 1) {
+        num += 1;
+      }
+    });
+  return num;
+};
 
 class WeekBox extends React.Component {
   constructor (props) {
     super(props);
   }
-
-  getWeekAttendance = (arr) => (arr.filter(item => item === 1).length);
-
 
   render () {
     const { attendance } = this.props,
@@ -68,7 +75,7 @@ class WeekBox extends React.Component {
               </div >
               <div className={styles[`${PrefixCls}-bottom`]} >
                 <div >
-                  {`周出勤天数:${this.getWeekAttendance(getGrid(Object.assign(...grid, currentData)))}`}
+                  {`周出勤天数:${getWeekAttendance(currentData)}`}
                 </div >
                 <CnBadge
                   text={weekStat ? '达标' : '未达标'}

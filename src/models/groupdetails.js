@@ -33,7 +33,7 @@ export default modelExtend(model, {
               }
             });
             dispatch({
-              type: 'queryList',
+              type: 'query',
               payload: {
                 courseid,
               },
@@ -45,7 +45,7 @@ export default modelExtend(model, {
   },
 
   effects: {
-    * queryList ({ payload }, { call, put, select }) {
+    * query ({ payload }, { call, put, select }) {
       const { callback = '', isRefresh = false, courseid } = payload,
         _this = yield select(_ => _[`${namespace}`]),
         { users: { userid } } = yield select(_ => _.app),

@@ -12,7 +12,9 @@ export default modelExtend(model, {
   state: {
     gradeItems: [],
     refreshing: false,
-    scrollerTop: 0
+    scrollerTop: 0,
+    graderaw: '',
+    coursename: '',
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -24,6 +26,8 @@ export default modelExtend(model, {
               type: 'updateState',
               payload: {
                 gradeItems: [],
+                graderaw: '',
+                coursename: '',
                 refreshing: false,
                 scrollerTop: 0
               }
@@ -45,14 +49,14 @@ export default modelExtend(model, {
       const { users: { userid } } = yield select(_ => _.app),
         response = yield call(queryList.queryGradeDetails, { userid, ...payload });
       if (response.success) {
-        const { coursegrade, coursename, courseid, data } = response;
+        const { coursename, courseid, data, graderaw = '' } = response;
         yield put({
           type: 'updateState',
           payload: {
-            coursegrade,
             coursename,
             courseid,
-            gradeItems: getGradeItems(data)
+            gradeItems: getGradeItems(data),
+            graderaw
           },
         });
       }

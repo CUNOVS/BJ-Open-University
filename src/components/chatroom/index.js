@@ -7,7 +7,7 @@ import { ReceiveBubble, ReplyBubble } from './chatbubble/index';
 import styles from './index.less';
 
 const PrefixCls = 'chatroom';
-let defaultTimer = '';
+let defaultTimer = 0;
 
 class ChatRoom extends Component {
   constructor (props) {
@@ -50,8 +50,7 @@ class ChatRoom extends Component {
       },
       getShowTimer = (messageTimer = '') => {
         const current = new Date(messageTimer * 1000).getMinutes();
-        if (messageTimer && defaultTimer !== (current)) {
-          console.log(current, defaultTimer);
+        if (messageTimer && defaultTimer !== (current - 1)) {
           defaultTimer = current;
           return <div className={styles[`${PrefixCls}-timer`]} ><span >{getMessageTime(messageTimer)}</span ></div >;
         }

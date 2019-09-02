@@ -8,6 +8,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { getOffsetTopByBody } from 'utils';
+import loading from './loading.gif';
 import styles from './index.less';
 
 class NoContent extends React.Component {
@@ -29,8 +30,8 @@ class NoContent extends React.Component {
   render () {
     return (
       <div ref={el => this.lv = el} className={styles.outer} style={{ height: this.state.height }} >
-        <img style={{ width: '60px' }} src={this.props.images} alt="" />
-        <p className={styles.content} >{this.props.context}</p >
+        <img src={this.props.isLoading ? loading : this.props.images} alt="" />
+        <p className={styles.content} >{this.props.isLoading ? '加载中...' : this.props.context}</p >
       </div >
     );
   }
@@ -40,6 +41,7 @@ class NoContent extends React.Component {
 NoContent.defaultProps = {
   images: require('./img.png'),
   context: '暂无内容',
+  isLoading: false
 };
 NoContent.propTypes = {
   images: PropTypes.string,
